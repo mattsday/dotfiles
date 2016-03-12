@@ -42,7 +42,12 @@ case "$TERM" in xterm*|rxvt*)
     PROMPT_COMMAND='echo -ne "\033]0;${USER}: ${PWD/$HOME/~}\007"' ;; *)  ;;
 esac
 
-# Alias definitions.
+# Local bashrc config (paths etc)
+if [ -f ~/.bash_local ]; then
+    . ~/.bash_local
+fi
+
+# DEPRECATED: Alias definitions.
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
