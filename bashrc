@@ -49,6 +49,7 @@ fi
 
 # DEPRECATED: Alias definitions.
 if [ -f ~/.bash_aliases ]; then
+    echo "bash_aliases is deprecated; move to .bash_local"
     . ~/.bash_aliases
 fi
 # Meh, shit happens:

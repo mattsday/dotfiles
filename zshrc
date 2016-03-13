@@ -13,7 +13,7 @@ fi
 # Essentials...
 # If vim exists somewhere, make it the default editor:
 if [[ -x $(which vim 2> /dev/null) ]]; then
-	export VISUAL="vim"
+	export VISUAL=$(which vim)
 	export USE_EDITOR=$VISUAL
 	export EDITOR=$VISUAL
 fi
@@ -30,7 +30,6 @@ for option (
 
 # If a command takes longer than 15 seconds, print its duration
 export REPORTTIME=15
-
 
 # Bash style word deletion (i.e. /usr/local/bin^w would just delete 'bin')
 autoload -U select-word-style && select-word-style bash
@@ -61,7 +60,6 @@ zstyle ':completion:*' menu select
 zstyle ':completion:*' verbose yes
 zstyle ':completion:*' rehash yes
 
-
 # Ensure ctrl-a/ctrl-e for home/end respectively (emacs compatibility):
 bindkey -e
 
@@ -75,20 +73,32 @@ zstyle ':vcs_info:*' actionformats '(%s)-[%b|%a]'
 zstyle ':vcs_info:*' formats       '(%s)-[%b]'
 zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b:%r'
 
-
 # Aliases
 # First if sudo exists on the system then use it by default for some commands
-if [[ -e /usr/bin/sudo ]]; then
-	alias apt-get='sudo apt-get'
-	# I prefer aptitude over apt-get but muscle memory sucks
-	if [[ -e /usr/bin/aptitude ]]; then
-		alias apt-get="sudo aptitude"
-		alias apt-cache="sudo aptitude"
+if [[ -f /usr/bin/sudo ]]; then
+	if [[ -f /usr/bin/apt-get ]]; then
+		# I prefer aptitude over apt-get but muscle memory sucks
+		if [[ -e /usr/bin/aptitude ]]; then
+			alias apt-get='sudo aptitude'
+			alias apt-cache='sudo aptitude'
+		else
+			alias apt-get='sudo apt-get'
+		fi
+		alias update='apt-get update && apt-get upgrade'
 	fi
-	# Red Hat is a thing too I guess :(
-	if [[ -e /usr/bin/yum ]]; then
+	# Same if using RPM-based distributions
+	if [[ -f /usr/bin/yum ]]; then
 		alias yum='sudo yum'
+		alias update='yum update'
 	fi
+	# Always restart services as root
+	if [[ -f /usr/sbin/service ]]; then
+		alias service='sudo service'
+	fi
+fi
+
+if [[ -f /usr/local/bin/brew ]]; then
+	alias update='brew update && brew upgrade'
 fi
 
 # wget enforces certificates by default and I almost never care (dangerous I know)
@@ -100,13 +110,6 @@ alias 'cd~=cd ~'
 # Common shortcuts
 alias ll='ls -lah'
 alias l='ls -CF'
-
-# Global aliases
-# ls L == ls | less
-alias -g L="|less"
-alias -g G="|grep"
-alias -g GI="|grep -i"
-alias -g Gi="|grep -i"
 
 # Custom prompt (coloured in yellow and cyan): user@host:~%
 PROMPT="%{$fg_bold[yellow]%}%n@%m%{$reset_color%}:%{$fg_bold[cyan]%}%~%{$reset_color%}%# "
@@ -126,17 +129,17 @@ case $TERM in
 esac
 
 # Check if OpenStack RC file exists:
-if [[ -e .openstack_credentials ]]; then
+if [[ -f .openstack_credentials ]]; then
 	source .openstack_credentials
 fi
 
 # Fish style syntax highlighting
-if [[ -e .zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+if [[ -f .zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
 	source .zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
 
 # Load local system stuff (local PATH, aliases etc)
-if [[ -e .zsh_local ]]; then
+if [[ -f .zsh_local ]]; then
 	source .zsh_local
 fi
 
