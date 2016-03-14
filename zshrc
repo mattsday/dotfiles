@@ -95,6 +95,9 @@ if [[ -f /usr/bin/sudo ]]; then
 	if [[ -f /usr/sbin/service ]]; then
 		alias service='sudo service'
 	fi
+	if [[ -f /bin/launchctl ]]; then
+		alias launchctl='sudo launchctl'
+	fi
 fi
 
 if [[ -f /usr/local/bin/brew ]]; then
