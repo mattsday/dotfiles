@@ -8,5 +8,4 @@ for dotfile (
 	muttrc
 	screenrc
 	tmux.conf
-	gitconfig
 ) ln -fs $HOME/dotfiles/$dotfile $HOME/.$dotfile
