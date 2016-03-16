@@ -64,14 +64,17 @@ alias dir='dir --color=auto'
 alias grep='grep --color=auto'
 export GREP_COLORS="ms=01;32:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36"
 
-
+# these won't work in bash < 3
+if [[ $BASH_VERSION == 4* ]]; then
+	shopt -s autocd		# Auto CD (i.e. can type '..' to change to parent directory, or 'bin' to change to ./bin)
+	shopt -s dirspell	# Correct spelling on directory names during globbing
+fi
 
 
 # A few nice settings
-shopt -s autocd          # Auto CD (i.e. can type '..' to change to parent directory, or 'bin' to change to ./bin)
 shopt -s extglob         # Expanded globbing (i.e. allow 'ls -d ^*.jpg' to show non-jpg files)
 shopt -s cdspell         # Mispelled directory names
-set -o noclobber         # Require '>!' instead of '>' to overwrite a file
+set -o noclobber         # Require '>|' instead of '>' to overwrite a file
 
 # Make auto completion more zsh-like
 bind 'set show-all-if-ambiguous on'

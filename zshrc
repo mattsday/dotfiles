@@ -115,10 +115,10 @@ alias ll='ls -lah'
 alias l='ls -CF'
 
 # Custom prompt (coloured in yellow and cyan): user@host:~%
-PROMPT="%{$fg_bold[yellow]%}%n@%m%{$reset_color%}:%{$fg_bold[cyan]%}%~%{$reset_color%}%# "
+PROMPT="%{$fg_bold[yellow]%}%n@%m%{$reset_color%}:%{$fg_bold[cyan]%}%~%{$reset_color%}%# %{$reset_color%}"
 
 # Date on right-side including return code + git info [0][09:30:00]
-RPROMPT='%F{green}${vcs_info_msg_0_}%{$reset_color%}'"[%?]%{$fg_bold[grey]%}[%D{%H:%M:%S}]%{$reset_color%}"
+RPROMPT='%{$reset_color%}%F{green}${vcs_info_msg_0_}%{$reset_color%}[%?]%{$fg_bold[grey]%}[%D{%H:%M:%S}]%{$reset_color%}'
 
 case $TERM in
     xterm*)
