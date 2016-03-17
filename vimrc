@@ -14,6 +14,13 @@ set t_Co=256
 set nocompatible
 
 "================
+"    Keybind
+"================
+" Disable the shift+q shortcut (Q) that enters Ex mode by default
+" I always fat-finger this by accident... :(
+:map Q <Nop>
+
+"================
 "  Spelling
 "================
 " To spell check a document, you will need to enter :set spell, this just defaults
