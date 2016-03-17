@@ -1,24 +1,31 @@
 # Matt Day's custom .zshrc file
-# Few bits made up, others thrown together etc
-# Put in public domain for anyone to copy!
+# Not sure where I got all this from, it showed up along the way!
+# Latest copy always here: https://github.com/mattsday/dotfiles/
 
-# Load colour names
+# ==========
+# Shell Init
+# ==========
+# Without these some options later may break...
+
+# Load colour names so they can be referred to as green, yellow etc
 autoload -U colors && colors
 
+# Initialise the autocompletion library
+zmodload zsh/complist
+autoload -U complist
+autoload -Uz compinit && compinit
+
+# Load some utilities such as zstyle and zformat
+autoload -U zutil
+
 # 256 colour support pls
-if [[ $TERM != *256color* ]]; then
-	export TERM=xterm-256color;
-fi
+[[ "$TERM" == "xterm" ]] && export TERM=xterm-256color
 
-# Essentials...
-# If vim exists somewhere, make it the default editor:
-if [[ -x $(which vim 2> /dev/null) ]]; then
-	export VISUAL=$(which vim)
-	export USE_EDITOR=$VISUAL
-	export EDITOR=$VISUAL
-fi
+# =============
+# Shell Options
+# =============
+# Various options, features and keybinds that make life that little bit better...
 
-# A few nice settings
 for option (
 	noautomenu 	# don't select stuff automatically when tabbing if there are options
 	auto_cd 	# Auto CD (i.e. can type '..' to change to parent directory, or 'bin' to change to ./bin)
@@ -27,6 +34,12 @@ for option (
 	correct		# Correct common errors
 	prompt_subst	# Allow dynamic prompt
 ) setopt $option
+
+# Ensure ctrl-a/ctrl-e for home/end respectively (emacs compatibility):
+bindkey -e
+
+# Map delete key (fn+backspace) on OS X correctly:
+bindkey "^[[3~" delete-char
 
 # If a command takes longer than 15 seconds, print its duration
 export REPORTTIME=15
@@ -43,39 +56,23 @@ setopt HIST_IGNORE_SPACE
 setopt HIST_REDUCE_BLANKS
 setopt HIST_VERIFY
 
-# Fancy command completion and style:
-zmodload zsh/complist
-autoload -U complist
-autoload -U zutil
-autoload -Uz compinit && compinit
+# =======================
+# Environment and Aliases
+# =======================
+# Check the environment and add aliases across various platforms
 
-# And set some styles...
-zstyle ':completion:*:descriptions' format "- %d -"
-zstyle ':completion:*:corrections' format "- %d - (errors %e})"
-zstyle ':completion:*:default' list-prompt '%S%M matches%s'
-zstyle ':completion:*' group-name ''
-zstyle ':completion:*:manuals' separate-sections true
-zstyle ':completion:*:manuals.(^1*)' insert-sections true
-zstyle ':completion:*' menu select
-zstyle ':completion:*' verbose yes
-zstyle ':completion:*' rehash yes
+# If vim exists somewhere, make it the default editor:
+if [[ -x $(which vim 2> /dev/null) ]]; then
+	export VISUAL=$(which vim)
+	export USE_EDITOR=$VISUAL
+	export EDITOR=$VISUAL
+	# Some systems are cruel and have vi + vim installed side-by-side
+	alias vi=$VISUAL
+fi
 
-# Ensure ctrl-a/ctrl-e for home/end respectively (emacs compatibility):
-bindkey -e
-
-# Map delete key (fn+backspace) on OS X correctly:
-bindkey "^[[3~" delete-char
-
-# Native Git directory information
-autoload -Uz vcs_info
-zstyle ':vcs_info:*' enable git svn
-zstyle ':vcs_info:*' actionformats '(%s)-[%b|%a]'
-zstyle ':vcs_info:*' formats       '(%s)-[%b]'
-zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b:%r'
-
-# Aliases
-# First if sudo exists on the system then use it by default for some commands
+# If we can sudo dodo!
 if [[ -f /usr/bin/sudo ]]; then
+	# Debian based systems
 	if [[ -f /usr/bin/apt-get ]]; then
 		# I prefer aptitude over apt-get but muscle memory sucks
 		if [[ -e /usr/bin/aptitude ]]; then
@@ -104,15 +101,36 @@ if [[ -f /usr/local/bin/brew ]]; then
 	alias update='brew update && brew upgrade'
 fi
 
-# wget enforces certificates by default and I almost never care (dangerous I know)
-alias wget='wget --no-check-certificate'
-
 # Meh, shit happens:
 alias 'cd..=cd ..'
 alias 'cd~=cd ~'
+
 # Common shortcuts
 alias ll='ls -lah'
-alias l='ls -CF'
+alias l='ls -aCF'
+
+# ===========
+# Look & Feel
+# ===========
+# Specific options that affect the L&F of the shell
+
+# Set some completion styles and features
+zstyle ':completion:*:descriptions' format "- %d -"
+zstyle ':completion:*:corrections' format "- %d - (errors %e})"
+zstyle ':completion:*:default' list-prompt '%S%M matches%s'
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*:manuals' separate-sections true
+zstyle ':completion:*:manuals.(^1*)' insert-sections true
+zstyle ':completion:*' menu select
+zstyle ':completion:*' verbose yes
+zstyle ':completion:*' rehash yes
+
+# Native Git directory information
+autoload -Uz vcs_info
+zstyle ':vcs_info:*' enable git svn
+zstyle ':vcs_info:*' actionformats '(%s)-[%b|%a]'
+zstyle ':vcs_info:*' formats       '(%s)-[%b]'
+zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b:%r'
 
 # Custom prompt (coloured in yellow and cyan): user@host:~%
 PROMPT="%{$fg_bold[yellow]%}%n@%m%{$reset_color%}:%{$fg_bold[cyan]%}%~%{$reset_color%}%# %{$reset_color%}"
@@ -120,6 +138,7 @@ PROMPT="%{$fg_bold[yellow]%}%n@%m%{$reset_color%}:%{$fg_bold[cyan]%}%~%{$reset_c
 # Date on right-side including return code + git info [0][09:30:00]
 RPROMPT='%{$reset_color%}%F{green}${vcs_info_msg_0_}%{$reset_color%}[%?]%{$fg_bold[grey]%}[%D{%H:%M:%S}]%{$reset_color%}'
 
+# Update the terminal title and version control info
 case $TERM in
     xterm*)
         precmd () {
@@ -131,6 +150,11 @@ case $TERM in
         ;;
 esac
 
+# ======================
+# Plug-ins and Resources
+# ======================
+# Check for (and source) additional plugins and resources, such as local config files
+
 # Check if OpenStack RC file exists:
 if [[ -f .openstack_credentials ]]; then
 	source .openstack_credentials
@@ -141,7 +165,7 @@ if [[ -f .zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
 	source .zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
 
-# Load local system stuff (local PATH, aliases etc)
+# Load local system stuff (local PATH, aliases etc) - this should be loaded last
 if [[ -f .zsh_local ]]; then
 	source .zsh_local
 fi

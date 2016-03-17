@@ -1,40 +1,113 @@
-#!/bin/bash
-# Matt Day's .bashrc
+# Matt Day's custom .bashrc file
+# Not sure where I got all this from, it showed up along the way!
+# As bash is the poor cousin to zsh, so this rcfile is to my zshrc...
+# Latest copy always here: https://github.com/mattsday/dotfiles/
+
+# ==========
+# Shell Init
+# ==========
+# Without these some options later may break...
+
+[[ "$TERM" == "xterm" ]] && export TERM=xterm-256color
 
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
-# Bash completion
-if [ -f /etc/bash_completion ]; then
-	. /etc/bash_completion
-fi
+# =============
+# Shell Options
+# =============
+# Various options, features and keybinds that make life that little bit better...
 
-# meh...
-if [[ -e /usr/bin/sudo ]]; then
-	alias apt-get='sudo apt-get'
-	# I prefer aptitude over apt-get but muscle memory sucks
-	if [[ -e /usr/bin/aptitude ]]; then
-		alias apt-get="sudo aptitude"
-		alias apt-cache="sudo aptitude"
-	fi
-fi
-
-# Colour ls prompt (OS X):
-export CLICOLOR="yes"
-export LSCOLORS="gxhxfxcxcxdxcxcxcxgxgx"
-
-# 256 colour support pls
-if [[ $TERM != *256color* ]]; then
-	export TERM=xterm-256color;
-fi
-
-# don't put duplicate lines in the history. See bash(1) for more options
+# Don't put duplicate lines in the history
 export HISTCONTROL=ignoredups
 
 # Update lines and columns
 shopt -s checkwinsize
 
-# Colour prompt :)
+
+shopt -s extglob         # Expanded globbing (i.e. allow 'ls -d ^*.jpg' to show non-jpg files)
+shopt -s cdspell         # Mispelled directory names
+set -o noclobber         # Require '>|' instead of '>' to overwrite a file
+
+# Apple bundle a ridiculously old version of bash with OSX due to their objection to GPL3...
+# Guess us users must write crappy hacks to work around it... thanks Apple!
+if [[ $BASH_VERSION == 4* ]]; then
+	shopt -s autocd		# Auto CD (i.e. can type '..' to change to parent directory, or 'bin' to change to ./bin)
+	shopt -s dirspell	# Correct spelling on directory names during globbing
+fi
+
+# Make auto completion more zsh-like
+bind 'set show-all-if-ambiguous on'
+
+# Extended globbing
+shopt -s extglob
+
+# Bash completion (check homebrew first on OS X)
+if [[ -f /usr/local/etc/bash_completion ]]; then
+	. /usr/local/etc/bash_completion
+elif [[ -f /etc/bash_completion ]]; then
+	. /etc/bash_completion
+fi
+
+# =======================
+# Environment and Aliases
+# =======================
+# Check the environment and add aliases across various platforms
+
+# If vim exists somewhere, make it the default editor:
+if [[ -x $(which vim 2> /dev/null) ]]; then
+	export VISUAL=$(which vim)
+	export USE_EDITOR=$VISUAL
+	export EDITOR=$VISUAL
+	# Some systems are cruel and have vi + vim installed side-by-side
+	alias vi=$VISUAL
+fi
+
+# If we can sudo dodo!
+if [[ -f /usr/bin/sudo ]]; then
+	# Debian based systems
+	if [[ -f /usr/bin/apt-get ]]; then
+		# I prefer aptitude over apt-get but muscle memory sucks
+		if [[ -e /usr/bin/aptitude ]]; then
+			alias apt-get='sudo aptitude'
+			alias apt-cache='sudo aptitude'
+		else
+			alias apt-get='sudo apt-get'
+		fi
+		alias update='apt-get update && apt-get upgrade'
+	fi
+	# Same if using RPM-based distributions
+	if [[ -f /usr/bin/yum ]]; then
+		alias yum='sudo yum'
+		alias update='yum update'
+	fi
+	# Always restart services as root
+	if [[ -f /usr/sbin/service ]]; then
+		alias service='sudo service'
+	fi
+	if [[ -f /bin/launchctl ]]; then
+		alias launchctl='sudo launchctl'
+	fi
+fi
+
+if [[ -f /usr/local/bin/brew ]]; then
+	alias update='brew update && brew upgrade'
+fi
+
+# Meh, shit happens:
+alias 'cd..=cd ..'
+alias 'cd~=cd ~'
+
+# Common shortcuts
+alias ll='ls -lah'
+alias l='ls -aCF'
+
+# ===========
+# Look & Feel
+# ===========
+# Specific options that affect the L&F of the shell
+
+# Custom prompt (coloured in yellow and cyan): user@host:~%
 PS1='\[\033[01;33m\]\u@\h\[\033[00m\]:\[\033[01;36m\]\w\[\033[00m\]\$ '
 
 # If this is an xterm set the title to user@host:dir
@@ -42,9 +115,9 @@ case "$TERM" in xterm*|rxvt*)
     PROMPT_COMMAND='echo -ne "\033]0;${USER}: ${PWD/$HOME/~}\007"' ;; *)  ;;
 esac
 
-# Local bashrc config (paths etc)
-if [ -f ~/.bash_local ]; then
-    . ~/.bash_local
+# Check if OpenStack RC file exists:
+if [[ -f .openstack_credentials ]]; then
+	source .openstack_credentials
 fi
 
 # DEPRECATED: Alias definitions.
@@ -52,37 +125,10 @@ if [ -f ~/.bash_aliases ]; then
     echo "bash_aliases is deprecated; move to .bash_local"
     . ~/.bash_aliases
 fi
-# Meh, shit happens:
-alias 'cd..=cd ..'
-alias 'cd~=cd ~'
-# Common shortcuts
-alias ls='ls --color=auto'
-alias ll='ls -la'
-alias l='ls -CF'
-alias wget='wget --no-check-certificate'
-alias dir='dir --color=auto'
-alias grep='grep --color=auto'
-export GREP_COLORS="ms=01;32:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36"
 
-# these won't work in bash < 3
-if [[ $BASH_VERSION == 4* ]]; then
-	shopt -s autocd		# Auto CD (i.e. can type '..' to change to parent directory, or 'bin' to change to ./bin)
-	shopt -s dirspell	# Correct spelling on directory names during globbing
+# Local bashrc config (paths etc) (should be the last thing loaded)
+if [ -f ~/.bash_local ]; then
+    . ~/.bash_local
 fi
 
-
-# A few nice settings
-shopt -s extglob         # Expanded globbing (i.e. allow 'ls -d ^*.jpg' to show non-jpg files)
-shopt -s cdspell         # Mispelled directory names
-set -o noclobber         # Require '>|' instead of '>' to overwrite a file
-
-# Make auto completion more zsh-like
-bind 'set show-all-if-ambiguous on'
-#bind 'TAB:menu-complete'
-
-# Extended globbing
-shopt -s extglob
-# 
-
-export PATH=/usr/local/bin:/usr/local/sbin:$PATH
 

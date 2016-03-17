@@ -1,5 +1,5 @@
-" Matt Day's .vimrc - http://matt.fragilegeek.com/vimrc
-" Use at your own risk - these settings work for me...
+" Matt Day's .vimrc
+" Latest version always here: https://github.com/mattsday/dotfiles/
 
 "================
 "  256 Colours!
