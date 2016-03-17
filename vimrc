@@ -25,7 +25,7 @@ set nocompatible
 "================
 " To spell check a document, you will need to enter :set spell, this just defaults
 " to British English (my preference)
-set spelllang=en_GB
+set spelllang=en_gb
 
 "================
 "  Look & Feel
