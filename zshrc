@@ -7,6 +7,9 @@
 # ==========
 # Without these some options later may break...
 
+# If not running interactively, don't do anything
+[[ -z "$PS1" ]] && return
+
 # Load colour names so they can be referred to as green, yellow etc
 autoload -U colors && colors
 
@@ -62,9 +65,14 @@ setopt HIST_VERIFY
 # Check the environment and add aliases across various platforms
 
 # Load basic aliases from common set (zsh & bash compatible)
-if [[ -f .shell_common ]]; then
-	source .shell_common
+if [[ -f $HOME/.shell_common ]]; then
+	source $HOME/.shell_common
 fi
+
+# Find function to quickly look for things in pwd
+f() {
+	find . -iname "*$1*"
+}
 
 # ===========
 # Look & Feel
@@ -88,6 +96,10 @@ zstyle ':vcs_info:*' enable git svn
 zstyle ':vcs_info:*' actionformats '(%s)-[%b|%a]'
 zstyle ':vcs_info:*' formats       '(%s)-[%b]'
 zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b:%r'
+
+# Enable caching of completion output to speed it up
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path ~/.zsh_cache
 
 # Custom prompt (coloured in yellow and cyan): user@host:~%
 PROMPT="%{$fg_bold[yellow]%}%n@%m%{$reset_color%}:%{$fg_bold[cyan]%}%~%{$reset_color%}%# %{$reset_color%}"
@@ -113,17 +125,17 @@ esac
 # Check for (and source) additional plugins and resources, such as local config files
 
 # Check if OpenStack RC file exists:
-if [[ -f .openstack_credentials ]]; then
-	source .openstack_credentials
+if [[ -f $HOME/.openstack_credentials ]]; then
+	source $HOME/.openstack_credentials
 fi
 
 # Fish style syntax highlighting
-if [[ -f .zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
-	source .zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+if [[ -f $HOME/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+	source $HOME/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
 
 # Load local system stuff (local PATH, aliases etc) - this should be loaded last
-if [[ -f .zsh_local ]]; then
-	source .zsh_local
+if [[ -f $HOME/.zsh_local ]]; then
+	source $HOME/.zsh_local
 fi
 

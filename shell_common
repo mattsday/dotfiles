@@ -1,6 +1,13 @@
-# This file contains alias definitions that are common between both
-# zsh and bash... rather than maintain two sets, both rcfiles load this
+# This file contains alias definitions and variables that are common 
+# between both zsh and bash... rather than maintain two sets, both 
+# rcfiles load this
 # Latest copy always here: https://github.com/mattsday/dotfiles/
+
+# =================
+# Alias definitions
+# =================
+# Check the presence of various utilities and alias them to give them
+# preference ahead of lesser system defaults
 
 # If vim exists somewhere, make it the default editor:
 if [[ -x $(which vim 2> /dev/null) ]]; then
@@ -11,12 +18,17 @@ if [[ -x $(which vim 2> /dev/null) ]]; then
 	alias vi=$VISUAL
 fi
 
+# Set less as the default pager
+if [[ -x $(which less 2> /dev/null) ]]; then
+    export PAGER=$(which less)
+fi
+
 # If we can sudo dodo!
 if [[ -f /usr/bin/sudo ]]; then
 	# Debian based systems
 	if [[ -f /usr/bin/apt-get ]]; then
 		# I prefer aptitude over apt-get but muscle memory sucks
-		if [[ -e /usr/bin/aptitude ]]; then
+		if [[ -f /usr/bin/aptitude ]]; then
 			alias apt-get='sudo aptitude'
 			alias apt-cache='sudo aptitude'
 		else
@@ -50,4 +62,13 @@ alias 'cd~=cd ~'
 # Common shortcuts
 alias ll='ls -lah'
 alias l='ls -aCF'
+
+# =====================
+# Environment variables
+# =====================
+# These affect most systems and are (usually) harmless if run without...
+
+# Sets ls and various commands to use yyyy-mm-dd as the date format
+export TIME_STYLE="long-iso"
+
 

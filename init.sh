@@ -10,6 +10,7 @@ muttrc
 screenrc
 tmux.conf
 shell_common
+bash_profile
 "
 
 for dotfile in $dotfiles

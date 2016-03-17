@@ -8,10 +8,10 @@
 # ==========
 # Without these some options later may break...
 
-[[ "$TERM" == "xterm" ]] && export TERM=xterm-256color
-
 # If not running interactively, don't do anything
-[ -z "$PS1" ] && return
+[[ -z "$PS1" ]] && return
+
+[[ "$TERM" == "xterm" ]] && export TERM=xterm-256color
 
 # =============
 # Shell Options
@@ -55,8 +55,8 @@ fi
 # Check the environment and add aliases across various platforms
 
 # Load basic aliases from common set (zsh & bash compatible)
-if [[ -f .shell_common ]]; then
-	source .shell_common
+if [[ -f $HOME/.shell_common ]]; then
+	source $HOME/.shell_common
 fi
 
 # ===========
@@ -73,19 +73,19 @@ case "$TERM" in xterm*|rxvt*)
 esac
 
 # Check if OpenStack RC file exists:
-if [[ -f .openstack_credentials ]]; then
-	source .openstack_credentials
+if [[ -f $HOME/.openstack_credentials ]]; then
+	source $HOME/.openstack_credentials
 fi
 
 # DEPRECATED: Alias definitions.
-if [ -f ~/.bash_aliases ]; then
+if [ -f $HOME/.bash_aliases ]; then
     echo "bash_aliases is deprecated; move to .bash_local"
-    . ~/.bash_aliases
+    . $HOME/.bash_aliases
 fi
 
 # Local bashrc config (paths etc) (should be the last thing loaded)
-if [ -f ~/.bash_local ]; then
-    . ~/.bash_local
+if [ -f $HOME/.bash_local ]; then
+    . $HOME/.bash_local
 fi
 
 
