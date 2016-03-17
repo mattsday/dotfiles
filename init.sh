@@ -9,6 +9,7 @@ vimrc
 muttrc
 screenrc
 tmux.conf
+shell_common
 "
 
 for dotfile in $dotfiles

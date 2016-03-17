@@ -54,53 +54,10 @@ fi
 # =======================
 # Check the environment and add aliases across various platforms
 
-# If vim exists somewhere, make it the default editor:
-if [[ -x $(which vim 2> /dev/null) ]]; then
-	export VISUAL=$(which vim)
-	export USE_EDITOR=$VISUAL
-	export EDITOR=$VISUAL
-	# Some systems are cruel and have vi + vim installed side-by-side
-	alias vi=$VISUAL
+# Load basic aliases from common set (zsh & bash compatible)
+if [[ -f .shell_common ]]; then
+	source .shell_common
 fi
-
-# If we can sudo dodo!
-if [[ -f /usr/bin/sudo ]]; then
-	# Debian based systems
-	if [[ -f /usr/bin/apt-get ]]; then
-		# I prefer aptitude over apt-get but muscle memory sucks
-		if [[ -e /usr/bin/aptitude ]]; then
-			alias apt-get='sudo aptitude'
-			alias apt-cache='sudo aptitude'
-		else
-			alias apt-get='sudo apt-get'
-		fi
-		alias update='apt-get update && apt-get upgrade'
-	fi
-	# Same if using RPM-based distributions
-	if [[ -f /usr/bin/yum ]]; then
-		alias yum='sudo yum'
-		alias update='yum update'
-	fi
-	# Always restart services as root
-	if [[ -f /usr/sbin/service ]]; then
-		alias service='sudo service'
-	fi
-	if [[ -f /bin/launchctl ]]; then
-		alias launchctl='sudo launchctl'
-	fi
-fi
-
-if [[ -f /usr/local/bin/brew ]]; then
-	alias update='brew update && brew upgrade'
-fi
-
-# Meh, shit happens:
-alias 'cd..=cd ..'
-alias 'cd~=cd ~'
-
-# Common shortcuts
-alias ll='ls -lah'
-alias l='ls -aCF'
 
 # ===========
 # Look & Feel
