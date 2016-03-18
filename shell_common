@@ -65,11 +65,9 @@ fi
 
 # Colour grep output
 alias grep='grep --color=auto'
+alias egrep='egrep --color=auto'
+alias fgrep='fgrep --color=auto'
 export GREP_COLORS="ms=01;32:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36"
-
-# OS X ls colouring (non-gnu ls)
-export CLICOLOR="yes"
-export LSCOLORS="gxhxfxcxcxdxcxcxcxgxgx"
 
 # Meh, shit happens:
 alias 'cd..=cd ..'
@@ -78,6 +76,7 @@ alias 'cd~=cd ~'
 # Common shortcuts
 alias ll='ls -lah'
 alias l='ls -aCF'
+alias l.='ls -d .*'
 
 # =====================
 # Environment variables
@@ -87,4 +86,7 @@ alias l='ls -aCF'
 # Sets ls and various commands to use yyyy-mm-dd as the date format
 export TIME_STYLE="long-iso"
 
+# OS X ls colouring (non-gnu ls)
+export CLICOLOR="yes"
+export LSCOLORS="gxhxfxcxcxdxcxcxcxgxgx"
 
