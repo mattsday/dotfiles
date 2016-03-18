@@ -79,6 +79,13 @@ f() {
 # ===========
 # Specific options that affect the L&F of the shell
 
+# Evalate directory colours if gnu coreutils is present
+if [[ -x $(which dircolors 2> /dev/null) ]]; then
+	eval `$(which dircolors)` && zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+elif [[ -x $(which gdircolors 2> /dev/null) ]]; then
+	eval `$(which gdircolors)` && zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+fi
+
 # Set some completion styles and features
 zstyle ':completion:*:descriptions' format "- %d -"
 zstyle ':completion:*:corrections' format "- %d - (errors %e})"

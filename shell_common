@@ -20,15 +20,23 @@ fi
 
 # Set less as the default pager
 if [[ -x $(which less 2> /dev/null) ]]; then
-    export PAGER=$(which less)
+	export PAGER=$(which less)
+fi
+
+# If running on OS X check for coreutils and use them with colour
+if [[ -x /usr/local/bin/gls ]]; then
+	alias ls='/usr/local/bin/gls --color=auto'
+# Otherwise check if /usr/bin/dircolors exists which is a good sign it's GNU ls
+elif [[ -x /usr/bin/dircolors ]]; then
+	alias ls='ls --color=auto'
 fi
 
 # If we can sudo dodo!
-if [[ -f /usr/bin/sudo ]]; then
+if [[ -x /usr/bin/sudo ]]; then
 	# Debian based systems
-	if [[ -f /usr/bin/apt-get ]]; then
+	if [[ -x /usr/bin/apt-get ]]; then
 		# I prefer aptitude over apt-get but muscle memory sucks
-		if [[ -f /usr/bin/aptitude ]]; then
+		if [[ -x /usr/bin/aptitude ]]; then
 			alias apt-get='sudo aptitude'
 			alias apt-cache='sudo aptitude'
 		else
@@ -37,23 +45,31 @@ if [[ -f /usr/bin/sudo ]]; then
 		alias update='apt-get update && apt-get upgrade'
 	fi
 	# Same if using RPM-based distributions
-	if [[ -f /usr/bin/yum ]]; then
+	if [[ -x /usr/bin/yum ]]; then
 		alias yum='sudo yum'
 		alias update='yum update'
 	fi
 	# Always restart services as root
-	if [[ -f /usr/sbin/service ]]; then
+	if [[ -x /usr/sbin/service ]]; then
 		alias service='sudo service'
 	fi
-	if [[ -f /bin/launchctl ]]; then
+	if [[ -x /bin/launchctl ]]; then
 		alias launchctl='sudo launchctl'
 	fi
 fi
 
 # Create an update alias if homebrew is installed
-if [[ -f /usr/local/bin/brew ]]; then
+if [[ -x /usr/local/bin/brew ]]; then
 	alias update='brew update && brew upgrade'
 fi
+
+# Colour grep output
+alias grep='grep --color=auto'
+export GREP_COLORS="ms=01;32:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36"
+
+# OS X ls colouring (non-gnu ls)
+export CLICOLOR="yes"
+export LSCOLORS="gxhxfxcxcxdxcxcxcxgxgx"
 
 # Meh, shit happens:
 alias 'cd..=cd ..'
