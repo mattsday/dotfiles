@@ -53,9 +53,6 @@ if [[ -x /usr/bin/sudo ]]; then
 	if [[ -x /usr/sbin/service ]]; then
 		alias service='sudo service'
 	fi
-	if [[ -x /bin/launchctl ]]; then
-		alias launchctl='sudo launchctl'
-	fi
 fi
 
 # Create an update alias if homebrew is installed
