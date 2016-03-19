@@ -3,12 +3,30 @@
 # rcfiles load this
 # Latest copy always here: https://github.com/mattsday/dotfiles/
 
+# Set some local utilities as default (this must be top of this file)
+if [[ -d /usr/local/bin ]]; then
+	# Affix /usr/local/bin to PATH as homebrew zsh doesn't do this for some reason
+	export PATH=/usr/local/bin:$PATH
+
+	# If running on OS X check for coreutils and use them with colour
+	if [[ -x /usr/local/bin/gls ]]; then
+		alias ls='/usr/local/bin/gls --color=auto'
+	# Otherwise check if /usr/bin/dircolors exists which is a good sign it's GNU ls
+	elif [[ -x /usr/bin/dircolors ]]; then
+		alias ls='ls --color=auto'
+	fi
+
+	# Create an update alias if homebrew is installed
+	if [[ -x /usr/local/bin/brew ]]; then
+		alias update='brew update && brew upgrade'
+	fi
+fi
+
 # =================
 # Alias definitions
 # =================
 # Check the presence of various utilities and alias them to give them
 # preference ahead of lesser system defaults
-
 # If vim exists somewhere, make it the default editor:
 if [[ -x $(which vim 2> /dev/null) ]]; then
 	export VISUAL=$(which vim)
@@ -21,14 +39,6 @@ fi
 # Set less as the default pager
 if [[ -x $(which less 2> /dev/null) ]]; then
 	export PAGER=$(which less)
-fi
-
-# If running on OS X check for coreutils and use them with colour
-if [[ -x /usr/local/bin/gls ]]; then
-	alias ls='/usr/local/bin/gls --color=auto'
-# Otherwise check if /usr/bin/dircolors exists which is a good sign it's GNU ls
-elif [[ -x /usr/bin/dircolors ]]; then
-	alias ls='ls --color=auto'
 fi
 
 # If we can sudo dodo!
@@ -53,11 +63,6 @@ if [[ -x /usr/bin/sudo ]]; then
 	if [[ -x /usr/sbin/service ]]; then
 		alias service='sudo service'
 	fi
-fi
-
-# Create an update alias if homebrew is installed
-if [[ -x /usr/local/bin/brew ]]; then
-	alias update='brew update && brew upgrade'
 fi
 
 # Colour grep output
