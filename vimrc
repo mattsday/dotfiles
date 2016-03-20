@@ -30,8 +30,10 @@ set spelllang=en_gb
 "================
 "  Look & Feel
 "================
-" Syntax hilighting
-syntax on
+" Syntax hilighting (if enabled and not running vim.tiny)
+if has("syntax")
+	syntax on
+endif
 " Show me where in the file I am at all times (col/line)
 set ruler
 " I always have a black-background in my terminals, tell vim this
