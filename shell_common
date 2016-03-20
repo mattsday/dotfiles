@@ -47,8 +47,9 @@ if [[ -x /usr/bin/sudo ]]; then
 	if [[ -x /usr/bin/apt-get ]]; then
 		# I prefer aptitude over apt-get but muscle memory sucks
 		if [[ -x /usr/bin/aptitude ]]; then
-			alias apt-get='sudo aptitude'
-			alias apt-cache='sudo aptitude'
+			alias aptitude='sudo aptitude'
+			alias apt-get='aptitude'
+			alias apt-cache='$(which aptitude) -F "%1p %40d# (%C) %D %10V"
 		else
 			alias apt-get='sudo apt-get'
 		fi
