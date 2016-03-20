@@ -88,4 +88,4 @@ if [ -f $HOME/.bash_local ]; then
     . $HOME/.bash_local
 fi
 
-
+# vim: syntax=sh

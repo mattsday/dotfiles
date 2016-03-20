@@ -1,10 +1,30 @@
+# Matt Day's custom .muttrc file
+# Latest copy always here: https://github.com/mattsday/dotfiles/
+
+# =====================
+# Mailbox configuration
+# =====================
+# Basic settings to configure the local mailbox
+
+# All systems I use now have a ~/Maildir
 set mbox_type=Maildir
 set folder="~/Maildir"
-set mask="!^\\.[^.]"
 set mbox="~/Maildir"
+set spoolfile="~/Maildir"
+
+# Don't include . or .. folders
+set mask="!^\\.[^.]"
+
+# Set sent and drafts folders
 set record="+.Sent"
 set postponed="+.Drafts"
-set spoolfile="~/Maildir"
+
+# ===================
+# Keybinds and Macros
+# ===================
+# Add a few nice to haves here
+
+# Build local list of mailboxes
 mailboxes `echo -n "+ "; gfind ~/Maildir -maxdepth 1 -type d -name ".*" -printf "+'%f' "`
 macro index c "<change-folder>?<toggle-mailboxes>" "open a different folder"
 macro pager c "<change-folder>?<toggle-mailboxes>" "open a different folder"
@@ -12,41 +32,12 @@ macro index C "<copy-message>?<toggle-mailboxes>" "copy a message to a mailbox"
 macro index M "<save-message>?<toggle-mailboxes>" "move a message to a mailbox"
 macro compose A "<attach-message>?<toggle-mailboxes>" "attach message(s) to this message"
 
+# ===========
+# Look & Feel 
+# ===========
+# Set various L&F options
 
-
-
-
-# Derived from: ataualpa.altervista.org (Il nirvana con mutt)
-# COLORS FOR BLACK BACKGROUND
-
-# colors:
-
-# white
-# brightwhite
-# black
-# green
-# magenta
-# blue
-# cyan
-# yellow
-# brightyellow
-# red
-# brightred
-# default (transparent)
-# colorx
-# color0 = black
-# color1 = red
-# color2 = green
-# color3 = black
-# color4 = blue
-# color5 = violet
-# color6 = cyan
-# color7 = gray
-# color8 = none
-# color9 = none
-
-
-# text colors - general functions
+# Configure colours for a black terminal
 color normal	white		default				# normal text
 color status	brightgreen	blue				# status bar, last and first row
 color search	brightyellow	red				# search results
@@ -54,7 +45,7 @@ color message	brightyellow	default				# information messages, last row
 color error	brightred	default				# error messages, last row
 color markers	brightred	default				# the + sign at the start of broken lines
 
-# text colors - message index and attachment menu
+# text colours - message index and attachment menu
 color indicator	brightwhite	red				# current message selected
 color tree	brightred	default				# Threads' arrow
 color index	brightwhite	default ~F			# important messages 	! flag - command "F"
@@ -63,16 +54,8 @@ color index	magenta		default ~T			# tagged messages	* flag - command "t"
 color index	green		default ~U			# unread messages
 color index	brightblue	default ~D			# deleted messages      D flag - commands "d"/"u"
 
-# Score colors
-#color index	magenta		default '(~n 1-4)'		# score 1-4
-#color index	green		default '(~n 5-7)'		# score 5-7
-#color index	brightblue	default '(~n 8-10)'		# score 8-10
-#color index	white		default '(~n 11-50)'		# score 11-50
-#color index	brightred	default '(~n 51-100)'		# score 51-100
-
-# text colors - pager
+# text colours - pager
 color hdrdefault green		default				# headers
-#color header	yellow		default "^(from|subject|to):"	# header from: subject: to:
 color bold	green		default				# bold on mails' body
 color underline	yellow		default				# underlined
 color attachment color5		default				# attachments
@@ -88,8 +71,6 @@ color quoted6	red		default
 color quoted7	red		default
 color quoted8	red		default
 color quoted9	red		default
-#color body       brightgreen    default  "((ftp|http|https)://|(file|mailto|news):|www\\.)[-a-zA-Z0-9_.:]\
-#*[a-zA-Z0-9](/[^][{} \t\n\r\"<>()]*[^][{} \t\n\r\"<>().,:!])?/?"
 
 # Ronald J Kimball's url regexp. mutt-user 04/05/28
 color body	brightyellow	default	"(https?|ftp|gopher|finger)://([^"'"'"' \t\r\n)>.,!?&]\
@@ -97,7 +78,7 @@ color body	brightyellow	default	"(https?|ftp|gopher|finger)://([^"'"'"' \t\r\n)>
 color body       brightred      default  "[-a-zA-Z_0-9.+]+@[-a-zA-Z_0-9.]+"
 color body       green          default  "(^| )_[-a-zA-Z0-9_]+_[,.?]?[ \n]"
 
-# enphasized text
+# enphasiszed text
 color body	green		default		"[*][-[:alnum:]]+[*]"
 color body	green		default		"[ ]_[-[:alnum:]]+_([ ]|\.)"
 
