@@ -1,0 +1,84 @@
+# Matt Day's ssh config file - not useful for anyone but sync'd with the rest of my dotfiles
+# Latest copy always here: https://github.com/mattsday/dotfiles/
+
+# ==============
+# Public Systems
+# ==============
+# Public systems I connect to
+
+# Personal server
+Host new-ph33r
+	Hostname darwin.fragilegeek.com
+
+# Switch in my office
+Host office-switch
+	Hostname 10.86.0.2
+
+# ========================
+# Cisco Production Systems
+# ========================
+# Mostly aliases to Cisco systems I connect to
+
+# Cisco port fowarding (uses token for auth, use in a pinch if VPN is down)
+Host cisco-forward
+	Hostname ssh-ams-2.cisco.com
+	User matday
+	LocalForward 80 mail.cisco.com:80
+	LocalForward 389 mail.cisco.com:389
+	LocalForward 993 mail.cisco.com:993
+	LocalForward 3268 mail.cisco.com:3268
+
+# Cisco home page server (people.cisco.com)
+Host people
+	HostName people.cisco.com
+	User matday
+
+# Cisco ssh host
+Host ssh.cisco.com
+	HostName ssh.cisco.com
+	User matday
+
+# =================
+# Cisco Lab Systems
+# =================
+# Labs, internal devices etc
+
+# CloudFoundry bootstrap
+Host cf-bootstrap
+	Hostname 10.51.8.164
+	User ubuntu
+
+# MANTL bootstrap
+Host mantl-bootstrap
+	HostName 10.51.8.167
+	User ubuntu
+
+# OpenStack Development Systems
+Host openstack-1
+	Hostname 10.51.8.150
+	User openstack
+Host openstack-2
+	Hostname 10.51.8.151
+	User openstack
+Host openstack-3
+	Hostname 10.51.8.152
+	User openstack
+Host devstack
+	Hostname 10.51.8.150
+	User openstack
+
+# UCS Director Demo Server
+Host ucsd-demo
+	Hostname 10.52.208.38
+	User shelladmin
+
+# UCSD Dev
+Host ucsd-dev
+	Hostname 10.52.208.30
+	User shelladmin
+
+Host shellserver
+	Hostname shellserver.ukidcv.cisco.com
+	User matt
+
+# vim: syntax=sshconfig

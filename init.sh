@@ -17,3 +17,8 @@ for dotfile in $dotfiles
 do
 	ln -fs $PWD/$dotfile $HOME/.$dotfile
 done
+
+# Add ssh config file:
+if [[ -d $HOME/.ssh ]]; then
+	ln -fs $PWD/ssh_config $HOME/.ssh/config
+fi

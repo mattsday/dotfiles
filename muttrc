@@ -83,5 +83,3 @@ color body	green		default		"[*][-[:alnum:]]+[*]"
 color body	green		default		"[ ]_[-[:alnum:]]+_([ ]|\.)"
 
 # vim: syntax=muttrc
-
-
