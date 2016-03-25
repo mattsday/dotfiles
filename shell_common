@@ -28,8 +28,14 @@ fi
 # Check the presence of various utilities and alias them to give them
 # preference ahead of lesser system defaults
 
-# If vim exists somewhere, make it the default editor:
-if [[ -x $(which vim 2> /dev/null) ]]; then
+# Prefer nvim over vim if its config file exists as well
+if [[ -x $(which nvim 2> /dev/null) && -d $HOME/.config/nvim ]]; then
+	export VISUAL=$(which nvim)
+	export USE_EDITOR=$VISUAL
+	export EDITOR=$VISUAL
+	alias vi=$VISUAL
+# Else if vim exists somewhere, make it the default editor:
+elif [[ -x $(which vim 2> /dev/null) ]]; then
 	export VISUAL=$(which vim)
 	export USE_EDITOR=$VISUAL
 	export EDITOR=$VISUAL
