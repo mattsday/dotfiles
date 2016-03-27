@@ -136,14 +136,14 @@ if [[ -f $HOME/.openstack_credentials ]]; then
 	source $HOME/.openstack_credentials
 fi
 
-# Fish style syntax highlighting
-if [[ -f $HOME/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
-	source $HOME/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-fi
-
-# Load local system stuff (local PATH, aliases etc) - this should be loaded last
+# Load local system stuff (local PATH, aliases etc)
 if [[ -f $HOME/.zsh_local ]]; then
 	source $HOME/.zsh_local
+fi
+
+# Finally, load fish style syntax highlighting if available
+if [[ -f $HOME/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+	source $HOME/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
 
 # vim: syntax=zsh
