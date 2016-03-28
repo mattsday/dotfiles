@@ -19,9 +19,10 @@ CORP_2_WHITELIST="$(echo 10.51.8.{0..255} | sed 's/ /,/g')"
 FE_WHITELIST="$(echo 192.168.210.{0..255} | sed 's/ /,/g')"
 APP_WHITELIST="$(echo 192.168.211.{0..255} | sed 's/ /,/g')"
 BE_WHITELIST="$(echo 192.168.212.{0..255} | sed 's/ /,/g')"
-export no_proxy=".cisco.com,127.0.0.1,localhost,local.home,0.0.0.0"
-export no_proxy="$no_proxy,$CORP_1_WHITELIST,$CORP_2_WHITELIST"
-export no_proxy="$no_proxy,$FE_WHITELIST,$APP_WHITELIST,$BE_WHITELIST"
+no_proxy=".cisco.com,127.0.0.1,localhost,local.home,0.0.0.0"
+no_proxy+="$CORP_1_WHITELIST,$CORP_2_WHITELIST"
+no_proxy+="$FE_WHITELIST,$APP_WHITELIST,$BE_WHITELIST"
+export no_proxy
 export NO_PROXY=$no_proxy
 
 # vim: syntax=zsh
