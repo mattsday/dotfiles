@@ -5,12 +5,14 @@
 
 # Set some local utilities as default (this must be top of this file)
 if [[ -d /usr/local/bin ]]; then
-	# Affix /usr/local/bin to PATH as homebrew zsh doesn't do this for some reason
+	# Affix /usr/local/bin to PATH as homebrew zsh doesn't do this for some
+	# reason
 	export PATH=/usr/local/bin:$PATH
 
 	# Create an update alias if homebrew is installed
 	if [[ -x /usr/local/bin/brew ]]; then
-		alias update='brew update && brew upgrade --all; brew upgrade wine --devel 2>/dev/null; brew cleanup; brew doctor'
+		alias update="brew update && brew upgrade --all; brew upgrade \
+			wine --devel 2>/dev/null; brew cleanup; brew doctor"
 	fi
 fi
 
@@ -100,11 +102,12 @@ export TIME_STYLE="long-iso"
 export CLICOLOR="yes"
 export LSCOLORS="gxhxfxcxcxdxcxcxcxgxgx"
 
-# Check if docker-machine exists, if there's a 'dev' one defined and it's running
-# ...if so grab its environment variables
+# Check if docker-machine exists, if there's a 'dev' one defined and it's
+# running... if so grab its environment variables
 if [[ -x $(which docker-machine 2> /dev/null) ]]; then
 	if [[ -d $HOME/.docker/machine/machines/dev ]]; then
-		[[ "$(docker-machine status dev 2>/dev/null)" == "Running" ]] && eval $(docker-machine env dev)
+		[[ "$(docker-machine status dev 2>/dev/null)" == "Running" ]] \
+		&& eval $(docker-machine env dev)
 	fi
 fi
 

@@ -27,12 +27,15 @@ autoload -U zutil
 # =============
 # Shell Options
 # =============
-# Various options, features and keybinds that make life that little bit better...
+# Various options, features and keybinds that make life a little bit better...
 
 for option (
-	noautomenu 	# don't select stuff automatically when tabbing if there are options
-	auto_cd 	# Auto CD (i.e. can type '..' to change to parent directory, or 'bin' to change to ./bin)
-	extendedglob 	# Expanded globbing (i.e. allow 'ls -d ^*.jpg' to show non-jpg files)
+	noautomenu 	# don't select stuff automatically when tabbing if there
+			# are options
+	auto_cd 	# Auto CD (i.e. can type '..' to change to 
+			# parent directory, or 'bin' to change to ./bin)
+	extendedglob 	# Expanded globbing (i.e. allow 'ls -d ^*.jpg' to show 
+			# non-jpg files)
 	noclobber 	# Require '>!' instead of '>' to overwrite a file
 	correct		# Correct common errors
 	prompt_subst	# Allow dynamic prompt
@@ -81,9 +84,11 @@ f() {
 
 # Evalate directory colours if gnu coreutils is present
 if [[ -x $(which dircolors 2> /dev/null) ]]; then
-	eval `$(which dircolors)` && zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+	eval `$(which dircolors)` && zstyle ':completion:*' list-colors \
+		${(s.:.)LS_COLORS}
 elif [[ -x $(which gdircolors 2> /dev/null) ]]; then
-	eval `$(which gdircolors)` && zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+	eval `$(which gdircolors)` && zstyle ':completion:*' list-colors \
+		${(s.:.)LS_COLORS}
 fi
 
 # Set some completion styles and features
@@ -109,10 +114,12 @@ zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path ~/.zsh_cache
 
 # Custom prompt (coloured in yellow and cyan): user@host:~%
-PROMPT="%{$fg_bold[yellow]%}%n@%m%{$reset_color%}:%{$fg_bold[cyan]%}%~%{$reset_color%}%# %{$reset_color%}"
+PROMPT="%{$fg_bold[yellow]%}%n@%m%{$reset_color%}:%{$fg_bold[cyan]%}%~"
+PROMPT+="%{$reset_color%}%# %{$reset_color%}"
 
 # Date on right-side including return code + git info [0][09:30:00]
-RPROMPT='%{$reset_color%}%F{green}${vcs_info_msg_0_}%{$reset_color%}[%?]%{$fg_bold[grey]%}[%D{%H:%M:%S}]%{$reset_color%}'
+RPROMPT='%{$reset_color%}%F{green}${vcs_info_msg_0_}%{$reset_color%}[%?]'
+RPROMPT+='%{$fg_bold[grey]%}[%D{%H:%M:%S}]%{$reset_color%}'
 
 # Update the terminal title and version control info
 case $TERM in
@@ -129,7 +136,8 @@ esac
 # ======================
 # Plug-ins and Resources
 # ======================
-# Check for (and source) additional plugins and resources, such as local config files
+# Check for (and source) additional plugins and resources, such as local config
+# files
 
 # Check if OpenStack RC file exists:
 if [[ -f $HOME/.openstack_credentials ]]; then

@@ -23,8 +23,8 @@ set nocompatible
 "================
 "  Spelling
 "================
-" To spell check a document, you will need to enter :set spell, this just defaults
-" to British English (my preference)
+" To spell check a document, you will need to enter :set spell, this just 
+" defaults to British English (my preference)
 set spelllang=en_gb
 
 "================
@@ -49,6 +49,9 @@ set autoindent
 set smartindent
 " Hilight matching parenthesis etc
 set showmatch
+" Highlight after column 80
+let &colorcolumn=join(range(81,999),",")
+highlight ColorColumn ctermbg=233 guibg=#121212
 
 "================
 "    Editing

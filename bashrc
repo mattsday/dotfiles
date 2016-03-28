@@ -16,7 +16,7 @@
 # =============
 # Shell Options
 # =============
-# Various options, features and keybinds that make life that little bit better...
+# Various options, features and keybinds that make life a little bit better...
 
 # Don't put duplicate lines in the history
 export HISTCONTROL=ignoredups
@@ -25,15 +25,19 @@ export HISTCONTROL=ignoredups
 shopt -s checkwinsize
 
 
-shopt -s extglob         # Expanded globbing (i.e. allow 'ls -d ^*.jpg' to show non-jpg files)
+shopt -s extglob         # Expanded globbing (i.e. allow 'ls -d ^*.jpg' to show 
+			 # non-jpg files)
 shopt -s cdspell         # Mispelled directory names
 set -o noclobber         # Require '>|' instead of '>' to overwrite a file
 
-# Apple bundle a ridiculously old version of bash with OSX due to their objection to GPL3...
-# Guess us users must write crappy hacks to work around it... thanks Apple!
+# Apple bundle a ridiculously old version of bash with OSX due to their
+# objection to GPL3... Guess us users must write crappy hacks to work around
+# it... thanks Apple!
 if [[ $BASH_VERSION == 4* ]]; then
-	shopt -s autocd		# Auto CD (i.e. can type '..' to change to parent directory, or 'bin' to change to ./bin)
-	shopt -s dirspell	# Correct spelling on directory names during globbing
+	shopt -s autocd		# Auto CD (i.e. can type '..' to change to 
+				# parent directory, or 'bin' to change to ./bin)
+	shopt -s dirspell	# Correct spelling on directory names during
+				# globbing
 fi
 
 # Make auto completion more zsh-like
