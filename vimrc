@@ -42,6 +42,8 @@ set background=dark
 if has("gui_vimr")
 	highlight Normal guibg=Black
 endif
+" Disable the mouse (enabled by default in neovim)
+set mouse-=a
 " Auto-indent and be smart about it (note, type :set paste to paste text)
 set autoindent
 set smartindent

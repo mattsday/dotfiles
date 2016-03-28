@@ -11,6 +11,7 @@ screenrc
 tmux.conf
 shell_common
 bash_profile
+proxy_settings
 "
 
 for dotfile in $dotfiles
