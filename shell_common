@@ -84,6 +84,7 @@ export GREP_COLORS="ms=01;32:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36"
 # Meh, shit happens:
 alias 'cd..=cd ..'
 alias 'cd~=cd ~'
+alias 'tmuxa=tmux a'
 
 # Common shortcuts
 alias ll='ls -lah'
