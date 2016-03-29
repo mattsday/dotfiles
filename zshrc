@@ -115,7 +115,7 @@ zstyle ':completion:*' cache-path ~/.zsh_cache
 
 # Custom prompt (coloured in yellow and cyan):
 # If the user is 'matt' don't print it
-if [[ $user == "matt" ]]; then
+if [[ $USER == "matt" ]]; then
 PROMPT="%{$fg_bold[yellow]%}%m%{$reset_color%}:%{$fg_bold[cyan]%}%~"
 # else format it user@host:%~
 else
