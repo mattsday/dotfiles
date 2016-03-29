@@ -114,7 +114,8 @@ zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path ~/.zsh_cache
 
 # Custom prompt (coloured in yellow and cyan): user@host:~%
-PROMPT="%{$fg_bold[yellow]%}%n@%m%{$reset_color%}:%{$fg_bold[cyan]%}%~"
+#PROMPT="%{$fg_bold[yellow]%}%n@%m%{$reset_color%}:%{$fg_bold[cyan]%}%~"
+PROMPT="%{$fg_bold[yellow]%}%m%{$reset_color%}:%{$fg_bold[cyan]%}%~"
 PROMPT+="%{$reset_color%}%# %{$reset_color%}"
 
 # Date on right-side including return code + git info [0][09:30:00]
