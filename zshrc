@@ -113,9 +113,15 @@ zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b:%r'
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path ~/.zsh_cache
 
-# Custom prompt (coloured in yellow and cyan): user@host:~%
-#PROMPT="%{$fg_bold[yellow]%}%n@%m%{$reset_color%}:%{$fg_bold[cyan]%}%~"
+# Custom prompt (coloured in yellow and cyan):
+# If the user is 'matt' don't print it
+if [[ $user == "matt" ]]; then
 PROMPT="%{$fg_bold[yellow]%}%m%{$reset_color%}:%{$fg_bold[cyan]%}%~"
+# else format it user@host:%~
+else
+	PROMPT="%{$fg_bold[yellow]%}%n@%m%{$reset_color%}:%{$fg_bold[cyan]%}%~"
+fi
+
 PROMPT+="%{$reset_color%}%# %{$reset_color%}"
 
 # Date on right-side including return code + git info [0][09:30:00]
