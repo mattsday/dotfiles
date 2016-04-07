@@ -109,6 +109,9 @@ zstyle ':vcs_info:*' actionformats '(%s)-[%b|%a]'
 zstyle ':vcs_info:*' formats       '(%s)-[%b]'
 zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b:%r'
 
+# Use the same completion for mosh as ssh:
+compdef mosh=ssh
+
 # Enable caching of completion output to speed it up
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path ~/.zsh_cache
