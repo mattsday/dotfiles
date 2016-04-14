@@ -138,7 +138,7 @@ case $TERM in
 		# Check directory for git etc
 		vcs_info
 		# Print xterm title (user@host:~)
-		print -Pn "\e]0;%n@%m: %~\a"
+		print -Pn "\e]0;%m: %~\a"
 	}
         ;;
 esac
