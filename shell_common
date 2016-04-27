@@ -117,5 +117,7 @@ if [[ -f $HOME/.enable_proxy ]]; then
 	[[ -f $HOME/.proxy_settings ]] && source $HOME/.proxy_settings
 fi
 
+# Opt out of homebrew fucking analytics
+export HOMEBREW_NO_ANALYTICS=1
 
 # vim: syntax=zsh
