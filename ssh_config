@@ -73,6 +73,11 @@ Host ucsd-demo
 	Hostname 10.52.208.38
 	User shelladmin
 
+# UCSD 3PAR dev
+Host 3par-dev
+	Hostname 10.52.208.91
+	User shelladmin
+
 # UCSD Dev
 Host ucsd-dev
 	Hostname 10.52.208.30

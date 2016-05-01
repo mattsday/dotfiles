@@ -69,7 +69,11 @@ fi
 # Specific options that affect the L&F of the shell
 
 # Custom prompt (coloured in yellow and cyan): user@host:~%
-PS1='\[\033[01;33m\]\u@\h\[\033[00m\]:\[\033[01;36m\]\w\[\033[00m\]\$ '
+if [[ $USER == "matt" ]]; then
+	PS1='\[\033[01;33m\]\h\[\033[00m\]:\[\033[01;36m\]\w\[\033[00m\]\$ '
+else
+	PS1='\[\033[01;33m\]\u@\h\[\033[00m\]:\[\033[01;36m\]\w\[\033[00m\]\$ '
+fi
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in xterm*|rxvt*)
