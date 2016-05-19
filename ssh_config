@@ -15,6 +15,9 @@ Host new-ph33r
 Host office-switch
 	Hostname 10.86.0.2
 
+Host zaphod
+	Hostname zaphod.fragilegeek.com
+
 # ========================
 # Cisco Production Systems
 # ========================
