@@ -62,11 +62,11 @@ Host mantl-bootstrap
 
 # OpenStack ACI Lab
 Host aci-openstack-1
-	HostName 10.52.208.6
+	HostName aci-openstack-1.ukidcv.cisco.com
 	User openstack
 
 Host aci-openstack-2
-	HostName 10.52.208.7
+	HostName aci-openstack-2.ukidcv.cisco.com
 	User openstack
 
 # OpenStack Development Systems
