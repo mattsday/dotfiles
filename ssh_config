@@ -18,6 +18,9 @@ Host office-switch
 Host zaphod
 	Hostname zaphod.fragilegeek.com
 
+Host home-openstack
+	Hostname 2001:8b0:ccf:c4aa:250:56ff:fe24:5324
+
 # ========================
 # Cisco Production Systems
 # ========================
