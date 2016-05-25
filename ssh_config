@@ -57,6 +57,15 @@ Host mantl-bootstrap
 	HostName 10.51.8.167
 	User ubuntu
 
+# OpenStack ACI Lab
+Host aci-openstack-1
+	HostName 10.52.208.6
+	User openstack
+
+Host aci-openstack-2
+	HostName 10.52.208.7
+	User openstack
+
 # OpenStack Development Systems
 Host openstack-1
 	Hostname 10.51.8.150
