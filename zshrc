@@ -105,7 +105,7 @@ zstyle ':completion:*' rehash yes
 # Native Git directory information
 autoload -Uz vcs_info
 zstyle ':vcs_info:*' enable git svn
-zstyle ':vcs_info:*' actionformats '(%s)-[%b|%a]'
+zstyle ':vcs_info:*' actionformats '(%s)-[%b|%a] (%a)'
 zstyle ':vcs_info:*' formats       '(%s)-[%b]'
 zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b:%r'
 
