@@ -83,6 +83,16 @@ Host devstack
 	Hostname 10.51.8.150
 	User openstack
 
+# Nexus switches
+Host 10.52.208.1
+	User admin
+
+Host 10.52.208.2
+	User admin
+
+Host 10.52.208.3
+	User admin
+
 # UCS Director Demo Server
 Host ucsd-demo
 	Hostname 10.52.208.38
