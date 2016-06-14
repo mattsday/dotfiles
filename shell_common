@@ -69,6 +69,13 @@ if [[ -x /usr/bin/sudo ]]; then
 		alias yum='sudo yum'
 		alias update='yum update'
 	fi
+	# Oh Fedora you special little turkey...
+	if [[ -x /usr/bin/dnf ]]; then
+		alias dnf='sudo dnf'
+		alias yum='dnf'
+		alias update='dnf update'
+	fi
+
 	# Always restart services as root
 	if [[ -x /usr/sbin/service ]]; then
 		alias service='sudo service'
