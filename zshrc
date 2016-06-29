@@ -72,11 +72,6 @@ if [[ -f $HOME/.shell_common ]]; then
 	source $HOME/.shell_common
 fi
 
-# Find function to quickly look for things in pwd
-f() {
-	find . -iname "*$1*"
-}
-
 # ===========
 # Look & Feel
 # ===========

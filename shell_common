@@ -98,6 +98,11 @@ alias ll='ls -lah'
 alias l='ls -aCF'
 alias l.='ls -d .*'
 
+# Find function to quickly look for things in pwd
+f() {
+	find . -iname "*$1*"
+}
+
 # =====================
 # Environment variables
 # =====================
