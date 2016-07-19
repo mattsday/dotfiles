@@ -11,8 +11,7 @@ if [[ -d /usr/local/bin ]]; then
 
 	# Create an update alias if homebrew is installed
 	if [[ -x /usr/local/bin/brew ]]; then
-		alias update="brew update && brew upgrade --all; brew upgrade \
-			wine --devel 2>/dev/null; brew cleanup; brew doctor"
+		alias update="brew update && brew upgrade --all; brew upgrade; brew cleanup; brew doctor"
 	fi
 fi
 
