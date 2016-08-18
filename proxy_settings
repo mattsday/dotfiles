@@ -1,3 +1,4 @@
+#!/bin/bash
 # This file loads the Cisco proxy settings.
 # Latest copy always here: https://github.com/mattsday/dotfiles/
 
