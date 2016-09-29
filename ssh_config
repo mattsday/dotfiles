@@ -42,6 +42,30 @@ Host ssh.cisco.com
 	HostName ssh.cisco.com
 	User matday
 
+# ============
+# Cloud Center
+# ============
+
+Host ccm
+	Hostname cloud-center-ccm.ukidcv.cisco.com
+	User centos
+	IdentityFile ~/lab_id_rsa
+
+Host cco
+        Hostname cloud-center-cco.ukidcv.cisco.com
+        User centos
+        IdentityFile ~/lab_id_rsa
+
+Host cc-rabbit
+        Hostname cloud-center-rabbit.ukidcv.cisco.com
+        User centos
+        IdentityFile ~/lab_id_rsa
+
+Host cc-mon
+        Hostname cloud-center-monitor.ukidcv.cisco.com
+        User centos
+        IdentityFile ~/lab_id_rsa
+
 # =================
 # Cisco Lab Systems
 # =================
