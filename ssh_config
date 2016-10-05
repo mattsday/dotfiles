@@ -76,8 +76,6 @@ Host cc-rabbit-vc
         User centos
         IdentityFile ~/lab_id_rsa
 	
-
-
 # =================
 # Cisco Lab Systems
 # =================
