@@ -119,15 +119,6 @@ export TIME_STYLE="long-iso"
 export CLICOLOR="yes"
 export LSCOLORS="gxhxfxcxcxdxcxcxcxgxgx"
 
-# Check if docker-machine exists, if there's a 'dev' one defined and it's
-# running... if so grab its environment variables
-if [[ -x $(which docker-machine 2> /dev/null) ]]; then
-	if [[ -d $HOME/.docker/machine/machines/dev ]]; then
-		[[ "$(docker-machine status dev 2>/dev/null)" == "Running" ]] \
-		&& eval $(docker-machine env dev)
-	fi
-fi
-
 # Do we need to load proxy settings?
 if [[ -f $HOME/.enable_proxy ]]; then
 	[[ -f $HOME/.proxy_settings ]] && source $HOME/.proxy_settings
