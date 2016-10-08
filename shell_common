@@ -74,6 +74,11 @@ if [[ -x /usr/bin/sudo ]]; then
 		alias yum='dnf'
 		alias update='dnf update'
 	fi
+	# SUSE based distributions
+	if [[ -x /usr/bin/yast ]]; then
+		alias zypper='sudo zypper'
+		alias update='zypper update'
+	fi
 
 	# Always restart services as root
 	if [[ -x /usr/sbin/service ]]; then
