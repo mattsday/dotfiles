@@ -75,7 +75,7 @@ if [[ -x /usr/bin/sudo ]]; then
 		alias update='dnf update'
 	fi
 	# SUSE based distributions
-	if [[ -x /usr/bin/yast ]]; then
+	if [[ -x /usr/bin/zypper ]]; then
 		alias zypper='sudo zypper'
 		alias update='zypper update'
 	fi
