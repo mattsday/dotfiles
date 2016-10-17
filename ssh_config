@@ -49,37 +49,42 @@ Host ssh.cisco.com
 Host ccm
 	Hostname cloud-center-ccm.ukidcv.cisco.com
 	User centos
-	IdentityFile ~/lab_id_rsa
+	IdentityFile ~/.ssh/lab_id_rsa
 
 Host cc-mon
         Hostname cloud-center-monitor.ukidcv.cisco.com
         User centos
-        IdentityFile ~/lab_id_rsa
+        IdentityFile ~/.ssh/lab_id_rsa
 
 Host cco-os
         Hostname cloud-center-cco-os.ukidcv.cisco.com
         User centos
-        IdentityFile ~/lab_id_rsa
+        IdentityFile ~/.ssh/lab_id_rsa
 
 Host cc-rabbit-os
         Hostname cloud-center-rabbit-os.ukidcv.cisco.com
         User centos
-        IdentityFile ~/lab_id_rsa
+        IdentityFile ~/.ssh/lab_id_rsa
 	
 Host cco-vc
         Hostname cloud-center-cco-vc.ukidcv.cisco.com
         User centos
-        IdentityFile ~/lab_id_rsa
+        IdentityFile ~/.ssh/lab_id_rsa
 
 Host cc-rabbit-vc
         Hostname cloud-center-rabbit-vc.ukidcv.cisco.com
         User centos
-        IdentityFile ~/lab_id_rsa
+        IdentityFile ~/.ssh/lab_id_rsa
 
 Host cc-repo
         Hostname 10.51.8.122
         User centos
-        IdentityFile ~/lab_id_rsa
+        IdentityFile ~/.ssh/lab_id_rsa
+
+Host cc-bundle
+        Hostname 10.52.208.198
+        User centos
+        IdentityFile ~/.ssh/lab_id_rsa
 
 # =================
 # Cisco Lab Systems
@@ -89,13 +94,12 @@ Host cc-repo
 Host gitlab
 	Hostname 10.51.8.175
 	User ubuntu
-	IdentityFile ~/lab_id_rsa
+	IdentityFile ~/.ssh/lab_id_rsa
 
 Host jenkins
 	Hostname 10.51.8.173
 	User ubuntu
-	IdentityFile ~/lab_id_rsa
-
+	IdentityFile ~/.ssh/lab_id_rsa
 
 
 # CloudFoundry bootstrap
