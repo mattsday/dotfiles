@@ -75,11 +75,28 @@ Host cc-rabbit-vc
         Hostname cloud-center-rabbit-vc.ukidcv.cisco.com
         User centos
         IdentityFile ~/lab_id_rsa
-	
+
+Host cc-repo
+        Hostname 10.51.8.122
+        User centos
+        IdentityFile ~/lab_id_rsa
+
 # =================
 # Cisco Lab Systems
 # =================
 # Labs, internal devices etc
+
+Host gitlab
+	Hostname 10.51.8.175
+	User ubuntu
+	IdentityFile ~/lab_id_rsa
+
+Host jenkins
+	Hostname 10.51.8.173
+	User ubuntu
+	IdentityFile ~/lab_id_rsa
+
+
 
 # CloudFoundry bootstrap
 Host cf-bootstrap
