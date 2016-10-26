@@ -83,8 +83,7 @@ Host cc-repo
 
 Host cc-bundle
         Hostname 10.52.208.198
-        User centos
-        IdentityFile ~/.ssh/lab_id_rsa
+        User matt
 
 # =================
 # Cisco Lab Systems
@@ -131,8 +130,8 @@ Host openstack-2
 Host openstack-3
 	Hostname 10.51.8.152
 	User openstack
-Host devstack
-	Hostname 10.51.8.150
+Host openstack-4
+	Hostname 10.51.8.153
 	User openstack
 
 # Nexus switches
