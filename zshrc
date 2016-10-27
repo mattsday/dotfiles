@@ -21,7 +21,7 @@ autoload -Uz compinit && compinit
 # Load some utilities such as zstyle and zformat
 autoload -U zutil
 
-# 256 colour support pls
+# If a terminal is bold enough to claim XTERM let's assume it can do 256 colours!
 [[ "$TERM" == "xterm" ]] && export TERM=xterm-256color
 
 # =============

@@ -11,6 +11,7 @@
 # If not running interactively, don't do anything
 [[ -z "$PS1" ]] && return
 
+# If a terminal is bold enough to claim XTERM let's assume it can do 256 colours!
 [[ "$TERM" == "xterm" ]] && export TERM=xterm-256color
 
 # =============
