@@ -108,6 +108,11 @@ f() {
 	find . -iname "*$1*"
 }
 
+# Grep find
+gf() {
+	grep -Ri "$1"
+}
+
 # =====================
 # Environment variables
 # =====================
