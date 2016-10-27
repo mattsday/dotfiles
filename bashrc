@@ -26,9 +26,10 @@ export HISTCONTROL=ignoredups
 shopt -s checkwinsize
 
 
-shopt -s extglob         # Expanded globbing (i.e. allow 'ls -d ^*.jpg' to show non-jpg files)
-shopt -s cdspell         # Mispelled directory names
-set -o noclobber         # Require '>|' instead of '>' to overwrite a file
+shopt -s extglob        # Expanded globbing (i.e. allow 'ls -d ^*.jpg' to show non-jpg files)
+shopt -s cdspell        # Mispelled directory names
+set -o noclobber        # Require '>|' instead of '>' to overwrite a file
+set +o histexpand	# Disable history expansion (i.e. make echo "Hello World!" work!)
 
 # Apple bundle a ridiculously old version of bash with OSX due to their
 # objection to GPL3... Guess us users must write crappy hacks to work around
