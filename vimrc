@@ -2,11 +2,6 @@
 " Latest version always here: https://github.com/mattsday/dotfiles/
 
 "================
-"  256 Colours!
-"================
-set t_Co=256
-
-"================
 "    General
 "================
 " I'm lazy and launch vim with 'vi' - when I do this I don't want to emulate
@@ -49,9 +44,6 @@ set autoindent
 set smartindent
 " Hilight matching parenthesis etc
 set showmatch
-" Highlight after column 80
-let &colorcolumn=join(range(81,999),",")
-highlight ColorColumn ctermbg=233 guibg=#121212
 
 "================
 "    Editing
