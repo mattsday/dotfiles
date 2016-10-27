@@ -68,12 +68,24 @@ fi
 # ===========
 # Specific options that affect the L&F of the shell
 
-# Custom prompt (coloured in yellow and cyan): user@host:~%
-if [[ $USER == "matt" ]]; then
-	PS1='\[\033[01;33m\]\h\[\033[00m\]:\[\033[01;36m\]\w\[\033[00m\]\$ '
+# Test for number of colours
+colours=$(tput colors)
+
+if (( $colours >= 8 )); then
+	# Custom prompt (coloured in yellow and cyan): user@host:~%
+	if [[ $USER == "matt" ]]; then
+		PS1='\[\033[01;33m\]\h\[\033[00m\]:\[\033[01;36m\]\w\[\033[00m\]\$ '
+	else
+		PS1='\[\033[01;32m\]\u\[\033[00m\]@\[\033[01;33m\]\h\[\033[00m\]:\[\033[01;36m\]\w\[\033[00m\]\$ '
+	fi
 else
-	PS1='\[\033[01;33m\]\u@\h\[\033[00m\]:\[\033[01;36m\]\w\[\033[00m\]\$ '
+	if [[ $USER == "matt" ]]; then
+		PS1='\h\:\w\$'
+	else
+		PS1='\u@\h\:\w\$'
+	fi
 fi
+
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in xterm*|rxvt*)

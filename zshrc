@@ -111,17 +111,26 @@ compdef mosh=ssh
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path ~/.zsh_cache
 
-# Custom prompt (coloured in yellow and cyan):
-# If the user is 'matt' don't print it
-if [[ $USER == "matt" ]]; then
-	PROMPT="%{$fg_bold[yellow]%}%m%{$reset_color%}:%{$fg_bold[cyan]%}%~"
-# else format it user@host:%~
-else
-#	PROMPT="%{$fg_bold[yellow]%}%n@%m%{$reset_color%}:%{$fg_bold[cyan]%}%~"
-	PROMPT="%{$fg_bold[green]%}%n%{$reset_color%}@%{$fg_bold[yellow]%}%m%{$reset_color%}:%{$fg_bold[cyan]%}%~"
-fi
+# Test for number of colours
+colours=$(tput colors)
 
-PROMPT+="%{$reset_color%}%# %{$reset_color%}"
+if (( $colours >= 8 )); then
+	# Custom prompt (coloured in yellow and cyan):
+	# If the user is 'matt' don't print it
+	if [[ $USER == "matt" ]]; then
+		PROMPT="%{$fg_bold[yellow]%}%m%{$reset_color%}:%{$fg_bold[cyan]%}%~"
+	else
+		PROMPT="%{$fg_bold[green]%}%n%{$reset_color%}@%{$fg_bold[yellow]%}%m%{$reset_color%}:%{$fg_bold[cyan]%}%~"
+	fi
+	# Append directory info
+	PROMPT+="%{$reset_color%}%# %{$reset_color%}"
+else
+	if [[ $USER == "matt" ]]; then
+		PROMPT="%m:%~%# "
+	else
+		PROMPT="%n@%m:%~%# "
+	fi
+fi
 
 # Date on right-side including return code + git info [0][09:30:00]
 RPROMPT='%{$reset_color%}%F{green}${vcs_info_msg_0_}%{$reset_color%}[%?]'
