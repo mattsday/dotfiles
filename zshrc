@@ -30,12 +30,9 @@ autoload -U zutil
 # Various options, features and keybinds that make life a little bit better...
 
 for option (
-	noautomenu 	# don't select stuff automatically when tabbing if there
-			# are options
-	auto_cd 	# Auto CD (i.e. can type '..' to change to 
-			# parent directory, or 'bin' to change to ./bin)
-	extendedglob 	# Expanded globbing (i.e. allow 'ls -d ^*.jpg' to show 
-			# non-jpg files)
+	noautomenu 	# don't select stuff automatically when tabbing if there are options
+	auto_cd 	# Auto CD (i.e. can type '..' to change to parent directory, or 'bin' to change to ./bin)
+	extendedglob 	# Expanded globbing (i.e. allow 'ls -d ^*.jpg' to show non-jpg files)
 	noclobber 	# Require '>!' instead of '>' to overwrite a file
 	correct		# Correct common errors
 	prompt_subst	# Allow dynamic prompt

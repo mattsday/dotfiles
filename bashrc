@@ -26,26 +26,20 @@ export HISTCONTROL=ignoredups
 shopt -s checkwinsize
 
 
-shopt -s extglob         # Expanded globbing (i.e. allow 'ls -d ^*.jpg' to show 
-			 # non-jpg files)
+shopt -s extglob         # Expanded globbing (i.e. allow 'ls -d ^*.jpg' to show non-jpg files)
 shopt -s cdspell         # Mispelled directory names
 set -o noclobber         # Require '>|' instead of '>' to overwrite a file
 
 # Apple bundle a ridiculously old version of bash with OSX due to their
 # objection to GPL3... Guess us users must write crappy hacks to work around
 # it... thanks Apple!
-if [[ $BASH_VERSION == 4* ]]; then
-	shopt -s autocd		# Auto CD (i.e. can type '..' to change to 
-				# parent directory, or 'bin' to change to ./bin)
-	shopt -s dirspell	# Correct spelling on directory names during
-				# globbing
+if (( $BASH_VERSINFO >= 4 )); then
+	shopt -s autocd		# Auto CD (i.e. can type '..' to change to parent directory, or 'bin' to change to ./bin)
+	shopt -s dirspell	# Correct spelling on directory names during globbing
 fi
 
 # Make auto completion more zsh-like
 bind 'set show-all-if-ambiguous on'
-
-# Extended globbing
-shopt -s extglob
 
 # Bash completion (check homebrew first on OS X)
 if [[ -f /usr/local/etc/bash_completion ]]; then
@@ -92,21 +86,14 @@ else
 	fi
 fi
 
-
-# If this is an xterm set the title to user@host:dir
+# If this is an xterm set the title to host:dir
 case "$TERM" in xterm*|rxvt*)
-    PROMPT_COMMAND='echo -ne "\033]0;${USER}: ${PWD/$HOME/~}\007"' ;; *)  ;;
+    PROMPT_COMMAND='echo -ne "\033]0;$HOSTNAME:${PWD/$HOME/~}\007"' ;; *)  ;;
 esac
 
 # Check if OpenStack RC file exists:
 if [[ -f $HOME/.openstack_credentials ]]; then
 	source $HOME/.openstack_credentials
-fi
-
-# DEPRECATED: Alias definitions.
-if [ -f $HOME/.bash_aliases ]; then
-    echo "bash_aliases is deprecated; move to .bash_local"
-    . $HOME/.bash_aliases
 fi
 
 # Local bashrc config (paths etc) (should be the last thing loaded)
