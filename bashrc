@@ -85,9 +85,9 @@ if (( $colours >= 8 )); then
 	fi
 else
 	if [[ $USER == "matt" ]]; then
-		PS1='\h\:\w\$'
+		PS1='\h:\w\$ '
 	else
-		PS1='\u@\h\:\w\$'
+		PS1='\u@\h:\w\$ '
 	fi
 fi
 
