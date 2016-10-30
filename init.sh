@@ -6,6 +6,7 @@ zshrc
 vimrc
 bashrc
 vimrc
+kshrc
 muttrc
 screenrc
 tmux.conf
