@@ -39,11 +39,18 @@ if has("gui_vimr")
 endif
 " Disable the mouse (enabled by default in neovim)
 set mouse-=a
-" Auto-indent and be smart about it (note, type :set paste to paste text)
+" Enable auto indenting (maintain position between lines)
 set autoindent
-set smartindent
+" Set tab width to 4
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
 " Hilight matching parenthesis etc
 set showmatch
+" Allow indentation based on file type if available
+if has("autocmd")
+	filetype plugin indent on
+endif
 
 "================
 "    Editing
