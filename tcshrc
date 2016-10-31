@@ -175,6 +175,7 @@ endif
 if ( $colours >= 8 ) then
 	# Load colour aliases
 	set yellow = "%{\033[1;33m%}"
+	set  green = "%{\033[1;32m%}"
 	set   cyan = "%{\033[1;36m%}"
 	set    end = "%{\033[0m%}" 
 	set   grey = "%{\033[1;30m%}"
@@ -183,11 +184,11 @@ if ( $colours >= 8 ) then
 	if ( $USER == "matt" ) then
 		set prompt = "${yellow}%m${end}:${cyan}%~${end}%# "
 	else
-		set prompt = "${yellow}%n@%m${end}:${cyan}%~${end}%# "
+		set prompt = "${green}%n${end}@${yellow}%m${end}:${cyan}%~${end}%# "
 	endif
 	set rprompt = "${end}[%?]${grey}[%P]${end} "
 	# Cleanup
-	unset yellow cyan end grey
+	unset yellow cyan end grey green
 else
 	if ( $USER == "matt" ) then
 		set prompt = "%m:%~%# "
