@@ -1,6 +1,7 @@
 #!/bin/sh
+# This should execute on pretty much any bourne shell in case the plan is to jump to zsh or tcsh asap...
 
-# horrible but I want it over multiple lines and usable by bash...
+# horrible but I want it over multiple lines and usable by standard shells...
 dotfiles="
 zshrc
 tcshrc
@@ -16,8 +17,7 @@ bash_profile
 proxy_settings
 "
 
-for dotfile in $dotfiles
-do
+for dotfile in $dotfiles; do
 	ln -fs "$PWD/$dotfile" "$HOME/.$dotfile"
 done
 
