@@ -62,7 +62,7 @@ if ( -x /usr/bin/sudo ) then
 	# Same if using RPM-based distributions
 	if ( -x /usr/bin/yum ) then
 		alias yum 'sudo yum'
-		alias updat 'yum update'
+		alias update 'yum update'
 	endif
 	# Oh Fedora you special little turkey...
 	if ( -x /usr/bin/dnf ) then
