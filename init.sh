@@ -1,4 +1,4 @@
-#!/usr/local/bin/dash
+#!/bin/sh
 
 # horrible but I want it over multiple lines and usable by bash...
 dotfiles="
