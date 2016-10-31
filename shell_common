@@ -29,16 +29,9 @@ fi
 # Check the presence of various utilities and alias them to give them
 # preference ahead of lesser system defaults
 
-# Prefer nvim over vim if its config file exists as well
-#if [[ -x $(which nvim 2> /dev/null) && -d $HOME/.config/nvim ]]; then
-#	export VISUAL=$(which nvim)
-#	export USE_EDITOR=$VISUAL
-#	export EDITOR=$VISUAL
-#	alias vi=$VISUAL
-# ...vim is second best
-#elif [[ -x $(which vim 2> /dev/null) ]]; then
-if [[ -x $(which vim 2> /dev/null) ]]; then
-	export VISUAL=$(which vim)
+# Always prefer vim to alternatives
+if command -v vim > /dev/null 2>&1; then
+	export VISUAL=$(command -v vim)
 	export USE_EDITOR=$VISUAL
 	export EDITOR=$VISUAL
 	# Some systems are cruel and have vi + vim installed side-by-side
@@ -46,8 +39,8 @@ if [[ -x $(which vim 2> /dev/null) ]]; then
 fi
 
 # Set less as the default pager
-if [[ -x $(which less 2> /dev/null) ]]; then
-	export PAGER=$(which less)
+if command -v less > /dev/null 2>&1; then
+	export PAGER=$(command -v less)
 fi
 
 # If we can sudo dodo!

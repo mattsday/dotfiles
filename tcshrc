@@ -1,0 +1,205 @@
+# Matt Day's custom .tcsh endifle
+# Not sure where I got all this from, it showed up along the way!
+# Latest copy always here: https://github.com/mattsday/dotendifles/
+
+# ==========
+# Shell Init
+# ==========
+# Without these some options later may break...
+
+# Set some local utilities as default (this must be top of this endifle)
+
+if ( -d /usr/local/bin) then
+	set path = (/usr/local/bin $path)
+	# Create a homebrew update alias
+	if (-x /usr/local/bin/brew) then
+		alias update "brew update; brew upgrade; brew cleanup; brew doctor"
+	endif
+endif
+
+# If running on OS X check for coreutils and use them with colour
+if ( -X gls ) then
+	alias ls "`which gls` --color=auto"
+# Otherwise check if /usr/bin/dircolors exists which is a good sign it's GNU ls
+else if ( -X dircolors ) then
+	alias ls 'ls --color=auto'
+endif
+
+# =================
+# Alias definitions
+# =================
+# Check the presence of various utilities and alias them to give them
+# preference ahead of lesser system defaults
+
+# Always prefer vim!
+if ( -X vim ) then
+	setenv VISUAL `which vim`
+	setenv USE_EDITOR $VISUAL
+	setenv EDITOR $VISUAL
+	# Some systems are cruel and have vi + vim installed side-by-side
+	alias vi $VISUAL
+endif
+
+# Set less as the default pager
+if ( -X less ) then
+	setenv PAGER `which less`
+endif
+
+# If we can sudo dodo!
+if ( -x /usr/bin/sudo ) then
+	# Debian based systems
+	if ( -x /usr/bin/apt-get ) then
+		# I prefer aptitude over apt-get but muscle memory sucks
+		if ( -x /usr/bin/aptitude ) then
+			alias aptitude 'sudo aptitude'
+			alias apt-get 'aptitude'
+			alias apt-cache "aptitude -F '%1p %40d# (%C) %D %10V'"
+		else
+			alias apt-get 'sudo apt-get'
+		endif
+		alias update 'apt-get update && apt-get upgrade'
+	endif
+	# Same if using RPM-based distributions
+	if ( -x /usr/bin/yum ) then
+		alias yum 'sudo yum'
+		alias updat 'yum update'
+	endif
+	# Oh Fedora you special little turkey...
+	if ( -x /usr/bin/dnf ) then
+		alias dnf 'sudo dnf'
+		alias yum 'dnf'
+		alias update 'dnf update'
+	endif
+	# SUSE based distributions
+	if ( -x /usr/bin/zypper ) then
+		alias zypper 'sudo zypper'
+		alias update 'zypper update'
+	endif
+
+	# Always restart services as root
+	if ( -x /usr/sbin/service ) then
+		alias service 'sudo service'
+	endif
+endif
+
+# Colour grep output
+alias grep 'grep --color=auto'
+alias egrep 'egrep --color=auto'
+alias fgrep 'fgrep --color=auto'
+setenv GREP_COLORS "ms=01;32:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36"
+
+# Meh, shit happens:
+alias cd.. 'cd ..'
+alias cd~ 'cd ~'
+alias tmuxa 'tmux a'
+
+# Common shortcuts
+alias ll 'ls -lah'
+alias l 'ls -aCF'
+alias l. 'ls -d .*'
+
+# find function to quickly look for things in pwd
+alias f "find . -iname \*\!:1\*"
+
+# Grep find
+alias gf 'grep -Ri "\!:1"'
+
+
+# =====================
+# Environment variables
+# =====================
+# These affect most systems and are (usually) harmless if run without...
+
+# Sets ls and various commands to use yyyy-mm-dd as the date format
+setenv TIME_STYLE "long-iso"
+
+# OS X ls colouring (non-gnu ls)
+setenv CLICOLOR "yes"
+setenv LSCOLORS "gxhxfxcxcxdxcxcxcxgxgx"
+
+# Do we need to load proxy settings?
+if ( -f $HOME/.enable_proxy ) then
+	( -f $HOME/.proxy_settings ) && source $HOME/.proxy_settings
+endif
+
+# Opt out of homebrew fucking analytics
+setenv HOMEBREW_NO_ANALYTICS 1
+
+# =============
+# Shell Options
+# =============
+# Various options, features and keybinds that make life a little bit better...
+
+# Auto CD
+set implicitcd
+# No clobber
+set noclobbe
+# Autocomplete with colour
+set autolist 
+set color
+set colorcat 
+# Nobeeps
+set nobeep
+# No clobber please
+set noclobber
+# Don't log out on ctrl-D
+set ignoreeof
+# Don't autologout either...
+unset autologout
+# 24 hour time please
+unset ampm
+# Add zeros to hours
+set padhour
+# Allow file completion on legacy
+set filec
+# Emacs mode
+bindkey -e
+
+# History management
+set history = 25000
+set histfile = ~/.tcsh_history
+set savehist = ($history merge)
+history -M
+
+# Prompt
+set prompt="%n@%m:%~%# "
+
+# Test for number of colours
+set colours = `tput colors`
+
+# Check if colour is disabled manually
+if ( -f ~/.disable_shell_colour ) then
+	set colours = 7
+endif
+
+if ( $colours >= 8 ) then
+	# Load colour aliases
+	set yellow = "%{\033[1;33m%}"
+	set   cyan = "%{\033[1;36m%}"
+	set    end = "%{\033[0m%}" 
+	set   grey = "%{\033[1;30m%}"
+	# Custom prompt (coloured in yellow and cyan):
+	# If the user is 'matt' don't print it
+	if ( $USER == "matt" ) then
+		set prompt = "${yellow}%m${end}:${cyan}%~${end}%# "
+	else
+		set prompt = "${yellow}%n@%m${end}:${cyan}%~${end}%# "
+	endif
+	set rprompt = "${end}[%?]${grey}[%P]${end} "
+	# Cleanup
+	unset yellow cyan end grey
+else
+	if ( $USER == "matt" ) then
+		set prompt = "%m:%~%# "
+	else
+		set prompt = "%n@%m:%~%# "
+	endif
+	set rprompt = "[%?][%P]"
+endif
+
+# Local system stuff (PATH, aliases etc)
+if ( -f $HOME/.tcshrc_local ) then
+	source $HOME/.tcshrc_local
+endif
+
+# vim: syntax=tcsh

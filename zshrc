@@ -76,11 +76,11 @@ fi
 # Specific options that affect the L&F of the shell
 
 # Evalate directory colours if gnu coreutils is present
-if [[ -x $(which dircolors 2> /dev/null) ]]; then
-	eval `$(which dircolors)` && zstyle ':completion:*' list-colors \
+if command -v dircolors > /dev/null 2>&1; then
+	eval `$(command -v dircolors)` && zstyle ':completion:*' list-colors \
 		${(s.:.)LS_COLORS}
-elif [[ -x $(which gdircolors 2> /dev/null) ]]; then
-	eval `$(which gdircolors)` && zstyle ':completion:*' list-colors \
+elif command -v gdircolors > /dev/null 2>&1; then
+	eval `$(command -v gdircolors)` && zstyle ':completion:*' list-colors \
 		${(s.:.)LS_COLORS}
 fi
 
@@ -127,17 +127,19 @@ if (( $colours >= 8 )); then
 	fi
 	# Append directory info
 	PROMPT+="%{$reset_color%}%# %{$reset_color%}"
+	# Date on right-side including return code + git info [0][09:30:00]
+	RPROMPT='%{$reset_color%}%F{green}${vcs_info_msg_0_}%{$reset_color%}[%?]'
+	RPROMPT+='%{$fg_bold[grey]%}[%D{%H:%M:%S}]%{$reset_color%}'
 else
 	if [[ $USER == "matt" ]]; then
 		PROMPT="%m:%~%# "
 	else
 		PROMPT="%n@%m:%~%# "
 	fi
+	# Date on right-side including return code + git info [0][09:30:00]
+	RPROMPT='${vcs_info_msg_0_}[%?][%D{%H:%M:%S}]'
 fi
 
-# Date on right-side including return code + git info [0][09:30:00]
-RPROMPT='%{$reset_color%}%F{green}${vcs_info_msg_0_}%{$reset_color%}[%?]'
-RPROMPT+='%{$fg_bold[grey]%}[%D{%H:%M:%S}]%{$reset_color%}'
 
 # Update the terminal title and version control info
 case $TERM in
