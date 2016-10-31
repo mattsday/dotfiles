@@ -16,7 +16,16 @@ autoload -U colors && colors
 # Initialise the autocompletion library
 zmodload zsh/complist
 autoload -U complist
-autoload -Uz compinit && compinit
+# Check if autocomplete will work via -Uz
+autoload -Uz compinit 2>/dev/null
+comp_support=$?
+if (( $comp_support > 0 )); then
+	autoload -U compinit 2>/dev/null
+	comp_support=$?
+fi
+if (( $comp_support == 0 )); then
+	compinit
+fi
 
 # Load some utilities such as zstyle and zformat
 autoload -U zutil
@@ -96,7 +105,13 @@ zstyle ':completion:*' verbose yes
 zstyle ':completion:*' rehash yes
 
 # Native Git directory information
-autoload -Uz vcs_info
+autoload -Uz vcs_info 2>/dev/null
+vcs_support=$?
+# If the shell doesn't support -Uz then try -U
+if (( $? > 0 )); then
+	autoload -U vcs_info 2>/dev/null
+	vcs_support=$?
+fi
 zstyle ':vcs_info:*' enable git svn
 zstyle ':vcs_info:*' actionformats '(%s)-[%b|%a] (%a)'
 zstyle ':vcs_info:*' formats       '(%s)-[%b]'
@@ -108,14 +123,6 @@ compdef mosh=ssh
 # Enable caching of completion output to speed it up
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path ~/.zsh_cache
-
-# Test for number of colours
-colours=$(tput colors)
-
-# Check if colour is disabled manually
-if [[ -f ~/.disable_shell_colour ]]; then
-	colours=7
-fi
 
 if (( $colours >= 8 )); then
 	# Custom prompt (coloured in yellow and cyan):
@@ -146,7 +153,9 @@ case $TERM in
     xterm*)
         precmd () {
 		# Check directory for git etc
-		vcs_info
+		if (( $vcs_support == 0 )); then
+			vcs_info
+		fi
 		# Print xterm title (user@host:~)
 		print -Pn "\e]0;%m: %~\a"
 	}

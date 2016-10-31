@@ -126,4 +126,28 @@ fi
 # Opt out of homebrew fucking analytics
 export HOMEBREW_NO_ANALYTICS=1
 
+# =====================
+# Colour support
+# =====================
+# Checks about terminal colour support
+
+# Test for number of colours
+colours=$(tput colors 2> /dev/null)
+
+# If tput errors out then try and fix...
+if (( $? > 0 )); then
+	# If it's reporting as a 256-colour term try changing to just an xterm
+	[[ "$TERM" == "xterm-256color" ]] && export TERM=xterm
+	colours=$(tput colors 2> /dev/null)
+	# If that still fails then disable colour
+	if (( $? > 0 )); then
+		colours=7
+	fi
+fi
+
+# Check if colour is disabled manually
+if [[ -f ~/.disable_shell_colour ]]; then
+	colours=7
+fi
+
 # vim: syntax=zsh

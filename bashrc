@@ -64,14 +64,6 @@ fi
 # ===========
 # Specific options that affect the L&F of the shell
 
-# Test for number of colours
-colours=$(tput colors)
-
-# Check if colour is disabled manually
-if [[ -f ~/.disable_shell_colour ]]; then
-	colours=7
-fi
-
 if (( $colours >= 8 )); then
 	# Custom prompt (coloured in yellow and cyan): user@host:~%
 	if [[ $USER == "matt" ]]; then

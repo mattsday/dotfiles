@@ -20,14 +20,6 @@ if [[ -f $HOME/.shell_common ]]; then
 	source $HOME/.shell_common
 fi
 
-# Test for number of colours
-colours=$(tput colors)
-
-# Check if colour is disabled manually
-if [[ -f ~/.disable_shell_colour ]]; then
-	colours=7
-fi
-
 if (( $colours >= 8 )); then
 	if [[ $USER == "matt" ]]; then
 		PS1='$(print -ne "\033[01;33m`hostname`\033[00m:\033[01;36m";if [[ "${PWD#$HOME}" != "$PWD" ]] then; print -n "~${PWD#$HOME}"; else; print -n "$PWD";fi;print "\033[00m$ ")'
