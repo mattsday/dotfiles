@@ -164,8 +164,20 @@ set histfile = ~/.tcsh_history
 set savehist = ($history merge)
 history -M
 
-# Test for number of colours
-set colours = `tput colors`
+# Test for number of colours (and provide good example why c shell sucks!)
+set colours = `sh -c 'tput colors 2>/dev/null'`
+
+if ( $? > 0 ) then
+	# If it's reporting as a 256-colour term try changing to just an xterm
+	if ( "$TERM" == "xterm-256color") then
+		setenv TERM xterm
+	endif
+	set colours = `sh -c 'tput colors 2>/dev/null'`
+	# If that still fails then disable colour
+	if ( $? > 0 ) then
+		set colours = 7
+	endif
+endif
 
 # Check if colour is disabled manually
 if ( -f ~/.disable_shell_colour ) then
