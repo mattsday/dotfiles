@@ -1,19 +1,17 @@
 # dotfiles
 I use this to sync my various dotfiles between systems. It's not intended for people to use this, but no harm if they do.
 
-1. zshrc
-2. vimrc
-3. bashrc
-4. bash_profile
-5. muttrc
-6. screenrc
-7. tmux.conf
-8. shell_common
+I maintain for the following shell environments:
 
-There's a small bash compatible `init.sh` file to create the symlinks and off it goes. Nothing fancy, most of the logic is in the files themselves.
+1. zsh (primary shell)
+2. bash (secondary for linux systems where installing zsh isn't worth it)
+3. tcsh (for BSD systems, sporadically maintained)
+4. ksh (for BSD systems, rarely/never maintained except via ```shell_common```)
 
-I maintain the `.zshrc` and `.vimrc` quite aggressively and manage the others if/when I have time.
+The goal is compatibility betwee the look, feel and features of shells (autocd, noclobber, prompt etc)
 
-In particular, the `.bashrc` is designed to be as compatible with my `.zshrc` as possible. This is managed via various shell options, a `shell_common` file (which loads aliases and environment variables for both zsh and bash) and similar themes. Compatibility is highest when running bash 4 or later.
+There's a small bourne compatible `init.sh` file to create symlinks. It will do this without mercy, deleting any rc files in its path.
 
-The `bash_profile` exists purely to load the `.bashrc`, especially on OS X where the latter isn't loaded by default.
+The bashrc, kshrc and zshrc all launch ```shell_common```, this is a bourne-compatible script that loads aliases and everything except shell-specific options. This makes these shells fairly consistent for things like aliases etc. This file should work with other bourne shells like dash, although I haven't tested it.
+
+I also maintain various rc files for programs like vim and mutt. I try and document the settings as comments inside each one.

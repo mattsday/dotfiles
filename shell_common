@@ -4,22 +4,22 @@
 # Latest copy always here: https://github.com/mattsday/dotfiles/
 
 # Set some local utilities as default (this must be top of this file)
-if [[ -d /usr/local/bin ]]; then
+if [ -d /usr/local/bin ]; then
 	# Affix /usr/local/bin to PATH as homebrew zsh doesn't do this for some
 	# reason
 	export PATH=/usr/local/bin:$PATH
 
 	# Create an update alias if homebrew is installed
-	if [[ -x /usr/local/bin/brew ]]; then
+	if [ -x /usr/local/bin/brew ]; then
 		alias update="brew update; brew upgrade; brew cleanup; brew doctor"
 	fi
 fi
 
 # If running on OS X check for coreutils and use them with colour
-if [[ -x /usr/local/bin/gls ]]; then
+if [ -x /usr/local/bin/gls ]; then
 	alias ls='/usr/local/bin/gls --color=auto'
 # Otherwise check if /usr/bin/dircolors exists which is a good sign it's GNU ls
-elif [[ -x /usr/bin/dircolors ]]; then
+elif [ -x /usr/bin/dircolors ]; then
 	alias ls='ls --color=auto'
 fi
 
@@ -44,11 +44,11 @@ if command -v less > /dev/null 2>&1; then
 fi
 
 # If we can sudo dodo!
-if [[ -x /usr/bin/sudo ]]; then
+if [ -x /usr/bin/sudo ]; then
 	# Debian based systems
-	if [[ -x /usr/bin/apt-get ]]; then
+	if [ -x /usr/bin/apt-get ]; then
 		# I prefer aptitude over apt-get but muscle memory sucks
-		if [[ -x /usr/bin/aptitude ]]; then
+		if [ -x /usr/bin/aptitude ]; then
 			alias aptitude='sudo aptitude'
 			alias apt-get='aptitude'
 			alias apt-cache="aptitude -F '%1p %40d# (%C) %D %10V'"
@@ -58,24 +58,24 @@ if [[ -x /usr/bin/sudo ]]; then
 		alias update='apt-get update && apt-get upgrade'
 	fi
 	# Same if using RPM-based distributions
-	if [[ -x /usr/bin/yum ]]; then
+	if [ -x /usr/bin/yum ]; then
 		alias yum='sudo yum'
 		alias update='yum update'
 	fi
 	# Oh Fedora you special little turkey...
-	if [[ -x /usr/bin/dnf ]]; then
+	if [ -x /usr/bin/dnf ]; then
 		alias dnf='sudo dnf'
 		alias yum='dnf'
 		alias update='dnf update'
 	fi
 	# SUSE based distributions
-	if [[ -x /usr/bin/zypper ]]; then
+	if [ -x /usr/bin/zypper ]; then
 		alias zypper='sudo zypper'
 		alias update='zypper update'
 	fi
 
 	# Always restart services as root
-	if [[ -x /usr/sbin/service ]]; then
+	if [ -x /usr/sbin/service ]; then
 		alias service='sudo service'
 	fi
 fi
@@ -119,8 +119,8 @@ export CLICOLOR="yes"
 export LSCOLORS="gxhxfxcxcxdxcxcxcxgxgx"
 
 # Do we need to load proxy settings?
-if [[ -f $HOME/.enable_proxy ]]; then
-	[[ -f $HOME/.proxy_settings ]] && source $HOME/.proxy_settings
+if [ -f $HOME/.enable_proxy ]; then
+	[ -f $HOME/.proxy_settings ] && . $HOME/.proxy_settings
 fi
 
 # Opt out of homebrew fucking analytics
