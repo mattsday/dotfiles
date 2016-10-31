@@ -141,7 +141,7 @@ set color
 set colorcat 
 # Nobeeps
 set nobeep
-# No clobber please
+# No clobber (require >! to overwrite a file)
 set noclobber
 # Don't log out on ctrl-D
 set ignoreeof
@@ -149,7 +149,7 @@ set ignoreeof
 unset autologout
 # 24 hour time please
 unset ampm
-# Add zeros to hours
+# Add zeros to hours (e.g. 8:02 ==> 08:02)
 set padhour
 # Allow file completion on legacy
 set filec
@@ -161,9 +161,6 @@ set history = 25000
 set histfile = ~/.tcsh_history
 set savehist = ($history merge)
 history -M
-
-# Prompt
-set prompt="%n@%m:%~%# "
 
 # Test for number of colours
 set colours = `tput colors`
@@ -178,15 +175,15 @@ if ( $colours >= 8 ) then
 	set yellow = "%{\033[1;33m%}"
 	set  green = "%{\033[1;32m%}"
 	set   cyan = "%{\033[1;36m%}"
-	set    end = "%{\033[0m%}" 
 	set   grey = "%{\033[1;30m%}"
-	# Custom prompt (coloured in yellow and cyan):
+	set    end = "%{\033[0m%}" 
 	# If the user is 'matt' don't print it
 	if ( $USER == "matt" ) then
 		set prompt = "${yellow}%m${end}:${cyan}%~${end}%# "
 	else
 		set prompt = "${green}%n${end}@${yellow}%m${end}:${cyan}%~${end}%# "
 	endif
+	# For some reason the colour isn't resetting unless I put a space here (iTerm bug?)
 	set rprompt = "${end}[%?]${grey}[%P]${end} "
 	# Cleanup
 	unset yellow cyan end grey green
