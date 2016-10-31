@@ -1,13 +1,13 @@
-# Matt Day's custom .tcsh endifle
+# Matt Day's custom .tcsh file
 # Not sure where I got all this from, it showed up along the way!
-# Latest copy always here: https://github.com/mattsday/dotendifles/
+# Latest copy always here: https://github.com/mattsday/dotfiles/
 
 # ==========
 # Shell Init
 # ==========
 # Without these some options later may break...
 
-# Set some local utilities as default (this must be top of this endifle)
+# Set some local utilities as default (this must be top of this file)
 
 if ( -d /usr/local/bin) then
 	set path = (/usr/local/bin $path)
@@ -134,7 +134,7 @@ setenv HOMEBREW_NO_ANALYTICS 1
 # Auto CD
 set implicitcd
 # No clobber
-set noclobbe
+set noclobber
 # Autocomplete with colour
 set autolist 
 set color
