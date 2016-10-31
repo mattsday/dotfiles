@@ -21,7 +21,7 @@ endif
 if ( -X gls ) then
 	alias ls "`which gls` --color=auto"
 # Otherwise check if /usr/bin/dircolors exists which is a good sign it's GNU ls
-else if ( -X dircolors ) then
+else if ( -x /usr/bin/dircolors ) then
 	alias ls 'ls --color=auto'
 endif
 
