@@ -117,10 +117,11 @@ setenv TIME_STYLE "long-iso"
 setenv CLICOLOR "yes"
 setenv LSCOLORS "gxhxfxcxcxdxcxcxcxgxgx"
 
-# Do we need to load proxy settings?
-if ( -f $HOME/.enable_proxy ) then
-	( -f $HOME/.proxy_settings ) && source $HOME/.proxy_settings
-endif
+#Do we need to load proxy settings?
+# not compatible with c shell for now (workaround, source in a bourne shell?)
+#if ( -f $HOME/.enable_proxy ) then
+#	source $HOME/.proxy_settings
+#endif
 
 # Opt out of homebrew fucking analytics
 setenv HOMEBREW_NO_ANALYTICS 1
