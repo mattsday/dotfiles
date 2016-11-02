@@ -73,7 +73,11 @@ if [ -x /usr/bin/sudo ]; then
 		alias zypper='sudo zypper'
 		alias update='zypper update'
 	fi
-
+	# FreeBSD
+	if [ -x /usr/sbin/pkg ]; then
+		alias pkg='sudo /usr/sbin/pkg'
+		alias update='pkg update && pkg upgrade'
+	fi
 	# Always restart services as root
 	if [ -x /usr/sbin/service ]; then
 		alias service='sudo service'
