@@ -24,7 +24,7 @@ if (( $colours >= 8 )); then
 	if [ $USER == "matt" ]; then
 		PS1='$(print -ne "\033[01;33m`hostname`\033[00m:\033[01;36m";if [ "${PWD#$HOME}" != "$PWD" ]; then print -n "~${PWD#$HOME}"; else; print -n "$PWD";fi;print "\033[00m$ ")'
 	else
-		PS1='$(print -ne "\033[01;33m$USER@`hostname`\033[00m:\033[01;36m";if [ "${PWD#$HOME}" != "$PWD" ]; then print -n "~${PWD#$HOME}"; else; print -n "$PWD";fi;print "\033[00m$ ")'
+		PS1='$(print -ne "\033[01;32m$USER\033[00m@\033[01;33m`hostname`\033[00m:\033[01;36m";if [ "${PWD#$HOME}" != "$PWD" ]; then print -n "~${PWD#$HOME}"; else; print -n "$PWD";fi;print "\033[00m$ ")'
 	fi
 else
 	if [ $USER == "matt" ]; then
