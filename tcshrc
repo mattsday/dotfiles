@@ -46,7 +46,7 @@ if ( -X less ) then
 endif
 
 # If we can sudo dodo!
-if ( -x /usr/bin/sudo ) then
+if ( -x /usr/bin/sudo || -x /usr/local/bin/sudo ) then
 	# Debian based systems
 	if ( -x /usr/bin/apt-get ) then
 		# I prefer aptitude over apt-get but muscle memory sucks
