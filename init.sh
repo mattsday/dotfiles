@@ -15,6 +15,7 @@ tmux.conf
 shell_common
 bash_profile
 proxy_settings
+proxy_settings_csh
 "
 
 for dotfile in $dotfiles; do
