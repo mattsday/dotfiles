@@ -79,6 +79,7 @@ if ( -x /usr/bin/sudo || -x /usr/local/bin/sudo ) then
 	# FreeBSD
 	if ( -x /usr/sbin/pkg ) then
 		alias pkg 'sudo pkg'
+		alias freebsd-update 'sudo freebsd-update'
 		alias update 'pkg update && pkg upgrade'
 	endif
 

@@ -76,6 +76,7 @@ if [ -x /usr/bin/sudo ] || [ -x /usr/local/bin/sudo ]; then
 	# FreeBSD
 	if [ -x /usr/sbin/pkg ]; then
 		alias pkg='sudo /usr/sbin/pkg'
+		alias freebsd-update='sudo /usr/sbin/freebsd-update'
 		alias update='pkg update && pkg upgrade'
 	fi
 	# Always restart services as root
