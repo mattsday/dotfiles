@@ -8,7 +8,7 @@
 # Without these some options later may break...
 
 # If a terminal is bold enough to claim XTERM let's assume it can do 256 colours!
-[[ "$TERM" == "xterm" ]] && export TERM=xterm-256color
+[ "$TERM" == "xterm" ] && export TERM=xterm-256color
 
 # =======================
 # Environment and Aliases
@@ -16,21 +16,21 @@
 # Check the environment and add aliases across various platforms
 
 # Load basic aliases from common set (zsh & bash compatible)
-if [[ -f $HOME/.shell_common ]]; then
+if [ -f $HOME/.shell_common ]; then
 	source $HOME/.shell_common
 fi
 
 if (( $colours >= 8 )); then
-	if [[ $USER == "matt" ]]; then
-		PS1='$(print -ne "\033[01;33m`hostname`\033[00m:\033[01;36m";if [[ "${PWD#$HOME}" != "$PWD" ]] then; print -n "~${PWD#$HOME}"; else; print -n "$PWD";fi;print "\033[00m$ ")'
+	if [ $USER == "matt" ]; then
+		PS1='$(print -ne "\033[01;33m`hostname`\033[00m:\033[01;36m";if [ "${PWD#$HOME}" != "$PWD" ]; then print -n "~${PWD#$HOME}"; else; print -n "$PWD";fi;print "\033[00m$ ")'
 	else
-		PS1='$(print -ne "\033[01;33m$USER@`hostname`\033[00m:\033[01;36m";if [[ "${PWD#$HOME}" != "$PWD" ]] then; print -n "~${PWD#$HOME}"; else; print -n "$PWD";fi;print "\033[00m$ ")'
+		PS1='$(print -ne "\033[01;33m$USER@`hostname`\033[00m:\033[01;36m";if [ "${PWD#$HOME}" != "$PWD" ]; then print -n "~${PWD#$HOME}"; else; print -n "$PWD";fi;print "\033[00m$ ")'
 	fi
 else
-	if [[ $USER == "matt" ]]; then
-		PS1='$(print -ne "`hostname`:";if [[ "${PWD#$HOME}" != "$PWD" ]] then; print -n "~${PWD#$HOME}"; else; print -n "$PWD";fi;print "$ ")'
+	if [ $USER == "matt" ]; then
+		PS1='$(print -ne "`hostname`:";if [ "${PWD#$HOME}" != "$PWD" ]; then print -n "~${PWD#$HOME}"; else; print -n "$PWD";fi;print "$ ")'
 	else
-		PS1='$(print -ne "$USER@`hostname`:";if [[ "${PWD#$HOME}" != "$PWD" ]] then; print -n "~${PWD#$HOME}"; else; print -n "$PWD";fi;print "$ ")'
+		PS1='$(print -ne "$USER@`hostname`:";if [ "${PWD#$HOME}" != "$PWD" ]; then print -n "~${PWD#$HOME}"; else; print -n "$PWD";fi;print "$ ")'
 	fi
 fi
 
@@ -56,7 +56,7 @@ case "$TERM" in xterm*|rxvt*)
 esac
 
 # Check if OpenStack RC file exists:
-if [[ -f $HOME/.openstack_credentials ]]; then
+if [ -f $HOME/.openstack_credentials ]; then
 	source $HOME/.openstack_credentials
 fi
 
