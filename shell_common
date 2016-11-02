@@ -80,7 +80,7 @@ if [ -x /usr/bin/sudo ] || [ -x /usr/local/bin/sudo ]; then
 	fi
 	if [ -x /usr/sbin/freebsd-update ]; then
 		alias freebsd-update='sudo /usr/sbin/freebsd-update'
-	endif
+	fi
 
 	# Always restart services as root
 	if [ -x /usr/sbin/service ]; then
