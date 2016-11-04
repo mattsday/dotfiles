@@ -13,14 +13,18 @@ setenv HTTPS_PROXY $proxy
 setenv FTP_PROXY $proxy
 
 # Whitelist common lab ranges 
-set CORP_A_WHITELIST = `seq -f "10.52.208.%g" -s "," 0 255`
-set CORP_B_WHITELIST = `seq -f "10.51.8.%g" -s "," 0 255`
+set CORP_A_WHITELIST = `seq -f "10.52.208.%g" -s "," 0 255 | sed 's/.$//'`
+set CORP_B_WHITELIST = `seq -f "10.51.8.%g" -s "," 0 255 | sed 's/.$//'`
 
 # Frontend/App/Backend whitelists
-set FE_WHITELIST = `seq -f "192.168.210.%g" -s "," 0 255`
-set APP_WHITELIST = `seq -f "192.168.211.%g" -s "," 0 255`
-set BE_WHITELIST = `seq -f "192.168.212.%g" -s "," 0 255`
-setenv no_proxy ".cisco.com,127.0.0.1,localhost,local.home,0.0.0.0,$CORP_A_WHITELIST,$CORP_B_WHITELIST,$FE_WHITELIST,$APP_WHITELIST,$BE_WHITELIST"
+set FE_WHITELIST = `seq -f "192.168.210.%g" -s "," 0 255 | sed 's/.$//'`
+set APP_WHITELIST = `seq -f "192.168.211.%g" -s "," 0 255 | sed 's/.$//'`
+set BE_WHITELIST = `seq -f "192.168.212.%g" -s "," 0 255 | sed 's/.$//'`
+
+# Common OpenStack whitelist
+set OS_WHITELIST = `seq -f "10.0.0.%g" -s "," 0 255 | sed 's/.$//'`
+
+setenv no_proxy ".cisco.com,127.0.0.1,localhost,local.home,0.0.0.0,$CORP_A_WHITELIST,$CORP_B_WHITELIST,$FE_WHITELIST,$APP_WHITELIST,$BE_WHITELIST,$OS_WHITELIST"
 setenv NO_PROXY $no_proxy
 
-# vim: syntax csh
+# vim: syntax=csh
