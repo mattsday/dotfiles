@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # This file loads the Cisco proxy settings.
 # Latest copy always here: https://github.com/mattsday/dotfiles/
 
@@ -12,18 +12,16 @@ export HTTP_PROXY=$proxy
 export HTTPS_PROXY=$proxy
 export FTP_PROXY=$proxy
 
-# Whitelist common lab ranges 
-CORP_1_WHITELIST="$(echo 10.52.208.{0..255} | sed 's/ /,/g')"
-CORP_2_WHITELIST="$(echo 10.51.8.{0..255} | sed 's/ /,/g')"
+# Whitelist common lab ranges
+CORP_A_WHITELIST=`seq -f "10.52.208.%g" -s "," 0 255`
+CORP_B_WHITELIST=`seq -f "10.51.8.%g" -s "," 0 255`
 
 # Frontend/App/Backend whitelists
-FE_WHITELIST="$(echo 192.168.210.{0..255} | sed 's/ /,/g')"
-APP_WHITELIST="$(echo 192.168.211.{0..255} | sed 's/ /,/g')"
-BE_WHITELIST="$(echo 192.168.212.{0..255} | sed 's/ /,/g')"
-no_proxy=".cisco.com,127.0.0.1,localhost,local.home,0.0.0.0,"
-no_proxy+="$CORP_1_WHITELIST,$CORP_2_WHITELIST"
-no_proxy+="$FE_WHITELIST,$APP_WHITELIST,$BE_WHITELIST"
-export no_proxy
+FE_WHITELIST=`seq -f "192.168.210.%g" -s "," 0 255`
+APP_WHITELIST=`seq -f "192.168.211.%g" -s "," 0 255`
+BE_WHITELIST=`seq -f "192.168.212.%g" -s "," 0 255`
+
+export no_proxy=".cisco.com,127.0.0.1,localhost,local.home,0.0.0.0,$CORP_1_WHITELIST,$CORP_2_WHITELIST,$FE_WHITELIST,$APP_WHITELIST,$BE_WHITELIST"
 export NO_PROXY=$no_proxy
 
-# vim: syntax=zsh
+# vim: syntax=sh
