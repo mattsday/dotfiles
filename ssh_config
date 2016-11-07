@@ -90,6 +90,9 @@ Host cc-bundle
 # =================
 # Labs, internal devices etc
 
+Host freebsd
+	Hostname 10.51.8.134
+
 Host gitlab
 	Hostname 10.51.8.175
 	User ubuntu
