@@ -145,7 +145,7 @@ colours=$(tput colors 2> /dev/null)
 # If tput errors out then try and fix...
 if [ $? -gt 0 ]; then
 	# If it's reporting as a 256-colour term try changing to just an xterm
-	[ "$TERM" == "xterm-256color" ] && export TERM=xterm
+	[ "$TERM" = "xterm-256color" ] && export TERM=xterm
 	colours=$(tput colors 2> /dev/null)
 	# If that still fails then disable colour
 	if [ $? -gt 0 ]; then
