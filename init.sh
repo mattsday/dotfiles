@@ -11,6 +11,7 @@ vimrc
 kshrc
 muttrc
 screenrc
+profile
 tmux.conf
 shell_common
 bash_profile
