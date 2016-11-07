@@ -24,7 +24,7 @@ BE_WHITELIST=`seq -f "192.168.212.%g" -s "," 0 255 | sed 's/.$//'`
 # Common OpenStack subnet whitelist
 OS_WHITELIST=`seq -f "10.0.0.%g" -s "," 0 255 | sed 's/.$//'`
 
-export no_proxy=".cisco.com,127.0.0.1,localhost,local.home,0.0.0.0,$CORP_1_WHITELIST,$CORP_2_WHITELIST,$FE_WHITELIST,$APP_WHITELIST,$BE_WHITELIST,$OS_WHITELIST"
+export no_proxy=".cisco.com,127.0.0.1,localhost,local.home,0.0.0.0,$CORP_A_WHITELIST,$CORP_B_WHITELIST,$FE_WHITELIST,$APP_WHITELIST,$BE_WHITELIST,$OS_WHITELIST"
 export NO_PROXY=$no_proxy
 
 # vim: syntax=sh
