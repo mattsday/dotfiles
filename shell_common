@@ -1,6 +1,8 @@
-# This file contains alias definitions and variables that are common 
-# between both zsh and bash... rather than maintain two sets, both 
-# rcfiles load this
+# This file loads various defaults on virtually any bourne-compatible
+# shell. It's designed to be POSIX and flavour-neutral. Any rc file
+# can load this (e.g. zshrc, kshrc, bashrc) for consistency across
+# environments
+#
 # Latest copy always here: https://github.com/mattsday/dotfiles/
 
 # Set some local utilities as default (this must be top of this file)
@@ -15,7 +17,7 @@ if [ -d /usr/local/bin ]; then
 	fi
 fi
 
-# If running on OS X check for coreutils and use them with colour
+# If GNU ls is available on a BSD system, use it:
 if [ -x /usr/local/bin/gls ]; then
 	alias ls='/usr/local/bin/gls --color=auto'
 # Otherwise check if /usr/bin/dircolors exists which is a good sign it's GNU ls
