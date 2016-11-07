@@ -14,6 +14,8 @@ if [ -d /usr/local/bin ]; then
 	# Create an update alias if homebrew is installed
 	if [ -x /usr/local/bin/brew ]; then
 		alias update="brew update; brew upgrade; brew cleanup; brew doctor"
+		# Opt out of homebrew fucking analytics
+		export HOMEBREW_NO_ANALYTICS=1
 	fi
 fi
 
@@ -147,9 +149,6 @@ fi
 if [ -f "$HOME/.openstack_credentials" ]; then
 	. "$HOME/.openstack_credentials"
 fi
-
-# Opt out of homebrew fucking analytics
-export HOMEBREW_NO_ANALYTICS=1
 
 # =====================
 # Colour support
