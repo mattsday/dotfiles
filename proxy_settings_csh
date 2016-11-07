@@ -12,17 +12,24 @@ setenv HTTP_PROXY $proxy
 setenv HTTPS_PROXY $proxy
 setenv FTP_PROXY $proxy
 
-# Whitelist common lab ranges 
-set CORP_A_WHITELIST = `seq -f "10.52.208.%g" -s "," 0 255 | sed 's/.$//'`
-set CORP_B_WHITELIST = `seq -f "10.51.8.%g" -s "," 0 255 | sed 's/.$//'`
+# Provide a generic sequence method (and proof that csh sucks!)
+alias sequence 'eval "if (-X jot) then \\
+jot -s , -w \!*.%d 255 0 255 \\
+else if (-X seq) then \\
+seq -f \!*.%g -s "," 0 255 \\
+endif"'
+
+# Whitelist common lab ranges
+set CORP_A_WHITELIST = `sequence 10.52.208`
+set CORP_B_WHITELIST = `sequence 10.51.8`
 
 # Frontend/App/Backend whitelists
-set FE_WHITELIST = `seq -f "192.168.210.%g" -s "," 0 255 | sed 's/.$//'`
-set APP_WHITELIST = `seq -f "192.168.211.%g" -s "," 0 255 | sed 's/.$//'`
-set BE_WHITELIST = `seq -f "192.168.212.%g" -s "," 0 255 | sed 's/.$//'`
+set FE_WHITELIST = `sequence 192.168.210`
+set APP_WHITELIST = `sequence 192.168.211`
+set BE_WHITELIST = `sequence 192.168.212`
 
 # Common OpenStack whitelist
-set OS_WHITELIST = `seq -f "10.0.0.%g" -s "," 0 255 | sed 's/.$//'`
+set OS_WHITELIST = `sequence 10.0.0`
 
 setenv no_proxy ".cisco.com,127.0.0.1,localhost,local.home,0.0.0.0,$CORP_A_WHITELIST,$CORP_B_WHITELIST,$FE_WHITELIST,$APP_WHITELIST,$BE_WHITELIST,$OS_WHITELIST"
 setenv NO_PROXY $no_proxy
