@@ -58,7 +58,7 @@ fi
 # ===========
 # Specific options that affect the L&F of the shell
 
-if [ $USER == "matt" ]; then
+if [ $USER = "matt" ]; then
 	PS1='\h:\w\$ '
 else
 	PS1='\u@\h:\w\$ '
