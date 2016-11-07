@@ -43,10 +43,10 @@ fi
 bind 'set show-all-if-ambiguous on'
 
 # Bash completion (check homebrew first on OS X)
-if [[ -f /usr/local/etc/bash_completion ]]; then
-	. /usr/local/etc/bash_completion
-elif [[ -f /etc/bash_completion ]]; then
-	. /etc/bash_completion
+if [[ -f "/usr/local/etc/bash_completion" ]]; then
+	. "/usr/local/etc/bash_completion"
+elif [[ -f "/etc/bash_completion" ]]; then
+	. "/etc/bash_completion"
 fi
 
 # =======================
@@ -55,8 +55,8 @@ fi
 # Check the environment and add aliases across various platforms
 
 # Load basic aliases from common set (zsh & bash compatible)
-if [[ -f $HOME/.shell_common ]]; then
-	source $HOME/.shell_common
+if [[ -f "$HOME/.shell_common" ]]; then
+	. "$HOME/.shell_common"
 fi
 
 # ===========
@@ -84,14 +84,18 @@ case "$TERM" in xterm*|rxvt*)
     PROMPT_COMMAND='echo -ne "\033]0;$HOSTNAME:${PWD/$HOME/~}\007"' ;; *)  ;;
 esac
 
-# Check if OpenStack RC file exists:
-if [[ -f $HOME/.openstack_credentials ]]; then
-	source $HOME/.openstack_credentials
+# Load local system stuff (local PATH, aliases etc)
+if [[ -f "$HOME/.bash_local" ]]; then
+	echo .bash_local is deprecated, moving to .bashrc_local
+	if [[ ! -f "$HOME/.bashrc_local" ]]; then
+		mv "$HOME/.bash_local" "$HOME/.bashrc_local"
+	else
+		echo 'Could not move file (.bashrc_local already exists)'
+	fi
 fi
 
-# Local bashrc config (paths etc) (should be the last thing loaded)
-if [ -f $HOME/.bash_local ]; then
-    . $HOME/.bash_local
+if [[ -f "$HOME/.bashrc_local" ]]; then
+	. "$HOME/.bashrc_local"
 fi
 
 # vim: syntax=sh

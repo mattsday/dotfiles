@@ -133,6 +133,11 @@ if [ -f "$HOME/.enable_proxy" ]; then
 	[ -f "$HOME/.proxy_settings" ] && . $HOME/.proxy_settings
 fi
 
+# Check if OpenStack RC file exists:
+if [ -f "$HOME/.openstack_credentials" ]; then
+	. "$HOME/.openstack_credentials"
+fi
+
 # Opt out of homebrew fucking analytics
 export HOMEBREW_NO_ANALYTICS=1
 

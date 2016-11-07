@@ -75,8 +75,8 @@ setopt HIST_VERIFY
 # Check the environment and add aliases across various platforms
 
 # Load basic aliases from common set (zsh & bash compatible)
-if [[ -f $HOME/.shell_common ]]; then
-	source $HOME/.shell_common
+if [[ -f "$HOME/.shell_common" ]]; then
+	. $HOME/.shell_common
 fi
 
 # ===========
@@ -127,7 +127,7 @@ zstyle ':completion:*' cache-path ~/.zsh_cache
 if (( $colours >= 8 )); then
 	# Custom prompt (coloured in yellow and cyan):
 	# If the user is 'matt' don't print it
-	if [[ $USER == "matt" ]]; then
+	if [[ "$USER" == "matt" ]]; then
 		PROMPT="%{$fg_bold[yellow]%}%m%{$reset_color%}:%{$fg_bold[cyan]%}%~"
 	else
 		PROMPT="%{$fg_bold[green]%}%n%{$reset_color%}@%{$fg_bold[yellow]%}%m%{$reset_color%}:%{$fg_bold[cyan]%}%~"
@@ -138,7 +138,7 @@ if (( $colours >= 8 )); then
 	RPROMPT='%{$reset_color%}%F{green}${vcs_info_msg_0_}%{$reset_color%}[%?]'
 	RPROMPT+='%{$fg_bold[grey]%}[%D{%H:%M:%S}]%{$reset_color%}'
 else
-	if [[ $USER == "matt" ]]; then
+	if [[ "$USER" == "matt" ]]; then
 		PROMPT="%m:%~%# "
 	else
 		PROMPT="%n@%m:%~%# "
@@ -168,19 +168,23 @@ esac
 # Check for (and source) additional plugins and resources, such as local config
 # files
 
-# Check if OpenStack RC file exists:
-if [[ -f $HOME/.openstack_credentials ]]; then
-	source $HOME/.openstack_credentials
+# Load local system stuff (local PATH, aliases etc)
+if [[ -f "$HOME/.zsh_local" ]]; then
+	echo .zsh_local is deprecated, moving to .zshrc_local
+	if [[ ! -f "$HOME/.zshrc_local" ]]; then
+		mv "$HOME/.zsh_local" "$HOME/.zshrc_local"
+	else
+		echo 'Could not move file (.zshrc_local already exists)'
+	fi
 fi
 
-# Load local system stuff (local PATH, aliases etc)
-if [[ -f $HOME/.zsh_local ]]; then
-	source $HOME/.zsh_local
+if [[ -f "$HOME/.zshrc_local" ]]; then
+	. "$HOME/.zshrc_local"
 fi
 
 # Finally, load fish style syntax highlighting if available
-if [[ -f $HOME/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
-	source $HOME/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+if [[ -f "$HOME/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]]; then
+	. "$HOME/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 fi
 
 # vim: syntax=zsh

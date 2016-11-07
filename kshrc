@@ -16,8 +16,8 @@
 # Check the environment and add aliases across various platforms
 
 # Load basic aliases from common set (zsh & bash compatible)
-if [ -f $HOME/.shell_common ]; then
-	source $HOME/.shell_common
+if [ -f "$HOME/.shell_common" ]; then
+	. "$HOME/.shell_common"
 fi
 
 if (( $colours >= 8 )); then
@@ -55,14 +55,9 @@ case "$TERM" in xterm*|rxvt*)
     PROMPT_COMMAND='echo -ne "\033]0;$HOSTNAME:${PWD/$HOME/~}\007"' ;; *)  ;;
 esac
 
-# Check if OpenStack RC file exists:
-if [ -f $HOME/.openstack_credentials ]; then
-	source $HOME/.openstack_credentials
-fi
-
 # Local bashrc config (paths etc) (should be the last thing loaded)
-if [ -f $HOME/.ksh_local ]; then
-    . $HOME/.ksh_local
+if [ -f "$HOME/.kshrc_local" ]; then
+    . "$HOME/.kshrc_local"
 fi
 
 # vim: syntax=sh
