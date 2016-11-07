@@ -12,14 +12,18 @@ export HTTP_PROXY=$proxy
 export HTTPS_PROXY=$proxy
 export FTP_PROXY=$proxy
 
-# Try jot, then seq and if all else files try inline expansion (least portable)
+# Try jot, then seq and if all else fails just loop
 sequence() {
 	if command -v jot > /dev/null 2>&1; then
 		jot -s , -w $1.%d 255 0 255
 	elif command -v seq > /dev/null 2>&1; then
 		seq -f "$1.%g" -s "," 0 255 | sed 's/.$//'
 	else
-		echo $1.{0..255} | sed 's/ /,/g'
+		i=0
+		while [ "$i" -le 255 ]; do
+			echo -n "$1.$i,"
+			let i+=1
+		done
 	fi
 }
 
