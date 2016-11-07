@@ -85,7 +85,14 @@ if [ -x /usr/bin/sudo ] || [ -x /usr/local/bin/sudo ]; then
 	if [ -x /usr/sbin/freebsd-update ]; then
 		alias freebsd-update='sudo /usr/sbin/freebsd-update'
 	fi
-
+	# OpenBSD (might get confused with xBSD)
+	if [ -x /usr/sbin/pkg_add ]; then
+		alias pkg_add='sudo /usr/sbin/pkg_add'
+		alias update 2>&1;
+		if [ $? = 0 ]; then
+			alias update='pkg_add -u'
+		fi
+	fi
 	# Always restart services as root
 	if [ -x /usr/sbin/service ]; then
 		alias service='sudo service'
