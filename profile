@@ -3,14 +3,30 @@
 # bash or even ksh! Some systems don't and this makes them a little more
 # usable...
 # Latest copy always here: https://github.com/mattsday/dotfiles/
+# If being called from another bourne compatible shell, load those
+# specific rc files instead and stop this
+case "$0" in
+    -zsh)
+        if [ -f "$HOME/.zshrc" ]; then
+            . "$HOME/.zshrc"
+        fi
+        return
+        ;;
+    -bash)
+        if [ -f "$HOME/.bashrc" ]; then
+            . "$HOME/.bashrc"
+        fi
+        return
+        ;;
 
-# Don't execute if being called from bash, zsh or korn
-case "$0" in *bash*|*zsh*|*ksh*)
-	echo "Shell not supported: $0"
-	return
-	;;
-*)
-	;;
+    -ksh)
+        if [ -f "$HOME/.kshrc" ]; then
+            . "$HOME/.kshrc"
+        fi
+        return
+        ;;
+    *)
+        ;;
 esac
 
 # ==========

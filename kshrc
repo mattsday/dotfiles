@@ -39,16 +39,11 @@ else
 	fi
 fi
 
-# Reset PS1 to something else if not running KSH 93:
-#if [ "$KSH_VERSION" != *93* ]; then
-#	echo NO MATCH
-#	PS1="$USER@$HOSTNAME:$PWD %#"
-#else
-#	echo $KSH_VERSION ver
-#fi
-
 # Set emacs style editing (makes life SO MUCH BETTER in ksh!)
 set -o emacs
+# Disable EOF (ctrl-d to quit terminal)
+set -o ignoreeof
+set -o noclobber
 
 # For some environments where this doesn't get set by default:
 alias __A=`echo "\020"` # up arrow = ^p = back a command
