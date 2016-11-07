@@ -20,20 +20,22 @@ if [ -f "$HOME/.shell_common" ]; then
 	. "$HOME/.shell_common"
 fi
 
+shorthost=$(echo `hostname` | sed 's/\..*//')
+
 if (( $colours >= 8 )); then
 	if [ $USER = "matt" ]; then
-		PS1='$(print -n "\033[01;33m`hostname`\033[00m:\033[01;36m";if [ "${PWD#$HOME}" = "$PWD" ]; then print -n $PWD; else print -n "~${PWD#$HOME}";fi;print "\033[00m$ ")'
+		PS1='$(print -n "\033[01;33m$shorthost\033[00m:\033[01;36m";if [ "${PWD#$HOME}" = "$PWD" ]; then print -n $PWD; else print -n "~${PWD#$HOME}";fi;print "\033[00m$ ")'
 
 	else
-		PS1='$(print -n "\033[01;32m$USER\033[00m@\033[01;33m`hostname`\033[00m:\033[01;36m";if [ "${PWD#$HOME}" = "$PWD" ]; then print -n $PWD; else print -n "~${PWD#$HOME}";fi;print "\033[00m$ ")'
+		PS1='$(print -n "\033[01;32m$USER\033[00m@\033[01;33m$shorthost\033[00m:\033[01;36m";if [ "${PWD#$HOME}" = "$PWD" ]; then print -n $PWD; else print -n "~${PWD#$HOME}";fi;print "\033[00m$ ")'
 
 	fi
 else
 	if [ $USER = "matt" ]; then
-		PS1='$(print -n "`hostname`:";if [ "${PWD#$HOME}" = "$PWD" ]; then print -n "$PWD"; else print -n "~${PWD#$HOME}";fi;print "$ ")'
+		PS1='$(print -n "$shorthost:";if [ "${PWD#$HOME}" = "$PWD" ]; then print -n "$PWD"; else print -n "~${PWD#$HOME}";fi;print "$ ")'
 
 	else
-		PS1='$(print -n "$USER@`hostname`:";if [ "${PWD#$HOME}" = "$PWD" ]; then print -n "$PWD"; else print -n "~${PWD#$HOME}";fi;print "$ ")'
+		PS1='$(print -n "$USER@$shorthost:";if [ "${PWD#$HOME}" = "$PWD" ]; then print -n "$PWD"; else print -n "~${PWD#$HOME}";fi;print "$ ")'
 	fi
 fi
 
