@@ -45,6 +45,8 @@ fi
 
 # If we can sudo dodo!
 if [ -x /usr/bin/sudo ] || [ -x /usr/local/bin/sudo ]; then
+    # Alias sudo so it can be expanded with aliases (e.g. sudo ll)
+	alias sudo='sudo '
 	# Debian based systems
 	if [ -x /usr/bin/apt-get ]; then
 		# I prefer aptitude over apt-get but muscle memory sucks
