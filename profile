@@ -61,7 +61,7 @@ fi
 if [ $USER = "matt" ]; then
 	PS1='\h:\w\$ '
 else
-	PS1='\u@\h:\w\$ '
+	PS1="$USER@\h:\w\$ "
 fi
 
 # If this is an xterm set the title to host:dir

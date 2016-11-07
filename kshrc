@@ -21,18 +21,29 @@ if [ -f "$HOME/.shell_common" ]; then
 fi
 
 if (( $colours >= 8 )); then
-	if [ $USER == "matt" ]; then
-		PS1='$(print -ne "\033[01;33m`hostname`\033[00m:\033[01;36m";if [ "${PWD#$HOME}" != "$PWD" ]; then print -n "~${PWD#$HOME}"; else; print -n "$PWD";fi;print "\033[00m$ ")'
+	if [ $USER = "matt" ]; then
+		PS1='$(print -n "\033[01;33m`hostname`\033[00m:\033[01;36m";if [ "${PWD#$HOME}" = "$PWD" ]; then print -n $PWD; else print -n "~${PWD#$HOME}";fi;print "\033[00m$ ")'
+
 	else
-		PS1='$(print -ne "\033[01;32m$USER\033[00m@\033[01;33m`hostname`\033[00m:\033[01;36m";if [ "${PWD#$HOME}" != "$PWD" ]; then print -n "~${PWD#$HOME}"; else; print -n "$PWD";fi;print "\033[00m$ ")'
+		PS1='$(print -n "\033[01;32m$USER\033[00m@\033[01;33m`hostname`\033[00m:\033[01;36m";if [ "${PWD#$HOME}" = "$PWD" ]; then print -n $PWD; else print -n "~${PWD#$HOME}";fi;print "\033[00m$ ")'
+
 	fi
 else
-	if [ $USER == "matt" ]; then
-		PS1='$(print -ne "`hostname`:";if [ "${PWD#$HOME}" != "$PWD" ]; then print -n "~${PWD#$HOME}"; else; print -n "$PWD";fi;print "$ ")'
+	if [ $USER = "matt" ]; then
+		PS1='$(print -n "`hostname`:";if [ "${PWD#$HOME}" = "$PWD" ]; then print -n "$PWD"; else print -n "~${PWD#$HOME}";fi;print "$ ")'
+
 	else
-		PS1='$(print -ne "$USER@`hostname`:";if [ "${PWD#$HOME}" != "$PWD" ]; then print -n "~${PWD#$HOME}"; else; print -n "$PWD";fi;print "$ ")'
+		PS1='$(print -n "$USER@`hostname`:";if [ "${PWD#$HOME}" = "$PWD" ]; then print -n "$PWD"; else print -n "~${PWD#$HOME}";fi;print "$ ")'
 	fi
 fi
+
+# Reset PS1 to something else if not running KSH 93:
+#if [ "$KSH_VERSION" != *93* ]; then
+#	echo NO MATCH
+#	PS1="$USER@$HOSTNAME:$PWD %#"
+#else
+#	echo $KSH_VERSION ver
+#fi
 
 # Set emacs style editing (makes life SO MUCH BETTER in ksh!)
 set -o emacs
@@ -42,8 +53,8 @@ alias __A=`echo "\020"` # up arrow = ^p = back a command
 alias __B=`echo "\016"` # down arrow = ^n = down a command
 alias __C=`echo "\006"` # right arrow = ^f = forward a character
 alias __D=`echo "\002"` # left arrow = ^b = back a character
-alias __H=`echo "\001"` # home = ^a = start of line 
-stty erase ^?		# bind backspace 
+alias __H=`echo "\001"` # home = ^a = start of line
+stty erase ^?		# bind backspace
 
 # History management
 export HISTSIZE=25000
