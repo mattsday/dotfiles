@@ -148,8 +148,6 @@ set noclobber
 set autolist 
 set color
 set colorcat 
-# Mac OSX sets the promptchar to '%', zsh uses this so change it to the default >:
-set promptchars = '>'
 # Nobeeps
 set nobeep
 # No clobber (require >! to overwrite a file)
