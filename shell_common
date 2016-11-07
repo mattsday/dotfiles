@@ -88,8 +88,9 @@ if [ -x /usr/bin/sudo ] || [ -x /usr/local/bin/sudo ]; then
 	# OpenBSD (might get confused with xBSD)
 	if [ -x /usr/sbin/pkg_add ]; then
 		alias pkg_add='sudo /usr/sbin/pkg_add'
-		alias update 2>&1;
-		if [ $? = 0 ]; then
+		alias pkg_delete='sudo /usr/sbin/pkg_delete'
+		alias update > /dev/null 2>&1;
+		if [ $? -gt 0 ]; then
 			alias update='pkg_add -u'
 		fi
 	fi
