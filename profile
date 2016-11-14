@@ -47,13 +47,6 @@ export HISTCONTROL=ignoredups
 set -o noclobber        # Require '>|' instead of '>' to overwrite a file
 set -o emacs		    # Run in EMACS compatible mode (ctrl-a/e)
 
-# Bash completion (check homebrew first on OS X)
-if [ -f /usr/local/etc/bash_completion ]; then
-	. /usr/local/etc/bash_completion
-elif [ -f /etc/bash_completion ]; then
-	. /etc/bash_completion
-fi
-
 # History management
 export HISTSIZE=25000
 export HISTFILE=~/.sh_history
@@ -73,17 +66,33 @@ fi
 # Look & Feel
 # ===========
 # Specific options that affect the L&F of the shell
+#
+shorthost=$(echo `hostname` | sed 's/\..*//')
 
-if [ $USER = "matt" ]; then
-	PS1='\h:\w\$ '
+if [ $colours -ge 8 ]; then
+	yellow="\033[01;33m"
+	green="\033[01;32m"
+	cyan="\033[01;36m"
+	grey="\033[01;30m"
+	end="\033[00m" 
+
+    if [ $USER = "matt" ]; then
+		PS1='$(echo "$yellow$shorthost$end:$cyan\c";if [ "${PWD#$HOME}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#$HOME}\c";fi;echo "$end$ ")'
+	else
+		PS1='$(echo "$green$USER$end@$yellow$shorthost$end:$cyan\c";if [ "${PWD#$HOME}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#$HOME}\c";fi;echo "$end$ ")'
+	fi
 else
-	PS1="$USER@\h:\w\$ "
+	if [ $USER = "matt" ]; then
+		PS1='$(echo "$shorthost:\c";if [ "${PWD#$HOME}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#$HOME}\c";fi;echo "$ ")'
+	else
+		PS1='$(echo "$USER@$shorthost:\c";if [ "${PWD#$HOME}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#$HOME}\c";fi;echo "$ ")'
+	fi
 fi
 
 # If this is an xterm set the title to host:dir
-case "$TERM" in xterm*|rxvt*)
-    PROMPT_COMMAND='echo -ne "\033]0;$HOSTNAME:${PWD/$HOME/~}\007"' ;; *)  ;;
-esac
+#case "$TERM" in xterm*|rxvt*)
+#    PROMPT_COMMAND='echo -ne "\033]0;$HOSTNAME:${PWD/$HOME/~}\007"' ;; *)  ;;
+#esac
 
 # Check if OpenStack RC file exists:
 if [ -f $HOME/.openstack_credentials ]; then
