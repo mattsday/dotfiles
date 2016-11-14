@@ -20,11 +20,13 @@ proxy_settings_csh
 "
 
 for dotfile in $dotfiles; do
+	echo "Creating $HOME/.$dotfile"
 	ln -fs "$PWD/$dotfile" "$HOME/.$dotfile"
 done
 
 # Add ssh config file:
 if [ -d "$HOME/.ssh" ]; then
+	echo "Creating $HOME/.ssh/config"
 	ln -fs "$PWD/ssh_config" "$HOME/.ssh/config"
 fi
 
@@ -33,3 +35,4 @@ if [ ! -d "$HOME/.config/nvim" ]; then
 	mkdir -p "$HOME/.config/nvim"
 fi
 ln -fs "$PWD/vimrc" "$HOME/.config/nvim/init.vim"
+echo Done.

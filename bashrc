@@ -68,7 +68,6 @@ if (( $colours >= 8 )); then
 	yellow="\[\033[01;33m\]"
 	green="\[\033[01;32m\]"
 	cyan="\[\033[01;36m\]"
-	grey="\[\033[01;30m\]"
 	end="\[\033[00m\]" 
 
 	# Custom prompt (coloured in yellow and cyan): user@host:~%
@@ -77,7 +76,7 @@ if (( $colours >= 8 )); then
 	else
 		PS1="$green\u$end@$yellow\h$end:$cyan\w$end\$ "
 	fi
-	unset yellow cyan green end grey
+	unset yellow cyan green end
 else
 	if [[ $USER == "matt" ]]; then
 		PS1='\h:\w\$ '
