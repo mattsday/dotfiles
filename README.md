@@ -7,7 +7,7 @@ I maintain for the following shell environments:
 2. bash (secondary for linux systems where installing zsh isn't worth it)
 3. tcsh (for BSD systems, e.g. FreeBSD)
 4. ksh (for BSD systems, e.g. NetBSD)
-5. profile (for everything else bourne-compatible, e.g. OpenBSD, SunOS)
+5. sh (a basic ```.profile``` for everything else bourne-compatible, e.g. OpenBSD, SunOS)
 
 The goal is compatibility betwee the look, feel and features of shells (autocd, noclobber, prompt etc)
 
