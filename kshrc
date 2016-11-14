@@ -23,17 +23,16 @@ fi
 shorthost=$(echo `hostname` | sed 's/\..*//')
 
 if (( $colours >= 8 )); then
-	typeset -A colour
-	colour=([yellow]="\033[01;33m"
-			[green]="\033[01;32m"
-			[cyan]="\033[01;36m"
-			[grey]="\033[01;30m"
-			[end]="\033[00m")
+	yellow="\033[01;33m"
+	green="\033[01;32m"
+	cyan="\033[01;36m"
+	grey="\033[01;30m"
+	end="\033[00m" 
 
 	if [ $USER = "matt" ]; then
-		PS1='$(print -n "${colour[yellow]}$shorthost${colour[end]}:${colour[cyan]}";if [ "${PWD#$HOME}" = "$PWD" ]; then print -n $PWD; else print -n "~${PWD#$HOME}";fi;print "${colour[end]}$ ")'
+		PS1='$(print -n "$yellow$shorthost$end:$cyan";if [ "${PWD#$HOME}" = "$PWD" ]; then print -n $PWD; else print -n "~${PWD#$HOME}";fi;print "$end$ ")'
 	else
-		PS1='$(print -n "${colour[green]}$USER${colour[end]}@${colour[yellow]}$shorthost${colour[end]}:${colour[cyan]}";if [ "${PWD#$HOME}" = "$PWD" ]; then print -n $PWD; else print -n "~${PWD#$HOME}";fi;print "${colour[end]}$ ")'
+		PS1='$(print -n "$green$USER$end@$yellow$shorthost$end:$cyan";if [ "${PWD#$HOME}" = "$PWD" ]; then print -n $PWD; else print -n "~${PWD#$HOME}";fi;print "$end$ ")'
 	fi
 else
 	if [ $USER = "matt" ]; then
