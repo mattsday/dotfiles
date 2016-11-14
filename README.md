@@ -1,5 +1,5 @@
 # dotfiles
-These are the configuration files I use for my shells and applications. Most of the work is in maintaining my shell configuration, so I can step between systems with a consistent configuration.
+These are the configuration files I use for my shells and applications. Most of the work is in maintaining my shell configuration, so I can step between systems with a consistent look and feel.
 
 I maintain for the following shell environments:
 
