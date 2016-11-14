@@ -1,14 +1,13 @@
 # dotfiles
-I use this to sync my various dotfiles between systems. It's not intended for people to use this, but no harm if they do.
+These are the configuration files I use for my shells and applications. Most of the work is in maintaining my shell configuration, so I can step between systems with a consistent configuration.
 
 I maintain for the following shell environments:
 
 1. zsh (primary shell)
 2. bash (secondary for linux systems where installing zsh isn't worth it)
-3. tcsh (for BSD systems)
-4. ksh (for BSD systems)
-5. profile (for plain old bourne shells)
-6. ```shell_common``` for all bourne shells (i.e. everything except tcsh)
+3. tcsh (for BSD systems, e.g. FreeBSD)
+4. ksh (for BSD systems, e.g. NetBSD)
+5. profile (for everything else bourne-compatible, e.g. OpenBSD, SunOS)
 
 The goal is compatibility betwee the look, feel and features of shells (autocd, noclobber, prompt etc)
 
