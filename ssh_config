@@ -103,6 +103,9 @@ Host jenkins
 	User ubuntu
 	IdentityFile ~/.ssh/lab_id_rsa
 
+Host k8lab
+	HostName 184.94.251.26
+	User user03
 
 # CloudFoundry bootstrap
 Host cf-bootstrap
