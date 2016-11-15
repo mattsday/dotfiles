@@ -39,7 +39,7 @@ esac
 [ -z "PS1" ] && return
 
 # Load any local config first (aliases should go in _local file)
-if [[ -f "$HOME/.profile_config" ]]; then
+if [ -f "$HOME/.profile_config" ]; then
 	. "$HOME/.profile_config"
 fi
 
