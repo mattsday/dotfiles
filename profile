@@ -3,6 +3,8 @@
 # bash or even ksh! Some systems don't and this makes them a little more
 # usable...
 # Latest copy always here: https://github.com/mattsday/dotfiles/
+
+
 # If being called from another bourne compatible shell, load those
 # specific rc files instead and stop this
 case "$0" in
@@ -58,8 +60,8 @@ export SAVEHIST=10000
 # Check the environment and add aliases across various platforms
 
 # Load basic aliases from common set (zsh & bash compatible)
-if [ -f $HOME/.shell_common ]; then
-	. $HOME/.shell_common
+if [ -f "$HOME/.shell_common" ]; then
+	. "$HOME/.shell_common"
 fi
 
 # ===========
@@ -67,7 +69,8 @@ fi
 # ===========
 # Specific options that affect the L&F of the shell
 #
-shorthost=$(echo `hostname` | sed 's/\..*//')
+hostname=`hostname`
+shorthost=`echo $hostname | sed 's/\..*//'`
 
 if [ $colours -ge 8 ]; then
 	yellow="\033[01;33m"
@@ -76,32 +79,27 @@ if [ $colours -ge 8 ]; then
 	grey="\033[01;30m"
 	end="\033[00m" 
 
-    if [ $USER = "matt" ]; then
+    if [ "$USER" = "matt" ]; then
 		PS1='$(echo "$yellow$shorthost$end:$cyan\c";if [ "${PWD#$HOME}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#$HOME}\c";fi;echo "$end$ ")'
 	else
 		PS1='$(echo "$green$USER$end@$yellow$shorthost$end:$cyan\c";if [ "${PWD#$HOME}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#$HOME}\c";fi;echo "$end$ ")'
 	fi
 else
-	if [ $USER = "matt" ]; then
+	if [ "$USER" = "matt" ]; then
 		PS1='$(echo "$shorthost:\c";if [ "${PWD#$HOME}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#$HOME}\c";fi;echo "$ ")'
 	else
 		PS1='$(echo "$USER@$shorthost:\c";if [ "${PWD#$HOME}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#$HOME}\c";fi;echo "$ ")'
 	fi
 fi
 
-# If this is an xterm set the title to host:dir
-#case "$TERM" in xterm*|rxvt*)
-#    PROMPT_COMMAND='echo -ne "\033]0;$HOSTNAME:${PWD/$HOME/~}\007"' ;; *)  ;;
-#esac
-
 # Check if OpenStack RC file exists:
-if [ -f $HOME/.openstack_credentials ]; then
-	. $HOME/.openstack_credentials
+if [ -f "$HOME/.openstack_credentials" ]; then
+	. "$HOME/.openstack_credentials"
 fi
 
 # Local bourne shell config (paths etc) (should be the last thing loaded)
-if [ -f $HOME/.profile_local ]; then
-    . $HOME/.profile_local
+if [ -f "$HOME/.profile_local" ]; then
+	. "$HOME/.profile_local"
 fi
 
 # vim: syntax=sh
