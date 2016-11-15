@@ -15,7 +15,7 @@ export FTP_PROXY=$proxy
 # Try jot, then seq and if all else fails just loop
 ip_sequence() {
 	if command -v jot > /dev/null 2>&1; then
-		jot -s , -w $1.%d 255 0 255
+		jot -s , -w $1.%d 256 0 256
 	elif command -v seq > /dev/null 2>&1; then
 		seq -f "$1.%g" -s "," 0 255 | sed 's/.$//'
 	else
