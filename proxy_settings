@@ -13,7 +13,7 @@ export HTTPS_PROXY=$proxy
 export FTP_PROXY=$proxy
 
 # Try jot, then seq and if all else fails just loop
-sequence() {
+ip_sequence() {
 	if command -v jot > /dev/null 2>&1; then
 		jot -s , -w $1.%d 255 0 255
 	elif command -v seq > /dev/null 2>&1; then
@@ -28,18 +28,20 @@ sequence() {
 }
 
 # Whitelist common lab ranges
-CORP_A_WHITELIST=`sequence 10.52.208`
-CORP_B_WHITELIST=`sequence 10.51.8`
+CORP_A_WHITELIST=`ip_sequence 10.52.208`
+CORP_B_WHITELIST=`ip_sequence 10.51.8`
 
 # Frontend/App/Backend whitelists
-FE_WHITELIST=`sequence 192.168.210`
-APP_WHITELIST=`sequence 192.168.211`
-BE_WHITELIST=`sequence 192.168.212`
+FE_WHITELIST=`ip_sequence 192.168.210`
+APP_WHITELIST=`ip_sequence 192.168.211`
+BE_WHITELIST=`ip_sequence 192.168.212`
 
 # Common OpenStack subnet whitelist
-OS_WHITELIST=`sequence 10.0.0`
+OS_WHITELIST=`ip_sequence 10.0.0`
 
 export no_proxy=".cisco.com,127.0.0.1,localhost,local.home,0.0.0.0,$CORP_A_WHITELIST,$CORP_B_WHITELIST,$FE_WHITELIST,$APP_WHITELIST,$BE_WHITELIST,$OS_WHITELIST"
 export NO_PROXY=$no_proxy
+
+unset -f ip_sequence
 
 # vim: syntax=sh
