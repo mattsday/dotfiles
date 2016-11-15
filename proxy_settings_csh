@@ -28,7 +28,7 @@ foreach ip ($prefixes)
 	if ( -X jot ) then
 		set no_proxy = $no_proxy`jot -s , -w $ip.%d 256 0 256`,
 	else if (-X seq) then
-		set no_proxy = $no_proxy`seq -f "$ip.%g" -s "," 0 255 | sed 's/.$//'`,
+		set no_proxy = $no_proxy`seq -f "$ip.%g" -s "," 0 255 | sed 's/,$//'`,
 	else
 		@ i = 0
 		while ($i <= 255)
