@@ -7,6 +7,11 @@
 # ==========
 # Without these some options later may break...
 
+# Load any local config first (aliases should go in _local file)
+if ( -f "$HOME/.tcshrc_config" ) then
+	source "$HOME/.tcshrc_config"
+endif
+
 # Set some local utilities as default (this must be top of this file)
 
 if ( -d /usr/local/bin) then

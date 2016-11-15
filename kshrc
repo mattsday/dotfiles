@@ -7,8 +7,11 @@
 # ==========
 # Without these some options later may break...
 
-# If a terminal is bold enough to claim XTERM let's assume it can do 256 colours!
-[ "$TERM" == "xterm" ] && export TERM=xterm-256color
+# Load any local config first (aliases should go in _local file)
+if [[ -f "$HOME/.kshrc_config" ]]; then
+	. "$HOME/.kshrc_config"
+fi
+
 
 # =======================
 # Environment and Aliases
@@ -64,12 +67,12 @@ export SAVEHIST=10000
 
 # If this is an xterm set the title to host:dir
 case "$TERM" in xterm*|rxvt*)
-    PROMPT_COMMAND='echo -ne "\033]0;$HOSTNAME:${PWD/$HOME/~}\007"' ;; *)  ;;
+	PROMPT_COMMAND='echo -ne "\033]0;$HOSTNAME:${PWD/$HOME/~}\007"' ;; *)  ;;
 esac
 
 # Local bashrc config (paths etc) (should be the last thing loaded)
 if [ -f "$HOME/.kshrc_local" ]; then
-    . "$HOME/.kshrc_local"
+	. "$HOME/.kshrc_local"
 fi
 
 # vim: syntax=sh

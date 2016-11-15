@@ -8,27 +8,26 @@
 # If being called from another bourne compatible shell, load those
 # specific rc files instead and stop this
 case "$0" in
-    -zsh)
-        if [ -f "$HOME/.zshrc" ]; then
-            . "$HOME/.zshrc"
-        fi
-        return
-        ;;
-    -bash)
-        if [ -f "$HOME/.bashrc" ]; then
-            . "$HOME/.bashrc"
-        fi
-        return
-        ;;
-
-    -ksh)
-        if [ -f "$HOME/.kshrc" ]; then
-            . "$HOME/.kshrc"
-        fi
-        return
-        ;;
-    *)
-        ;;
+	-zsh)
+		if [ -f "$HOME/.zshrc" ]; then
+			. "$HOME/.zshrc"
+		fi
+		return
+		;;
+	-bash)
+		if [ -f "$HOME/.bashrc" ]; then
+			. "$HOME/.bashrc"
+		fi
+		return
+		;;
+	-ksh)
+		if [ -f "$HOME/.kshrc" ]; then
+			. "$HOME/.kshrc"
+		fi
+		return
+		;;
+	*)
+		;;
 esac
 
 # ==========
@@ -39,20 +38,27 @@ esac
 # If not running interactively, don't do anything
 [ -z "PS1" ] && return
 
+# Load any local config first (aliases should go in _local file)
+if [[ -f "$HOME/.profile_config" ]]; then
+	. "$HOME/.profile_config"
+fi
+
+
 # =============
 # Shell Options
 # =============
 # Various options, features and keybinds that make life a little bit better...
 
 # Don't put duplicate lines in the history
-export HISTCONTROL=ignoredups
-set -o noclobber        # Require '>|' instead of '>' to overwrite a file
-set -o emacs		    # Run in EMACS compatible mode (ctrl-a/e)
+#set -o noclobber	# Require '>|' instead of '>' to overwrite a file
+#set -o emacs		# Run in EMACS compatible mode (ctrl-a/e)
 
 # History management
-export HISTSIZE=25000
-export HISTFILE=~/.sh_history
-export SAVEHIST=10000
+HISTSIZE=25000
+HISTFILE=~/.sh_history
+SAVEHIST=10000S
+HISTCONTROL=ignoredups
+export HISTSIZE HISTFILE SAVEHIST HISTCONTROL
 
 # =======================
 # Environment and Aliases
@@ -72,26 +78,32 @@ fi
 hostname=`hostname`
 shorthost=`echo $hostname | sed 's/\..*//'`
 
-if [ $colours -ge 8 ]; then
-	yellow="\033[01;33m"
-	green="\033[01;32m"
-	cyan="\033[01;36m"
-	grey="\033[01;30m"
-	end="\033[00m" 
+# Dynamic prompt
+# Some bourne shells don't support variables in the prompt, act to the lowest common denominator:
+PS1="$USER@$shorthost$ "
 
-    if [ "$USER" = "matt" ]; then
-		PS1='$(echo "$yellow$shorthost$end:$cyan\c";if [ "${PWD#$HOME}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#$HOME}\c";fi;echo "$end$ ")'
+# Enable a dynamic shell
+if [ -f "$HOME/.full_shell" ]; then
+	if [ $colours -ge 8 ]; then
+		yellow="\033[01;33m"
+		green="\033[01;32m"
+		cyan="\033[01;36m"
+		grey="\033[01;30m"
+		end="\033[00m" 
+
+		if [ "$USER" = "matt" ]; then
+			PS1='$(echo "$yellow$shorthost$end:$cyan\c";if [ "${PWD#$HOME}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#$HOME}\c";fi;echo "$end$ ")'
+		else
+			PS1='$(echo "$green$USER$end@$yellow$shorthost$end:$cyan\c";if [ "${PWD#$HOME}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#$HOME}\c";fi;echo "$end$ ")'
+		fi
 	else
-		PS1='$(echo "$green$USER$end@$yellow$shorthost$end:$cyan\c";if [ "${PWD#$HOME}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#$HOME}\c";fi;echo "$end$ ")'
-	fi
-else
-	if [ "$USER" = "matt" ]; then
-		PS1='$(echo "$shorthost:\c";if [ "${PWD#$HOME}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#$HOME}\c";fi;echo "$ ")'
-	else
-		PS1='$(echo "$USER@$shorthost:\c";if [ "${PWD#$HOME}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#$HOME}\c";fi;echo "$ ")'
+		if [ "$USER" = "matt" ]; then
+			PS1='$(echo "$shorthost:\c";if [ "${PWD#$HOME}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#$HOME}\c";fi;echo "$ ")'
+		else
+			PS1='$(echo "$USER@$shorthost:\c";if [ "${PWD#$HOME}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#$HOME}\c";fi;echo "$ ")'
+		fi
 	fi
 fi
-
 # Check if OpenStack RC file exists:
 if [ -f "$HOME/.openstack_credentials" ]; then
 	. "$HOME/.openstack_credentials"

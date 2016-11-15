@@ -11,8 +11,10 @@
 # If not running interactively, don't do anything
 [[ -z "$PS1" ]] && return
 
-# If a terminal is bold enough to claim XTERM let's assume it can do 256 colours!
-[[ "$TERM" == "xterm" ]] && export TERM=xterm-256color
+# Load any local config first (aliases should go in _local file)
+if [[ -f "$HOME/.bashrc_config" ]]; then
+	. "$HOME/.bashrc_config"
+fi
 
 # =============
 # Shell Options
@@ -26,9 +28,9 @@ export HISTCONTROL=ignoredups
 shopt -s checkwinsize
 
 
-shopt -s extglob        # Expanded globbing (i.e. allow 'ls -d ^*.jpg' to show non-jpg files)
-shopt -s cdspell        # Mispelled directory names
-set -o noclobber        # Require '>|' instead of '>' to overwrite a file
+shopt -s extglob	# Expanded globbing (i.e. allow 'ls -d ^*.jpg' to show non-jpg files)
+shopt -s cdspell	# Mispelled directory names
+set -o noclobber	# Require '>|' instead of '>' to overwrite a file
 set +o histexpand	# Disable history expansion (i.e. make echo "Hello World!" work!)
 
 # Apple bundle a ridiculously old version of bash with OSX due to their
@@ -87,7 +89,7 @@ fi
 
 # If this is an xterm set the title to host:dir
 case "$TERM" in xterm*|rxvt*)
-    PROMPT_COMMAND='echo -ne "\033]0;$HOSTNAME:${PWD/$HOME/~}\007"' ;; *)  ;;
+	PROMPT_COMMAND='echo -ne "\033]0;$HOSTNAME:${PWD/$HOME/~}\007"' ;; *)	;;
 esac
 
 # Load local system stuff (local PATH, aliases etc)

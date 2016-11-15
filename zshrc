@@ -10,6 +10,11 @@
 # If not running interactively, don't do anything
 [[ -z "$PS1" ]] && return
 
+# Load any local config first (aliases should go in _local file)
+if [[ -f "$HOME/.zshrc_config" ]]; then
+	. "$HOME/.zshrc_config"
+fi
+
 # Load colour names so they can be referred to as green, yellow etc
 autoload -U colors && colors
 
@@ -150,16 +155,16 @@ fi
 
 # Update the terminal title and version control info
 case $TERM in
-    xterm*)
-        precmd () {
-		# Check directory for git etc
-		if (( $vcs_support == 0 )); then
-			vcs_info
-		fi
-		# Print xterm title (user@host:~)
-		print -Pn "\e]0;%m: %~\a"
-	}
-        ;;
+	xterm*)
+		precmd () {
+			# Check directory for git etc
+			if (( $vcs_support == 0 )); then
+				vcs_info
+			fi
+			# Print xterm title (user@host:~)
+			print -Pn "\e]0;%m: %~\a"
+		}
+	;;
 esac
 
 # ======================
