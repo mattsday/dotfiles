@@ -12,26 +12,35 @@ setenv HTTP_PROXY $proxy
 setenv HTTPS_PROXY $proxy
 setenv FTP_PROXY $proxy
 
-# Provide a generic sequence method (and proof that csh sucks!)
-alias sequence 'eval "if (-X jot) then \\
-jot -s , -w \!*.%d 255 0 255 \\
-else if (-X seq) then \\
-seq -f \!*.%g -s "," 0 255 \\
-endif"'
+set prefixes = ( \
+	10.51.8 \
+	10.52.208 \
+	192.168.210 \
+	192.168.211 \
+	192.168.212 \
+	10.0.0 \
+)
 
-# Whitelist common lab ranges
-set CORP_A_WHITELIST = `sequence 10.52.208`
-set CORP_B_WHITELIST = `sequence 10.51.8`
+set no_proxy = ".cisco.com,127.0.0.1,localhost,local.home,0.0.0.0,"
 
-# Frontend/App/Backend whitelists
-set FE_WHITELIST = `sequence 192.168.210`
-set APP_WHITELIST = `sequence 192.168.211`
-set BE_WHITELIST = `sequence 192.168.212`
+# Because csh doesn't support functions we have to do gross crap like this!
+foreach ip ($prefixes)
+	if ( -X jot ) then
+		set no_proxy = $no_proxy`jot -s , -w $ip.%d 256 0 256`,
+	else if (-X seq) then
+		set no_proxy = $no_proxy`seq -f "$ip.%g" -s "," 0 255 | sed 's/.$//'`,
+	else
+		@ i = 0
+		while ($i <= 255)
+			set no_proxy = $no_proxy"$ip.$i,"
+			@ i++
+		end
+	endif
+end
 
-# Common OpenStack whitelist
-set OS_WHITELIST = `sequence 10.0.0`
+set no_proxy = `echo $no_proxy | sed 's/,$//'`
 
-setenv no_proxy ".cisco.com,127.0.0.1,localhost,local.home,0.0.0.0,$CORP_A_WHITELIST,$CORP_B_WHITELIST,$FE_WHITELIST,$APP_WHITELIST,$BE_WHITELIST,$OS_WHITELIST"
+setenv no_proxy $no_proxy
 setenv NO_PROXY $no_proxy
 
 # vim: syntax=csh
