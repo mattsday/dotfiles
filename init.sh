@@ -19,13 +19,23 @@ proxy_settings
 proxy_settings_csh
 "
 
+mkdir backup > /dev/null 2>&1
+
 for dotfile in $dotfiles; do
+	if [ -f "$HOME/.$dotfile" ] && [ ! -L "$HOME/.$dotfile" ]; then
+		echo Backing up local "$dotfile"
+		mv -f "$HOME/.$dotfile" "backup/local-$dotfile"
+	fi
 	echo "Creating $HOME/.$dotfile"
 	ln -fs "$PWD/$dotfile" "$HOME/.$dotfile"
 done
 
 # Add ssh config file:
 if [ -d "$HOME/.ssh" ]; then
+	if [ -f "$HOME/.ssh/config" ] && [ ! -L "$HOME/.ssh/config" ]; then
+		echo Backing up old ssh config
+		mv -f "$HOME/.ssh/config" "backup/local-ssh-config"
+	fi
 	echo "Creating $HOME/.ssh/config"
 	ln -fs "$PWD/ssh_config" "$HOME/.ssh/config"
 fi
