@@ -66,8 +66,12 @@ if [ -x /usr/bin/sudo ] || [ -x /usr/local/bin/sudo ]; then
 	alias sudo='sudo '
 	# Debian based systems
 	if [ -x /usr/bin/apt-get ]; then
-		# I prefer aptitude over apt-get but muscle memory sucks
-		if [ -x /usr/bin/aptitude ]; then
+		# Use apt or aptitude if they exist instead of apt-get for interactive stuff
+		if [ -x /usr/bin/apt ]; then
+			alias apt='sudo apt'
+			alias apt-get='apt'
+			alias apt-cache='apt'
+		elif [ -x /usr/bin/aptitude ]; then
 			alias aptitude='sudo aptitude'
 			alias apt-get='aptitude'
 			alias apt-cache="aptitude -F '%1p %40d# (%C) %D %10V'"
