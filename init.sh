@@ -14,6 +14,7 @@ screenrc
 profile
 tmux.conf
 shell_common
+gitconfig
 bash_profile
 proxy_settings
 proxy_settings_csh
