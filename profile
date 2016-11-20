@@ -76,14 +76,38 @@ fi
 # Specific options that affect the L&F of the shell
 #
 hostname=`hostname`
+if [ -z $hostname ]; then
+	hostname=`cat /etc/hostname`
+	if [ -z $hostname ]; then
+		hostname='(none)'
+	fi
+fi
 shorthost=`echo $hostname | sed 's/\..*//'`
 
 # Dynamic prompt
 # Some bourne shells don't support variables in the prompt, act to the lowest common denominator:
 PS1="$USER@$shorthost$ "
 
-# Enable a dynamic shell
-if [ -f "$HOME/.full_shell" ]; then
+dynamic_shell=0
+if command -v readlink > /dev/null 2>&1; then
+	case `readlink /bin/sh 2>/dev/null` in
+		*busybox)
+			# Enable a dynamic shell
+			PS1=$USER'@\h:\w\$ '
+			export PS1
+			;;
+		*bash)
+			dynamic_shell=1
+			;;
+		*dash)
+			dynamic_shell=0
+			;;
+		*)
+			dynamic_shell=0
+			;;
+	esac
+fi
+if [ dynamic_shell = 1 ] || [ -f "$HOME/.full_shell" ]; then
 	if [ $colours -ge 8 ]; then
 		yellow="\033[01;33m"
 		green="\033[01;32m"
@@ -103,6 +127,7 @@ if [ -f "$HOME/.full_shell" ]; then
 			PS1='$(echo "$USER@$shorthost:\c";if [ "${PWD#$HOME}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#$HOME}\c";fi;echo "$ ")'
 		fi
 	fi
+	export PS1
 fi
 # Check if OpenStack RC file exists:
 if [ -f "$HOME/.openstack_credentials" ]; then
