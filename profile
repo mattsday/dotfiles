@@ -96,18 +96,15 @@ if command -v readlink > /dev/null 2>&1; then
 			PS1=$USER'@\h:\w\$ '
 			export PS1
 			;;
-		*bash)
+		*bash|*dash)
 			dynamic_shell=1
-			;;
-		*dash)
-			dynamic_shell=0
 			;;
 		*)
 			dynamic_shell=0
 			;;
 	esac
 fi
-if [ dynamic_shell = 1 ] || [ -f "$HOME/.full_shell" ]; then
+if [ "$dynamic_shell" = 1 ] || [ -f "$HOME/.full_shell" ]; then
 	if [ $colours -ge 8 ]; then
 		yellow="\033[01;33m"
 		green="\033[01;32m"
