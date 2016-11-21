@@ -120,14 +120,17 @@ if [ -x /usr/bin/sudo ] || [ -x /usr/local/bin/sudo ]; then
 fi
 
 # Colour grep output if GNU grep
-grep --version > /dev/null 2>&1
-if [ $? = 0 ]; then
-	alias grep='grep --color=auto'
-	alias egrep='egrep --color=auto'
-	alias fgrep='fgrep --color=auto'
-fi
-GREP_COLORS="ms=01;32:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36"
-export GREP_COLORS
+grep_ver=`grep --version 2> /dev/null`
+case $grep_ver in
+	*GNU*|*FreeBSD*)
+		alias grep='grep --color=auto'
+		alias egrep='egrep --color=auto'
+		alias fgrep='fgrep --color=auto'
+		GREP_COLORS="ms=01;32:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36"
+		export GREP_COLORS
+		;;
+esac
+unset grep_ver
 
 # Meh, shit happens:
 alias 'cd..=cd ..'
