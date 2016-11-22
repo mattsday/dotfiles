@@ -39,6 +39,7 @@ if [ -d "$HOME/.ssh" ]; then
 	fi
 	echo "Creating $HOME/.ssh/config"
 	ln -fs "$PWD/ssh_config" "$HOME/.ssh/config"
+	chmod 600 "$HOME/.ssh/config"
 fi
 
 # Add nvim config file (same as vimrc):

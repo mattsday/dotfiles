@@ -88,7 +88,14 @@ shorthost=`echo $hostname | sed 's/\..*//'`
 # Some bourne shells don't support variables in the prompt, act to the lowest common denominator:
 PS1="$USER@$shorthost$ "
 
-dynamic_shell=0
+dynamic_prompt=0
+
+# If this doesn't fail then it's very likely a dynamic shell
+$SHELL -c 'echo $(ls)' > /dev/null 2>&1
+if [ $? = 0 ]; then
+	dynamic_prompt=1
+fi
+
 if command -v readlink > /dev/null 2>&1; then
 	case `readlink /bin/sh 2>/dev/null` in
 		*busybox)
@@ -97,14 +104,11 @@ if command -v readlink > /dev/null 2>&1; then
 			export PS1
 			;;
 		*bash|*dash)
-			dynamic_shell=1
-			;;
-		*)
-			dynamic_shell=0
+			dynamic_prompt=1
 			;;
 	esac
 fi
-if [ "$dynamic_shell" = 1 ] || [ -f "$HOME/.full_shell" ]; then
+if [ "$dynamic_prompt" = 1 ] || [ -f "$HOME/.full_shell" ]; then
 	if [ $colours -ge 8 ]; then
 		yellow="\033[01;33m"
 		green="\033[01;32m"
