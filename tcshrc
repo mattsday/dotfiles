@@ -97,7 +97,7 @@ if ( -x /usr/bin/sudo || -x /usr/local/bin/sudo ) then
 	endif
 endif
 # Colour grep output (more proof csh sucks!)
-set grep_ver = `sh -c 'grep --version 2>&1 | egrep -m 1 -o "(FreeBSD|GNU)" 2>/dev/null' | awk '{print length($0)}'`
+set grep_ver = `sh -c 'grep --version 2>&1 | grep -m 1 -o "GNU" 2>/dev/null' | awk '{print length($0)}'`
 if ( $grep_ver > 0 ) then
 	alias grep 'grep --color=auto'
 	alias egrep 'egrep --color=auto'
