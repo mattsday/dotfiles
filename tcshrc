@@ -96,10 +96,9 @@ if ( -x /usr/bin/sudo || -x /usr/local/bin/sudo ) then
 		alias service 'sudo service'
 	endif
 endif
-
 # Colour grep output (more proof csh sucks!)
-set grep_ver = `sh -c '/usr/bin/grep --version 2>&1 | /usr/bin/egrep -o "(FreeBSD|GNU)" 2>/dev/null'`
-if ( $grep_ver =~ *GNU* || $grep_ver =~ *FreeBSD* ) then
+set grep_ver = `sh -c 'grep --version 2>&1 | egrep -m 1 -o "(FreeBSD|GNU)" 2>/dev/null' | awk '{print length($0)}'`
+if ( $grep_ver > 0 ) then
 	alias grep 'grep --color=auto'
 	alias egrep 'egrep --color=auto'
 	alias fgrep 'fgrep --color=auto'
