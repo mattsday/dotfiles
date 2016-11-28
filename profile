@@ -110,9 +110,9 @@ if command -v readlink > /dev/null 2>&1; then
 fi
 
 # Another way to detect BusyBox...
-sh_ver=`sh --help 2>&1|grep -om 1 BusyBox`
+sh_ver=`sh --help 2>&1|grep -om 1 BusyBox 2>/dev/null`
 if [ "$sh_ver" = BusyBox ]; then
-        if [ -z $USER ]; then
+        if [ -z $USER ] || [ "$USER" = matt ]; then
                 PS1='\h:\w\$ '
         else
                 PS1=$USER'@\h:\w\$ '
