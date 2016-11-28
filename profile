@@ -108,6 +108,18 @@ if command -v readlink > /dev/null 2>&1; then
 			;;
 	esac
 fi
+
+# Another way to detect BusyBox...
+sh_ver=`sh --help 2>&1|grep -om 1 BusyBox`
+if [ "$sh_ver" = BusyBox ]; then
+        if [ -z $USER ]; then
+                PS1='\h:\w\$ '
+        else
+                PS1=$USER'@\h:\w\$ '
+        fi
+        export PS1
+fi
+
 if [ "$dynamic_prompt" = 1 ] || [ -f "$HOME/.full_shell" ]; then
 	if [ $colours -ge 8 ]; then
 		yellow="\033[01;33m"
