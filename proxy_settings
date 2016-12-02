@@ -3,7 +3,7 @@
 # Latest copy always here: https://github.com/mattsday/dotfiles/
 
 # Use same proxy host for all protocols
-proxy=http://proxy.esl.cisco.com:80/
+proxy=http://proxy-wsa.esl.cisco.com:80/
 http_proxy=$proxy
 https_proxy=$proxy
 ftp_proxy=$proxy
