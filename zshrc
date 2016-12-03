@@ -1,5 +1,6 @@
 # Matt Day's custom .zshrc file
-# Not sure where I got all this from, it showed up along the way!
+# This sets my favourite zsh features and loads most of my common
+# bourne shell settings from .shell_common
 # Latest copy always here: https://github.com/mattsday/dotfiles/
 
 # ==========

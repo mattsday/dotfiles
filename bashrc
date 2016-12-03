@@ -1,6 +1,6 @@
 # Matt Day's custom .bashrc file
-# Not sure where I got all this from, it showed up along the way!
-# As bash is the poor cousin to zsh, so this rcfile is to my zshrc...
+# This sets a few useful bash options and loads most of my common
+# bourne shell settings from .shell_common
 # Latest copy always here: https://github.com/mattsday/dotfiles/
 
 # ==========

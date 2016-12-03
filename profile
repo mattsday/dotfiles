@@ -1,7 +1,7 @@
 # Matt Day's custom .profile file
 # This file is for legacy bourne shells. Really should be using zsh,
 # bash or even ksh! Some systems don't and this makes them a little more
-# usable...
+# usable... An example is BusyBox
 # Latest copy always here: https://github.com/mattsday/dotfiles/
 
 

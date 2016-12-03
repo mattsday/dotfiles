@@ -1,5 +1,6 @@
 # Matt Day's custom .kshrc file
-# Not sure where I got all this from, it showed up along the way!
+# If I'm desperate enough to use ksh in the modern era I might as
+# well have a few nice settings eh?
 # Latest copy always here: https://github.com/mattsday/dotfiles/
 
 # ==========
