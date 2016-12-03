@@ -139,6 +139,9 @@ Host openstack-3
 Host openstack-4
 	Hostname 10.51.8.153
 	User openstack
+Host openstack-5
+	Hostname 10.51.8.154
+	User openstack
 
 # Nexus switches
 Host 10.52.208.1
