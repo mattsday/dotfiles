@@ -133,6 +133,9 @@ case $grep_ver in
 esac
 unset grep_ver
 
+BLOCKSIZE=K
+export BLOCKSIZE
+
 # Meh, shit happens:
 alias 'cd..=cd ..'
 alias 'cd~=cd ~'
@@ -145,6 +148,7 @@ alias ..='cd ..'
 alias ll='ls -lah'
 alias l='ls -aCF'
 alias l.='ls -d .*'
+alias j='jobs -l'
 
 # Find function to quickly look for things in pwd
 f() {
