@@ -5,6 +5,7 @@
 dotfiles="
 zshrc
 tcshrc
+cshrc
 vimrc
 bashrc
 vimrc
