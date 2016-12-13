@@ -45,7 +45,7 @@ if ( -x `sh -c 'which vim 2>/dev/null'` ) then
 	alias vi $VISUAL
 endif
 # Set less as the default pager
-if ( -x `sh -c 'less 2>/dev/null'` ) then
+if ( -x `sh -c 'which less 2>/dev/null'` ) then
 	setenv PAGER `which less`
 endif
 # If we can sudo dodo!
