@@ -2,19 +2,13 @@
 # Not sure where I got all this from, it showed up along the way!
 # Latest copy always here: https://github.com/mattsday/dotfiles/
 
-# Don't load this if it's actually tcsh
-if ( $?tcsh ) then
-	source .tcshrc
-	return
-endif
-
 # ==========
 # Shell Init
 # ==========
 # Without these some options later may break...
 
 # Load any local config first (aliases should go in _local file)
-if ( -f "$HOME/.cshrc_config" ) then
+if ( -e "$HOME/.cshrc_config" ) then
 	source "$HOME/.cshrc_config"
 endif
 
@@ -140,7 +134,7 @@ setenv CLICOLOR "yes"
 setenv LSCOLORS "gxhxfxcxcxdxcxcxcxgxgx"
 
 # Do we need to load proxy settings?
-if ( -f $HOME/.enable_proxy ) then
+if ( -e "$HOME/.enable_proxy" ) then
 	source $HOME/.proxy_settings_csh
 endif
 
@@ -180,30 +174,17 @@ set history = 25000
 set histfile = ~/.csh_history
 set savehist = ($history merge)
 
-# Test for number of colours (and provide good example why c shell sucks!)
-set colours = `sh -c 'tput colors 2>/dev/null'`
-if ( $status > 0 ) then
-	echo eh
-	# If it's reporting as a 256-colour term try changing to just an xterm
-	if ( $TERM == "xterm-256color") then
-		setenv TERM xterm
-	endif
-	set colours = `sh -c 'tput colors 2>/dev/null'`
-	# If that still fails then disable colour
-	if ( $? > 0 ) then
-		set colours = 7
-	endif
-endif
-# Check if colour is disabled manually
-if ( -f ~/.disable_shell_colour ) then
-	set colours = 7
-endif
 set HOSTNAME = `hostname|awk -F \. '{print $1}'`
 set prompt = "$USER@$HOSTNAME> "
 
+# Load tcsh specific stuff
+if ( $?tcsh ) then
+	source "$HOME/.tcsh_settings"
+endif
+
 # Local system stuff (PATH, aliases etc)
-if ( -f $HOME/.tcshrc_local ) then
-	source $HOME/.tcshrc_local
+if ( -e $HOME/.cshrc_local ) then
+	source $HOME/.cshrc_local
 endif
 
 # vim: syntax=tcsh

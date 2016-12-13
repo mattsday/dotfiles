@@ -4,8 +4,8 @@
 # horrible but I want it over multiple lines and usable by standard shells...
 dotfiles="
 zshrc
-tcshrc
 cshrc
+tcsh_settings
 vimrc
 bashrc
 vimrc
