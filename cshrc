@@ -1,5 +1,5 @@
 # Matt Day's custom .cshrc file
-# Not sure where I got all this from, it showed up along the way!
+# This should work on any csh based shell including tcsh
 # Latest copy always here: https://github.com/mattsday/dotfiles/
 
 # ==========

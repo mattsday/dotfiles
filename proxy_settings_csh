@@ -11,34 +11,46 @@ setenv PROXY $proxy
 setenv HTTP_PROXY $proxy
 setenv HTTPS_PROXY $proxy
 setenv FTP_PROXY $proxy
-
-set prefixes = ( \
-	10.51.8 \
-	10.52.208 \
-	192.168.210 \
-	192.168.211 \
-	192.168.212 \
-	10.0.0 \
-)
-
 set no_proxy = ".cisco.com,127.0.0.1,localhost,local.home,0.0.0.0,"
 
-# Because csh doesn't support functions we have to do gross crap like this!
-foreach ip ($prefixes)
-	if ( -x `sh -c 'which jot 2>/dev/null'` ) then
-		set no_proxy = $no_proxy`jot -s , -w $ip.%d 256 0 256`,
-	else if (-x `sh -c 'which seq 2>/dev/null'` ) then
-		set no_proxy = $no_proxy`seq -f "$ip.%g" -s "," 0 255 | sed 's/,$//'`,
-	else
-		@ i = 0
-		while ($i <= 255)
-			set no_proxy = $no_proxy"$ip.$i,"
-			@ i++
-		end
+# Older tcsh versions (and csh) can't do long environment variables, disable
+# proxy subnet expansion
+if ( $?tcsh ) then
+	set tcsh_version = `echo $tcsh | awk -F\. '{print $1$2}'`
+	if ( $tcsh_version < 615 ) then
+		set disable_no_proxy = 1
 	endif
-end
+	unset tcsh_version
+else
+	set disable_no_proxy = 1
+endif
 
-set no_proxy = `echo $no_proxy | sed 's/,$//'`
+if ( $?disable_no_proxy == 0 ) then
+	set prefixes = ( \
+		10.51.8 \
+		10.52.208 \
+		192.168.210 \
+		192.168.211 \
+		192.168.212 \
+		10.0.0 \
+	)
+
+	# Because csh doesn't support functions we have to do gross crap like this!
+	foreach ip ($prefixes)
+		if ( -x `sh -c 'which jot 2>/dev/null'` ) then
+			set no_proxy = $no_proxy`jot -s , -w $ip.%d 256 0 256`,
+		else if (-x `sh -c 'which seq 2>/dev/null'` ) then
+			set no_proxy = $no_proxy`seq -f "$ip.%g" -s "," 0 255 | sed 's/,$//'`,
+		else
+			@ i = 0
+			while ($i <= 255)
+				set no_proxy = $no_proxy"$ip.$i,"
+				@ i++
+			end
+		endif
+	end
+	set no_proxy = `echo $no_proxy | sed 's/,$//'`
+endif
 
 setenv no_proxy $no_proxy
 setenv NO_PROXY $no_proxy
