@@ -11,7 +11,7 @@ setenv PROXY $proxy
 setenv HTTP_PROXY $proxy
 setenv HTTPS_PROXY $proxy
 setenv FTP_PROXY $proxy
-set no_proxy = ".cisco.com,127.0.0.1,localhost,local.home,0.0.0.0,"
+set no_proxy = "169.254.169.254,.cisco.com,127.0.0.1,localhost,local.home,0.0.0.0,"
 
 # Older tcsh versions (and csh) can't do long environment variables, disable
 # proxy subnet expansion

@@ -44,7 +44,7 @@ BE_WHITELIST=`ip_sequence 192.168.212`
 # Common OpenStack subnet whitelist
 OS_WHITELIST=`ip_sequence 10.0.0`
 
-no_proxy=".cisco.com,127.0.0.1,localhost,local.home,0.0.0.0,$CORP_A_WHITELIST,$CORP_B_WHITELIST,$FE_WHITELIST,$APP_WHITELIST,$BE_WHITELIST,$OS_WHITELIST"
+no_proxy="169.254.169.254,.cisco.com,127.0.0.1,localhost,local.home,0.0.0.0,$CORP_A_WHITELIST,$CORP_B_WHITELIST,$FE_WHITELIST,$APP_WHITELIST,$BE_WHITELIST,$OS_WHITELIST"
 NO_PROXY=$no_proxy
 export no_proxy NO_PROXY
 
