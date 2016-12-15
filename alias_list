@@ -1,0 +1,74 @@
+# =================
+# Alias definitions
+# =================
+# This file sets all the alias definitions in a shell-agnostic fashion
+#
+# Format:
+# alias @requirement,/path/to/requirement alias1=value @ alias2=value
+# Very exotic but it works :-). To update run init.sh
+
+# Allow sudo expansion
+alias @sudo sudo='sudo '
+
+# Git aliases
+alias @git gp='git pull'
+
+# Common shortcuts
+alias @/usr/bin/dircolors ls='ls --color=auto'
+alias @/usr/local/bin/gls ls='/usr/local/bin/gls --color=auto'
+alias ll='ls -lah'
+alias l='ls -aCF'
+alias l.='ls -d .*'
+alias j='jobs -l'
+alias 'cd..=cd ..'
+alias 'cd~=cd ~'
+alias 'tmuxa=tmux a'
+
+# If autocd doesn't work then at least give me this!
+alias ..='cd ..'
+
+# Don't enable homebrew analytics
+export @/usr/local/bin/brew HOMEBREW_NO_ANALYTICS=1
+alias @/usr/local/bin/brew update='brew update; brew upgrade; brew cleanup; brew doctor'
+
+# Use 1024 as the basic blocksize, not 512
+export BLOCKSIZE=K
+
+# Give me readable times
+export TIME_STYLE="long-iso"
+
+# Colours too!
+export CLICOLOR="yes"
+export LSCOLORS="gxhxfxcxcxdxcxcxcxgxgx"
+
+# Use vim instead of vi if it exists
+alias @vim vi=vim
+export @vim VISUAL=vim @ EDITOR=vim @ USE_EDITOR=vim
+
+# Use less as a pager
+export @less PAGER=less
+
+# Debian Systems
+alias @sudo,/usr/bin/apt-get apt-get='sudo apt-get' @ update='apt-get update && apt-get upgrade'
+alias @sudo,/usr/bin/apt-get,/usr/bin/aptitude aptitude='sudo aptitude' @ apt-get='aptitude'
+
+# Red Hat
+alias @/usr/bin/yum,sudo yum='sudo yum' @ update='yum update'
+
+# OpenBSD
+alias @/usr/sbin/pkg_add,sudo pkg_add='sudo /usr/sbin/pkg_add' @ pkg_delete='sudo /usr/sbin/pkg_delete' @ update='pkg_add -uvi'
+
+# FreeBSD
+alias @/usr/sbin/pkg,sudo pkg='sudo /usr/sbin/pkg' @ update='pkg update && pkg upgrade'
+alias @/usr/sbin/freebsd-update,sudo freebsd-update='sudo /usr/sbin/freebsd-update'
+
+# Fedora
+alias @/usr/bin/dnf,sudo dnf='sudo dnf' @ yum='dnf' @ update='dnf update'
+
+# SuSE
+alias @/usr/bin/zypper,sudo zypper='sudo zypper' @ update='zypper update'
+
+# Generic services
+alias @/usr/sbin/service service='sudo service'
+
+
