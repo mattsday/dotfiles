@@ -43,7 +43,7 @@ export LSCOLORS="gxhxfxcxcxdxcxcxcxgxgx"
 
 # Use vim instead of vi if it exists
 alias @vim vi=vim
-export @vim VISUAL=vim @ EDITOR=vim @ USE_EDITOR=vim
+export @vim VISUAL='vim' @ EDITOR='vim' @ USE_EDITOR='vim'
 
 # Use less as a pager
 export @less PAGER=less

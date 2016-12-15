@@ -72,7 +72,7 @@ add_export() {
 	IFS='@'
 	for export in $1; do
 		export_name=`echo $export | awk -F= '{print $1}' | xargs`
-		export_data=`echo $export | awk -F= '{print $2}'`
+		export_data=`echo $export | awk -F= '{print $2}' | xargs`
 		echo $export_name=\'$export_data\' >> $SH_ALIAS_FILE
 		echo export $export_name >> $SH_ALIAS_FILE
 		echo setenv $export_name \'$export_data\' >> $CSH_ALIAS_FILE
