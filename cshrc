@@ -88,7 +88,7 @@ set history = 25000
 set histfile = ~/.csh_history
 set savehist = ($history merge)
 
-set HOSTNAME = `hostname|awk -F \. '{print $1}'`
+set HOSTNAME = `hostname|awk -F\. '{print $1}'`
 set prompt = "$USER@$HOSTNAME> "
 
 # Load tcsh specific stuff
