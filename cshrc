@@ -85,6 +85,8 @@ unset ampm
 set padhour
 # Allow file completion on legacy
 set filec
+# Always rehash the PATH environment
+set autorehash
 
 # History management
 set history = 25000
