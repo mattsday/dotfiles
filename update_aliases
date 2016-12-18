@@ -38,7 +38,7 @@ add_alias() {
 		echo $alias_data | egrep '^!.*' >/dev/null 2>&1
 		if [ $? = 0 ]; then
 			ocmd=`echo $alias_data | awk '{ print $1 }' | sed 's/^!//'`
-			wcmd=`which $ocmd 2>/dev/null`
+			wcmd=`command -v $ocmd 2>/dev/null`
 			if [ $? = 0 ]; then
 				alias_data="`echo $wcmd $alias_data | sed 's|!'$ocmd'||' | xargs`"
 			fi
@@ -58,7 +58,7 @@ add_export() {
 		echo $export_data | egrep '^!.*' >/dev/null 2>&1
 		if [ $? = 0 ]; then
 			ocmd=`echo $export_data | awk '{ print $1 }' | sed 's/^!//'`
-			wcmd=`which $ocmd 2>/dev/null`
+			wcmd=`command -v $ocmd 2>/dev/null`
 			if [ $? = 0 ]; then
 				export_data="`echo $wcmd $export_data | sed 's|!'$ocmd'||' | xargs`"
 			fi
