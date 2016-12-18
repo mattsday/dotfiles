@@ -13,6 +13,9 @@ if ( -e "$HOME/.cshrc_config" ) then
 endif
 
 # Load alias definitions
+if ( -e "$HOME/.update_aliases" ) then
+	sh "$HOME/.update_aliases"
+endif
 
 if ( -e "$HOME/.csh_aliases" ) then
 	source "$HOME/.csh_aliases"

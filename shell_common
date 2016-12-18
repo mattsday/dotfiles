@@ -21,8 +21,12 @@ fi
 # =================
 # Alias definitions
 # =================
-# Load aliases from a separate file and parse them in to bourne-compatible notation 
+# Update the alias file
+if [ -f "$HOME/.update_aliases" ]; then
+	sh "$HOME/.update_aliases"
+fi
 
+# Load aliases from a separate file and parse them in to bourne-compatible notation 
 if [ -f "$HOME/.aliases" ]; then
 	. "$HOME/.aliases"
 fi
