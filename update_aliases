@@ -3,9 +3,11 @@ week=604800
 # Get the date
 date=`date +%s 2>/dev/null | xargs`
 if [ "$date" = "%s" ]; then
+	# Horrible Solaris workaround
 	date=`truss /usr/bin/date 2>&1 | grep ^time | awk -F= '{print $2}' | xargs`
 fi
 
+# If no argument is passed then check the last-updated time
 if [ -z $1 ]; then
 	lastdate=`cat "$HOME/.alias_update_time"`
 	diff=`expr $date - $lastdate`
@@ -13,7 +15,6 @@ if [ -z $1 ]; then
 		exit
 	fi
 fi
-
 
 SH_ALIAS_FILE="$HOME/.aliases"
 CSH_ALIAS_FILE="$HOME/.csh_aliases"
@@ -33,6 +34,7 @@ add_alias() {
 	for alias in $1; do
 		alias_name=`echo $alias | awk -F= '{print $1}' | xargs`
 		alias_data=`echo $alias | awk -F= '{print $2}'`
+		# Check if the command needs to be expanded
 		echo $alias_data | egrep '^!.*' >/dev/null 2>&1
 		if [ $? = 0 ]; then
 			ocmd=`echo $alias_data | awk '{ print $1 }' | sed 's/^!//'`
@@ -52,6 +54,7 @@ add_export() {
 	for export in $1; do
 		export_name=`echo $export | awk -F= '{print $1}' | xargs`
 		export_data=`echo $export | awk -F= '{print $2}' | xargs`
+		# Check if the command needs to be expanded
 		echo $export_data | egrep '^!.*' >/dev/null 2>&1
 		if [ $? = 0 ]; then
 			ocmd=`echo $export_data | awk '{ print $1 }' | sed 's/^!//'`
