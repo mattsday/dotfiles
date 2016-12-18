@@ -33,6 +33,15 @@ add_alias() {
 	for alias in $1; do
 		alias_name=`echo $alias | awk -F= '{print $1}' | xargs`
 		alias_data=`echo $alias | awk -F= '{print $2}'`
+		echo $alias_data | egrep '^!.*' >/dev/null 2>&1
+		if [ $? = 0 ]; then
+			ocmd=`echo $alias_data | awk '{ print $1 }' | sed 's/^!//'`
+			wcmd=`which $ocmd 2>/dev/null`
+			if [ $? = 0 ]; then
+				alias_data="`echo $wcmd $alias_data | sed 's|!'$ocmd'||' | xargs`"
+			fi
+			unset wcmd ocmd
+		fi
 		echo alias $alias_name=\'$alias_data\' >> $SH_ALIAS_FILE
 		echo alias $alias_name \'$alias_data\' >> $CSH_ALIAS_FILE
 	done
@@ -43,10 +52,18 @@ add_export() {
 	for export in $1; do
 		export_name=`echo $export | awk -F= '{print $1}' | xargs`
 		export_data=`echo $export | awk -F= '{print $2}' | xargs`
+		echo $export_data | egrep '^!.*' >/dev/null 2>&1
+		if [ $? = 0 ]; then
+			ocmd=`echo $export_data | awk '{ print $1 }' | sed 's/^!//'`
+			wcmd=`which $ocmd 2>/dev/null`
+			if [ $? = 0 ]; then
+				export_data="`echo $wcmd $export_data | sed 's|!'$ocmd'||' | xargs`"
+			fi
+			unset wcmd ocmd
+		fi
 		echo $export_name=\'$export_data\' >> $SH_ALIAS_FILE
 		echo export $export_name >> $SH_ALIAS_FILE
 		echo setenv $export_name \'$export_data\' >> $CSH_ALIAS_FILE
-		#export $export_name=$export_data
 	done
 }
 

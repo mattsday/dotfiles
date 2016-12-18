@@ -11,7 +11,7 @@
 alias @sudo sudo='sudo '
 
 # Git aliases
-alias @git gipl='git pull'@gicl='git clone'@gic='git commit'@gipush='git push'
+alias @git gipl='!git pull'@gicl='!git clone'@gic='!git commit'@gipush='!git push'
 
 # Common shortcuts
 alias @/usr/bin/dircolors ls='ls --color=auto'
@@ -42,8 +42,8 @@ export CLICOLOR="yes"
 export LSCOLORS="gxhxfxcxcxdxcxcxcxgxgx"
 
 # Use vim instead of vi if it exists
-alias @vim vi=vim
-export @vim VISUAL='vim' @ EDITOR='vim' @ USE_EDITOR='vim'
+alias @vim vi=!vim
+export @vim VISUAL='!vim'@EDITOR='!vim'@USE_EDITOR='!vim'
 
 # Use less as a pager
 export @less PAGER=less
