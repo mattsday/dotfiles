@@ -52,5 +52,5 @@ fi
 ln -fs "$PWD/vimrc" "$HOME/.config/nvim/init.vim"
 
 echo Setting up aliases
-sh ./update_aliases
+sh ./update_aliases force
 echo Done.
