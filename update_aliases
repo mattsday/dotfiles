@@ -29,7 +29,8 @@ rm $CSH_ALIAS_FILE >/dev/null 2>&1
 
 FILE_COMMENT="# This file is auto generated and replaced every 7 days.
 \n# Edit '$HOME/.alias_list' to change them and then run
-\n# \`$HOME/.update_aliases force\` to update this file."
+\n# \`$HOME/.update_aliases force\` to update this file.
+\n# Last updated: `date`"
 
 echo $FILE_COMMENT > $SH_ALIAS_FILE
 echo $FILE_COMMENT > $CSH_ALIAS_FILE
