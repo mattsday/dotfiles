@@ -46,8 +46,7 @@ add_alias() {
 			continue
 		fi
 		# Check if the command needs to be expanded
-		echo $alias_data | egrep '^!.*' >/dev/null 2>&1
-		if [ $? = 0 ]; then
+		if echo $alias_data | egrep '^!.*' >/dev/null 2>&1; then
 			wcmd=`command -v $first_command 2>/dev/null`
 			if [ $? = 0 ]; then
 				alias_data="`echo $wcmd $alias_data | sed 's|!'$first_command'||' | xargs`"
@@ -65,8 +64,7 @@ add_export() {
 		export_name=`echo $export | awk -F= '{print $1}' | xargs`
 		export_data=`echo $export | awk -F= '{print $2}' | xargs`
 		# Check if the command needs to be expanded
-		echo $export_data | egrep '^!.*' >/dev/null 2>&1
-		if [ $? = 0 ]; then
+		if echo $export_data | egrep '^!.*' >/dev/null 2>&1; then
 			ocmd=`echo $export_data | awk '{ print $1 }' | sed 's/^!//'`
 			wcmd=`command -v $ocmd 2>/dev/null`
 			if [ $? = 0 ]; then

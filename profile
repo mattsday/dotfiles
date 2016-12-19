@@ -91,8 +91,7 @@ PS1="$USER@$shorthost$ "
 dynamic_prompt=0
 
 # If this doesn't fail then it's very likely a dynamic shell
-$SHELL -c 'echo $(ls)' > /dev/null 2>&1
-if [ $? = 0 ]; then
+if $SHELL -c 'echo $(ls)' > /dev/null 2>&1; then
 	dynamic_prompt=1
 fi
 
