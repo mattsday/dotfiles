@@ -16,6 +16,11 @@ if [ -z $1 ]; then
 	fi
 fi
 
+IS_ROOT=0
+if [ `id -u` = 0 ]; then
+	IS_ROOT=1
+fi
+
 SH_ALIAS_FILE="$HOME/.aliases"
 CSH_ALIAS_FILE="$HOME/.csh_aliases"
 
@@ -34,15 +39,20 @@ add_alias() {
 	for alias in $1; do
 		alias_name=`echo $alias | awk -F= '{print $1}' | xargs`
 		alias_data=`echo $alias | awk -F= '{print $2}'`
+		first_command=`echo $alias_data | awk '{ print $1 }' | sed 's/^!//'`
+
+		# If it's a sudo alias don't do it as root
+		if [ "$IS_ROOT" = 1 ] && [ "$first_command" = "sudo" ]; then
+			continue
+		fi
 		# Check if the command needs to be expanded
 		echo $alias_data | egrep '^!.*' >/dev/null 2>&1
 		if [ $? = 0 ]; then
-			ocmd=`echo $alias_data | awk '{ print $1 }' | sed 's/^!//'`
-			wcmd=`command -v $ocmd 2>/dev/null`
+			wcmd=`command -v $first_command 2>/dev/null`
 			if [ $? = 0 ]; then
-				alias_data="`echo $wcmd $alias_data | sed 's|!'$ocmd'||' | xargs`"
+				alias_data="`echo $wcmd $alias_data | sed 's|!'$first_command'||' | xargs`"
 			fi
-			unset wcmd ocmd
+			unset wcmd first_command 
 		fi
 		echo alias $alias_name=\'$alias_data\' >> $SH_ALIAS_FILE
 		echo alias $alias_name \'$alias_data\' >> $CSH_ALIAS_FILE

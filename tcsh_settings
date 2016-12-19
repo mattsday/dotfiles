@@ -27,8 +27,15 @@ if ( $? > 0 ) then
 	endif
 endif
 
+# By default disable colour for root (enable by creating ~/.enable_shell_colour):
+if ( `id -u` == 0 ) then
+	set colours = 7
+endif
+
 # Check if colour is disabled manually
-if ( -e ~/.disable_shell_colour ) then
+if ( -e ~/.enable_shell_colour ) then
+	set colours = 256
+else if ( -e ~/.disable_shell_colour ) then
 	set colours = 7
 endif
 
@@ -46,7 +53,10 @@ if ( $colours >= 8 ) then
 		set prompt = "${green}%n${end}@${yellow}%m${end}:${cyan}%~${end}%# "
 	endif
 	# For some reason the colour isn't resetting unless I put a space here (iTerm bug?)
-	set rprompt = "${end}[%?]${grey}[%P]${end} "
+	# set rprompt = "${end}[%?]${grey}[%P]${end} "
+	# Removed colour for now:
+	set rprompt = "[%?][%P]"
+
 	# Cleanup
 	unset yellow cyan end grey green
 else

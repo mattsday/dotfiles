@@ -80,12 +80,17 @@ fi
 # =====================
 # Checks about terminal colour support
 
+# By default disable colour for root (enable by creating ~/.enable_shell_colour):
+if [ `id -u` = 0 ]; then
+	colours=7
+fi
+
 # Check if colours are forced-enabled/disabled:
 if [ -f "$HOME/.enable_shell_colour" ]; then
 	colours=256
 elif [ -f "$HOME/.disable_shell_colour" ]; then
 	colours=7
-else
+elif [ -z $colours ]; then
 	# Test for number of colours
 	colours=`tput colors 2> /dev/null`
 	# If tput errors out then try and fix...
