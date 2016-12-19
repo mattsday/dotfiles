@@ -51,7 +51,6 @@ for option (
 	noclobber 	# Require '>!' instead of '>' to overwrite a file
 	correct		# Correct common errors
 	prompt_subst	# Allow dynamic prompt
-	no_bang_hist	# Disable history expansion (allow the use of ! in interactive shells)
 ) setopt $option
 
 # Ensure ctrl-a/ctrl-e for home/end respectively (emacs compatibility):
