@@ -4,7 +4,7 @@
 # This file sets all the alias definitions in a shell-agnostic fashion
 #
 # Format:
-# alias @requirement,/path/to/requirement alias1=value @ alias2=value
+# alias @requirement,/path/to/requirement alias1=value @ alias2=!which-this-value
 # Very exotic but it works :-). To update run init.sh
 
 # Allow sudo expansion
@@ -15,11 +15,13 @@ alias @git gipl='!git pull'@gicl='!git clone'@gic='!git commit'@gipush='!git pus
 
 # Common shortcuts
 alias @/usr/bin/dircolors ls='ls --color=auto'
-alias @/usr/local/bin/gls ls='/usr/local/bin/gls --color=auto'
+alias @gls ls='!gls --color=auto'
 alias ll='ls -lah'
 alias l='ls -aCF'
 alias l.='ls -d .*'
 alias j='jobs -l'
+
+# Shit happens...
 alias 'cd..=cd ..'
 alias 'cd~=cd ~'
 alias 'tmuxa=tmux a'
@@ -29,6 +31,8 @@ alias ..='cd ..'
 
 # Don't enable homebrew analytics
 export @/usr/local/bin/brew HOMEBREW_NO_ANALYTICS=1
+
+# Single alias to upgrade homebrew
 alias @/usr/local/bin/brew update='brew update; brew upgrade; brew cleanup; brew doctor'
 
 # Use 1024 as the basic blocksize, not 512
@@ -50,7 +54,7 @@ export @less PAGER=less
 
 # Debian Systems
 alias @sudo,/usr/bin/apt-get apt-get='sudo apt-get'@update='apt-get update && apt-get upgrade'
-alias @sudo,/usr/bin/apt-get,/usr/bin/aptitude aptitude='sudo aptitude'@apt-get='aptitude'
+alias @sudo,/usr/bin/aptitude aptitude='sudo aptitude'@apt-get='aptitude'
 
 # Red Hat
 alias @/usr/bin/yum,sudo yum='sudo yum'@update='yum update'
