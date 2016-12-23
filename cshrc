@@ -53,9 +53,21 @@ alias gf 'grep -Ri "\!:1"'
 # =====================
 # These affect most systems and are (usually) harmless if run without...
 
-# Do we need to load proxy settings?
+# Migrate to new proxy configuration
 if ( -e "$HOME/.enable_proxy" ) then
-	source $HOME/.proxy_settings_csh
+	if ( -x "$HOME/.update_proxy" ) then
+		echo Updating deprecated proxy settings
+		rm -f "$HOME/.enable_proxy" "$HOME/.proxy_settings_csh"
+		"$HOME/.update_proxy" write
+	else
+		# Re-run the init script
+		echo Proxy settings updated, you should re-run the dotfiles ./init.sh script
+	endif
+endif
+
+# Check if proxy settings have been created
+if ( -f "$HOME/.csh_proxy_settings" ) then
+	source "$HOME/.csh_proxy_settings"
 endif
 
 # =============

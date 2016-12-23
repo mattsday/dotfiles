@@ -5,6 +5,7 @@
 dotfiles="
 alias_list
 update_aliases
+update_proxy
 zshrc
 cshrc
 tcsh_settings
@@ -19,8 +20,6 @@ tmux.conf
 shell_common
 gitconfig
 bash_profile
-proxy_settings
-proxy_settings_csh
 "
 
 mkdir backup > /dev/null 2>&1
