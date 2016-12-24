@@ -98,7 +98,13 @@ setenv PROXY "$proxy"
 setenv HTTP_PROXY "$proxy"
 setenv HTTPS_PROXY "$proxy"
 setenv FTP_PROXY "$proxy"
-setenv no_proxy "$no_proxy"
-setenv NO_PROXY "\$no_proxy"
+if ( \$?tcsh ) then
+	set tcsh_version = \`echo \$tcsh | awk -F. '{print \$1\$2}'\`
+	if ( \$tcsh_version > 614 ) then
+		setenv no_proxy "$no_proxy"
+		setenv NO_PROXY "\$no_proxy"
+	endif
+endif
+
 EOT
 fi
