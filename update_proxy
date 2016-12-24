@@ -29,6 +29,8 @@ ip_sequence() {
 	fi
 }
 
+unset no_proxy
+
 IFS=,
 for prefix in $ignore_prefixes; do
 	# Calculate addresses; only support /8, /16 and /24
