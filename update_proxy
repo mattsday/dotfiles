@@ -74,7 +74,8 @@ PROXY="$proxy"
 HTTP_PROXY="$proxy"
 HTTPS_PROXY="$proxy"
 FTP_PROXY="$proxy"
-NO_PROXY="$no_proxy"
+no_proxy="$no_proxy"
+NO_PROXY="\$no_proxy"
 export proxy http_proxy https_proxy ftp_proxy no_proxy
 export PROXY HTTP_PROXY HTTPS_PROXY FTP_PROXY NO_PROXY
 EOT
@@ -96,6 +97,6 @@ setenv HTTP_PROXY "$proxy"
 setenv HTTPS_PROXY "$proxy"
 setenv FTP_PROXY "$proxy"
 setenv no_proxy "$no_proxy"
-setenv NO_PROXY "$no_proxy"
+setenv NO_PROXY "\$no_proxy"
 EOT
 fi
