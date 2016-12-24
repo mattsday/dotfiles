@@ -68,6 +68,12 @@ else
 	set rprompt = "[%?][%P]"
 endif
 
+# Use > and # prompts for users and root respectively
+set promptchars = '>#'
+
+# Use modern echo style
+set echo_style = 'both'
+
 # Emacs mode
 bindkey -e
 bindkey "^W" backward-delete-word
