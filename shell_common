@@ -31,19 +31,6 @@ if [ -f "$HOME/.aliases" ]; then
 	. "$HOME/.aliases"
 fi
 
-# Colour grep output if GNU grep
-grep_ver=`grep --version 2> /dev/null`
-case $grep_ver in
-	*GNU*|*FreeBSD*)
-		alias grep='grep --color=auto'
-		alias egrep='egrep --color=auto'
-		alias fgrep='fgrep --color=auto'
-		GREP_COLORS="ms=01;32:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36"
-		export GREP_COLORS
-		;;
-esac
-unset grep_ver
-
 # Find function to quickly look for things in pwd
 f() {
 	find . -iname "*$1*"

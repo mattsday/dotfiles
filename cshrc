@@ -33,15 +33,6 @@ endif
 # Check the presence of various utilities and alias them to give them
 # preference ahead of lesser system defaults
 
-# Colour grep output (more proof csh sucks!)
-set grep_ver = `sh -c 'grep --version 2>&1 | grep -m 1 -o "GNU" 2>/dev/null' | awk '{print length($0)}'`
-if ( $grep_ver > 0 ) then
-	alias grep 'grep --color=auto'
-	alias egrep 'egrep --color=auto'
-	alias fgrep 'fgrep --color=auto'
-endif
-unset grep_ver
-
 # find function to quickly look for things in pwd
 alias f "find . -iname \*\!:1\*"
 
