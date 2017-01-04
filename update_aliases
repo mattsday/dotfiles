@@ -11,7 +11,7 @@ if [ "$date" = "%s" ]; then
 fi
 
 # If no argument is passed then check the last-updated time
-if [ -z $1 ]; then
+if [ -f "$HOME/.alias_update_time" ] && [ -z $1 ]; then
 	lastdate=`cat "$HOME/.alias_update_time"`
 	diff=`expr $date - $lastdate`
 	if [ $week -gt $diff ]; then
