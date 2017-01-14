@@ -1,6 +1,11 @@
 # Matt Day's ssh config file - not useful for anyone but sync'd with the rest of
 # my dotfiles
 # Latest copy always here: https://github.com/mattsday/dotfiles/
+#
+Host *
+	AddKeysToAgent yes
+	UseKeychain yes
+	IdentityFile ~/.ssh/id_rsa
 
 # ==============
 # Public Systems
