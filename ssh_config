@@ -2,10 +2,6 @@
 # my dotfiles
 # Latest copy always here: https://github.com/mattsday/dotfiles/
 #
-Host *
-	AddKeysToAgent yes
-	UseKeychain yes
-	IdentityFile ~/.ssh/id_rsa
 
 # ==============
 # Public Systems
