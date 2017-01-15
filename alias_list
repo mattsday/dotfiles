@@ -21,6 +21,9 @@ alias l='ls -aCF'
 alias l.='ls -d .*'
 alias j='jobs -l'
 
+# Run pip as sudo normally
+alias @pip pip='sudo -H pip'
+
 # Shit happens...
 alias 'cd..=cd ..'
 alias 'cd~=cd ~'
