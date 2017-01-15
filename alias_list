@@ -55,6 +55,9 @@ export @vim VISUAL='!vim'@EDITOR='!vim'@USE_EDITOR='!vim'
 # Use less as a pager
 export @less PAGER=less
 
+# On OS X, the go version of bosh is called gosh, alias to it if it exists:
+alias @gosh bosh=!gosh
+
 # Debian Systems
 alias @sudo,/usr/bin/apt-get apt-get='sudo apt-get'@update='apt-get update && apt-get upgrade'
 alias @sudo,/usr/bin/aptitude aptitude='sudo aptitude'@apt-get='aptitude'
