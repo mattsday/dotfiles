@@ -21,6 +21,9 @@ alias l='ls -aCF'
 alias l.='ls -d .*'
 alias j='jobs -l'
 
+# Use GNU find if available
+alias @gfind find='gfind'
+
 # Run pip as sudo normally
 alias @pip pip='sudo -H pip'
 
