@@ -26,7 +26,6 @@ alias @gfind find='gfind'
 alias @gsed sed='gsed'
 alias @gtar tar='gtar'
 alias @gawk awk='gawk'
-alias @ggrep grep='grep'
 
 # Run pip as sudo normally
 alias @pip pip='sudo -H pip'

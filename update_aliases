@@ -144,18 +144,25 @@ while IFS='' read -r line || [ -n "$line" ]; do
 	esac
 done < "$HOME/.alias_list"
 
+# Check if GNU grep is installed
+
+grep_cmd=grep
+if command -v ggrep >/dev/null 2>&1; then
+	grep_cmd=ggrep
+fi
+
 # Colour grep output if GNU grep
-grep_ver=`grep --version 2> /dev/null`
+grep_ver=`$grep_cmd --version 2> /dev/null`
 case $grep_ver in *GNU*)
-	echo 'alias grep="grep --color=auto"' >> $SH_ALIAS_FILE
-	echo 'alias egrep="egrep --color=auto"' >> $SH_ALIAS_FILE
-	echo 'alias fgrep="fgrep --color=auto"' >> $SH_ALIAS_FILE
+	echo 'alias grep="'$grep_cmd' --color=auto"' >> $SH_ALIAS_FILE
+	echo 'alias egrep="grep -E --color=auto"' >> $SH_ALIAS_FILE
+	echo 'alias fgrep="grep -F --color=auto"' >> $SH_ALIAS_FILE
 	echo 'GREP_COLORS="ms=01;32:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36"' >> $SH_ALIAS_FILE
 	echo export GREP_COLORS >> $SH_ALIAS_FILE
 
-	echo 'alias grep "grep --color=auto"' >> $CSH_ALIAS_FILE
-	echo 'alias egrep "egrep --color=auto"' >> $CSH_ALIAS_FILE
-	echo 'alias fgrep "fgrep --color=auto"' >> $CSH_ALIAS_FILE
+	echo 'alias grep "'$grep_cmd' --color=auto"' >> $CSH_ALIAS_FILE
+	echo 'alias egrep "grep -E --color=auto"' >> $CSH_ALIAS_FILE
+	echo 'alias fgrep "grep -F --color=auto"' >> $CSH_ALIAS_FILE
 	echo 'setenv GREP_COLORS "ms=01;32:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36"' >> $CSH_ALIAS_FILE
 	;;
 esac
