@@ -18,7 +18,6 @@
     "editor.autoClosingBrackets": false,
     "editor.cursorStyle": "block",
     "editor.cursorBlinking": "solid",
-    "editor.dragAndDrop": true,
     "extensions.autoUpdate": true,
     "telemetry.enableTelemetry": false,
     "telemetry.enableCrashReporter": false,
