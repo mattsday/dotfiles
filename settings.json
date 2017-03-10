@@ -1,0 +1,12 @@
+// Place your settings in this file to overwrite the default settings
+{
+    "vim.insertModeKeyBindings": [
+       {
+           "before": ["j", "j"],
+           "after": ["<esc>"]
+       }
+],
+"workbench.welcome.enabled": false,
+"editor.wordWrap": true,
+"editor.quickSuggestions": false
+}

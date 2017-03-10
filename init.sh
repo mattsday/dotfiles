@@ -50,6 +50,22 @@ if [ ! -d "$HOME/.config/nvim" ]; then
 fi
 ln -fs "$PWD/vimrc" "$HOME/.config/nvim/init.vim"
 
+# Visual studio code
+if [ -d "$HOME/Library/Application Support/Code/User" ]; then
+	VS_DIR="$HOME/Library/Application Support/Code/User"
+elif [ -d "$HOME/.config/Code/User" ]; then
+	VS_DIR="$HOME/.config/Code/User"
+fi
+if [ "$VS_DIR" ]; then
+	VS_SETTINGS="$VS_DIR/settings.json"
+	if [ -f "$VS_SETTINGS" ]  && [ ! -L "$VS_SETTINGS" ]; then
+		echo Backing up $VS_SETTINGS
+		mv "$VS_SETTINGS" "backup/local_settings.json"
+	fi
+	ln -fs "$PWD/settings.json" "$VS_SETTINGS"
+	echo Creating $VS_SETTINGS
+fi
+
 echo Setting up aliases
 sh ./update_aliases force
 echo Done.

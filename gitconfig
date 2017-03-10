@@ -4,7 +4,7 @@
 	email = mattsday@gmail.com
 	signingkey = 649AB73C
 [credential]
-	helper = osxkeychain
+	helper = cache
 [color]
 	diff = auto
 	status = auto
