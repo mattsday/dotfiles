@@ -1,12 +1,34 @@
 // Place your settings in this file to overwrite the default settings
 {
     "vim.insertModeKeyBindings": [
-       {
-           "before": ["j", "j"],
-           "after": ["<esc>"]
-       }
-],
-"workbench.welcome.enabled": false,
-"editor.wordWrap": true,
-"editor.quickSuggestions": false
+        {
+            "before": [
+                "j",
+                "j"
+            ],
+            "after": [
+                "<esc>"
+            ]
+        }
+    ],
+    "workbench.welcome.enabled": false,
+    "editor.wordWrap": true,
+    "editor.quickSuggestions": true,
+    "editor.minimap.enabled": true,
+    "editor.autoClosingBrackets": false,
+    "editor.cursorStyle": "block",
+    "editor.cursorBlinking": "solid",
+    "editor.dragAndDrop": true,
+    "extensions.autoUpdate": true,
+    "telemetry.enableTelemetry": false,
+    "telemetry.enableCrashReporter": false,
+    "[markdown]": {
+        "editor.wordWrap": "on",
+        "editor.quickSuggestions": false
+    },
+    "[yaml]": {
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2
+    },
+    "vim.history": 50
 }
