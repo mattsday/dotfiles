@@ -1,5 +1,6 @@
 // Place your settings in this file to overwrite the default settings
 {
+    // Map escape key for vim mode
     "vim.insertModeKeyBindings": [
         {
             "before": [
@@ -11,23 +12,31 @@
             ]
         }
     ],
+    "vim.history": 50,
     "workbench.welcome.enabled": false,
-    "editor.wordWrap": true,
-    "editor.quickSuggestions": true,
-    "editor.minimap.enabled": true,
+    // Disable word wrap
+    "editor.wordWrap": "off",
+    // I hate these
+    "editor.quickSuggestions": false,
     "editor.autoClosingBrackets": false,
+    // Some Atom-esqueness
+    "editor.minimap.enabled": true,
+    // This allegedly uses 16% CPU if 'blinking'
     "editor.cursorStyle": "block",
     "editor.cursorBlinking": "solid",
+    // Auto update
     "extensions.autoUpdate": true,
+    // No fucking way
     "telemetry.enableTelemetry": false,
     "telemetry.enableCrashReporter": false,
+    // Markdown specific goodness
     "[markdown]": {
         "editor.wordWrap": "on",
         "editor.quickSuggestions": false
     },
+    // Yaml specific goodness
     "[yaml]": {
         "editor.insertSpaces": true,
         "editor.tabSize": 2
-    },
-    "vim.history": 50
+    }
 }

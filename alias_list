@@ -53,6 +53,7 @@ export TIME_STYLE="long-iso"
 # Colours too!
 export CLICOLOR="yes"
 export LSCOLORS="gxhxfxcxcxdxcxcxcxgxgx"
+export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 # Use vim instead of vi if it exists
 alias @vim vi=!vim
@@ -86,5 +87,4 @@ alias @/usr/bin/zypper,sudo zypper='sudo zypper'@update='zypper update'
 
 # Generic services
 alias @/usr/sbin/service service='sudo service'
-
 
