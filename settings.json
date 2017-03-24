@@ -38,5 +38,8 @@
     "[yaml]": {
         "editor.insertSpaces": true,
         "editor.tabSize": 2
-    }
+    },
+    // @see Silicon Valley
+    "editor.insertSpaces": true,
+    "editor.tabSize": 4
 }
