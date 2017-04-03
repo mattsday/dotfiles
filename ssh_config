@@ -19,6 +19,10 @@ Host office-switch
 Host zaphod
 	Hostname zaphod.fragilegeek.com
 
+# Nicky's computer
+Host 10.86.0.7
+	User nicolapurves
+
 # ========================
 # Cisco Production Systems
 # ========================
