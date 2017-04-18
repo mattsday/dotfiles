@@ -18,7 +18,6 @@ screenrc
 profile
 tmux.conf
 shell_common
-gitconfig
 bash_profile
 "
 
