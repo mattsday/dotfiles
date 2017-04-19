@@ -49,6 +49,36 @@ if [ ! -d "$HOME/.config/nvim" ]; then
 fi
 ln -fs "$PWD/vimrc" "$HOME/.config/nvim/init.vim"
 
+# Firefox userChrome.css file
+if [ -d "$HOME/Library/Application Support/Firefox" ]; then
+	FF_PROFILE_PATH="$HOME/Library/Application Support/Firefox"
+elif [ -d "$HOME/.mozilla/firefox" ]; then
+	FF_PROFILE_PATH="$HOME/.mozilla/firefox"
+fi
+FF_PROFILE_INI="$FF_PROFILE_PATH/profiles.ini"
+
+if [ -f "$FF_PROFILE_INI" ]; then
+	if [ `grep '\[Profile[^0]\]' "$FF_PROFILE_INI" 2>/dev/null` ]; then
+		FF_PROFILE=`tr < "$FF_PROFILE_INI" -s '\n' '|' | sed 's/\[Profile[0-9]\]/\x0/g; s/$/\x0/; s/.*\x0\([^\x0]*Default=1[^\x0]*\)\x0.*/\1/; s/.*Path=\([^|]*\)|.*/\1/'`
+	else
+		FF_PROFILE=`grep 'Path=' "$FF_PROFILE_INI" 2>/dev/null | sed 's/^Path=//' 2>/dev/null`
+	fi
+	FF_PROFILE_PATH="$FF_PROFILE_PATH/$FF_PROFILE"
+
+	if [ -d "$FF_PROFILE_PATH" ]; then
+		if [ ! -d "$FF_PROFILE_PATH/Chrome" ]; then
+			mkdir -p "$FF_PROFILE_PATH/Chrome"
+		fi
+		USER_CHROME="$FF_PROFILE_PATH/Chrome/userChrome.css"
+		if [ -f "$USER_CHROME" ] && [ ! -L "$USER_CHROME" ]; then
+			echo Backing up $USER_CHROME
+			mv "$USER_CHROME" "backup/userChrome.css"
+		fi
+		echo Creating $USER_CHROME
+		ln -fs "$PWD/userChrome.css" "$USER_CHROME"
+	fi
+fi
+
 # Visual studio code
 if [ -d "$HOME/Library/Application Support/Code/User" ]; then
 	VS_DIR="$HOME/Library/Application Support/Code/User"
@@ -57,12 +87,12 @@ elif [ -d "$HOME/.config/Code/User" ]; then
 fi
 if [ "$VS_DIR" ]; then
 	VS_SETTINGS="$VS_DIR/settings.json"
-	if [ -f "$VS_SETTINGS" ]  && [ ! -L "$VS_SETTINGS" ]; then
+	if [ -f "$VS_SETTINGS" ] && [ ! -L "$VS_SETTINGS" ]; then
 		echo Backing up $VS_SETTINGS
 		mv "$VS_SETTINGS" "backup/local_settings.json"
 	fi
-	ln -fs "$PWD/settings.json" "$VS_SETTINGS"
 	echo Creating $VS_SETTINGS
+	ln -fs "$PWD/settings.json" "$VS_SETTINGS"
 fi
 
 echo Setting up aliases
