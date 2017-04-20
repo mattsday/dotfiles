@@ -66,10 +66,10 @@ if [ -f "$FF_PROFILE_INI" ]; then
 	FF_PROFILE_PATH="$FF_PROFILE_PATH/$FF_PROFILE"
 
 	if [ -d "$FF_PROFILE_PATH" ]; then
-		if [ ! -d "$FF_PROFILE_PATH/Chrome" ]; then
-			mkdir -p "$FF_PROFILE_PATH/Chrome"
+		if [ ! -d "$FF_PROFILE_PATH/chrome" ]; then
+			mkdir -p "$FF_PROFILE_PATH/chrome"
 		fi
-		USER_CHROME="$FF_PROFILE_PATH/Chrome/userChrome.css"
+		USER_CHROME="$FF_PROFILE_PATH/chrome/userChrome.css"
 		if [ -f "$USER_CHROME" ] && [ ! -L "$USER_CHROME" ]; then
 			echo Backing up $USER_CHROME
 			mv "$USER_CHROME" "backup/userChrome.css"
