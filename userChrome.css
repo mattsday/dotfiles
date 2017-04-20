@@ -1,8 +1,10 @@
     /* Tab colse buttons left + disable tab favicons */
-/*    .tab-close-button { box-ordinal-group: 1 !important;}
-    .tab-text { box-ordinal-group: 2 !important;}
-    .tab-throbber { box-ordinal-group: 3 !important;}*/
-/*    .tab-icon-image { -moz-box-ordinal-group: 4; visibility: hidden !important;} */
+    .tabbrowser-tab .tab-close-button { -moz-box-ordinal-group: 3 !important;}
+    .tabbrowser-tab .tab-text { -moz-box-ordinal-group: 2 !important;}
+    .tabbrowser-tab .tab-throbber { -moz-box-ordinal-group: 1 !important;}
+/*    .tabbrowser-tab .tab-icon-image { -moz-box-ordinal-group: 4; visibility: hidden !important;} */
+    .tabbrowser-tab .tab-icon-image { display: none !important;}
+
 
     .tabbrowser-tab[pinned] .tab-icon-image {
       visibility: visible !important;
@@ -26,6 +28,11 @@
       padding-top: 0px !important;
       padding-bottom: 0px !important;
     }
+
+	#zoom-controls {
+      padding-top: 0px !important;
+      padding-bottom: 0px !important;
+	}
 
     /* Personal bookmarks menu smaller  */
     #personal-bookmarks menu,
