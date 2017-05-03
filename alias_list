@@ -60,7 +60,8 @@ alias @vim vi=!vim
 export @vim VISUAL='!vim'@EDITOR='!vim'@USE_EDITOR='!vim'
 
 # Cloud Foundry-ness
-alias @cf cfa="cf a"@cfs="cf s"@cfm="cf m"@cfp="cf p"
+alias @cf cfa="cf a"@cfs="cf s"@cfm="cf m"@cfp="cf p"@cfl="cf logs"
+export @cf CF_COLOR=true
 
 # Use less as a pager
 export @less PAGER=less
