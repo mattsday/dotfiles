@@ -24,6 +24,13 @@ zmodload zsh/complist
 autoload -U complist
 # Check if autocomplete will work via -Uz
 autoload -Uz compinit 2>/dev/null
+
+# Enable command line editing
+autoload -U edit-command-line
+zle -N edit-command-line
+bindkey '^xe' edit-command-line
+bindkey '^x^e' edit-command-line
+
 comp_support=$?
 if (( $comp_support > 0 )); then
 	autoload -U compinit 2>/dev/null
