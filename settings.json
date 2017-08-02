@@ -15,7 +15,7 @@
     "vim.history": 50,
     "workbench.welcome.enabled": false,
     // Disable word wrap
-    "editor.wordWrap": "off",
+    "editor.wordWrap": "on",
     // I hate these
     "editor.quickSuggestions": false,
     "editor.autoClosingBrackets": false,
@@ -42,5 +42,6 @@
     // @see Silicon Valley
     "editor.insertSpaces": true,
     "editor.tabSize": 4,
-    "window.zoomLevel": 0
+    "window.zoomLevel": 2,
+    "vim.disableAnnoyingNeovimMessage": true
 }

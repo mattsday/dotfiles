@@ -25,7 +25,7 @@ set postponed="+.Drafts"
 # Add a few nice to haves here
 
 # Build local list of mailboxes
-mailboxes `echo -n "+ "; gfind ~/Maildir -maxdepth 1 -type d -name ".*" -printf "+'%f' "`
+mailboxes `echo -n "+ "; find ~/Maildir -maxdepth 1 -type d -name ".*" -printf "+'%f' "`
 macro index c "<change-folder>?<toggle-mailboxes>" "open a different folder"
 macro pager c "<change-folder>?<toggle-mailboxes>" "open a different folder"
 macro index C "<copy-message>?<toggle-mailboxes>" "copy a message to a mailbox"
