@@ -43,5 +43,6 @@
     "editor.insertSpaces": true,
     "editor.tabSize": 4,
     "window.zoomLevel": 2,
-    "vim.disableAnnoyingNeovimMessage": true
+    "vim.disableAnnoyingNeovimMessage": true,
+    "extensions.ignoreRecommendations": false
 }

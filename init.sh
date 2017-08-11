@@ -46,8 +46,20 @@ fi
 # Add nvim config file (same as vimrc):
 if [ ! -d "$HOME/.config/nvim" ]; then
 	mkdir -p "$HOME/.config/nvim"
+elif [ -f "$HOME/.config/nvim/init.vim" ] && [ ! -L "$HOME/.config/nvim/init.vim" ]; then
+	echo "Backing up old nvim config"
+	mv -f "$HOME/.config/nvim/init.vim" "backup/local-init.vim"
 fi
 ln -fs "$PWD/vimrc" "$HOME/.config/nvim/init.vim"
+
+# Add fish config file
+if [ ! -d "$HOME/.config/fish" ]; then
+	mkdir -p "$HOME/.config/fish"
+elif [ -f "$HOME/.config/fish/config.fish" ] && [ ! -L "$HOME/.config/fish/config.fish" ]; then
+	echo "Backing up old fish config"
+	mv -f "$HOME/.config/fish/config.fish" "backup/local-config.fish"
+fi
+ln -fs "$PWD/config.fish" "$HOME/.config/fish/config.fish"
 
 # Firefox userChrome.css file
 if [ -d "$HOME/Library/Application Support/Firefox" ]; then
