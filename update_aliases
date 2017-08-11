@@ -27,9 +27,11 @@ fi
 
 SH_ALIAS_FILE="$HOME/.aliases"
 CSH_ALIAS_FILE="$HOME/.csh_aliases"
+FISH_ALIAS_FILE="$HOME/.fish_aliases"
 
 rm $SH_ALIAS_FILE >/dev/null 2>&1
 rm $CSH_ALIAS_FILE >/dev/null 2>&1
+rm $FISH_ALIAS_FILE >/dev/null 2>&1
 
 cat <<EOT > $SH_ALIAS_FILE
 # Bourne shell alias file
@@ -43,6 +45,16 @@ EOT
 
 cat <<EOT > $CSH_ALIAS_FILE
 # csh and tcsh alias file
+#
+# This file is auto generated and replaced every 7 days.
+# Edit '$HOME/.alias_list' to change them and then run
+# \`$HOME/.update_aliases force\` to update this file.
+# Last updated: `date`
+
+EOT
+
+cat <<EOT > $FISH_ALIAS_FILE
+# Fish shell alias file
 #
 # This file is auto generated and replaced every 7 days.
 # Edit '$HOME/.alias_list' to change them and then run
@@ -72,6 +84,7 @@ add_alias() {
 		fi
 		echo alias $alias_name=\'$alias_data\' >> $SH_ALIAS_FILE
 		echo alias $alias_name \'$alias_data\' >> $CSH_ALIAS_FILE
+		echo alias $alias_name \'$alias_data\' >> $FISH_ALIAS_FILE
 	done
 }
 
@@ -92,6 +105,7 @@ add_export() {
 		echo $export_name=\'$export_data\' >> $SH_ALIAS_FILE
 		echo export $export_name >> $SH_ALIAS_FILE
 		echo setenv $export_name \'$export_data\' >> $CSH_ALIAS_FILE
+		echo set -u $export_name \'$export_data\' >> $FISH_ALIAS_FILE
 	done
 }
 

@@ -1,3 +1,20 @@
+# Load and update aliases
+if test -e ~/.update_aliases
+	~/.update_aliases
+end
+if test -e ~/.fish_aliases
+	source ~/.fish_aliases
+end
+
+# Useful functions
+function f
+	find . -iname "*$argv*"
+end
+
+function gf
+	grep -Ri "$argv"
+end
+
 # Set colours
 set -u fish_color_cwd cyan
 set -u fish_color_user green
