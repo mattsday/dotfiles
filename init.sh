@@ -29,6 +29,8 @@ for dotfile in $dotfiles; do
 		echo Backing up local "$dotfile"
 		mv -f "$HOME/.$dotfile" "backup/local-$dotfile"
 		verb=Creating
+	elif [ ! -f "$HOME/.$dotfile" ]; then
+		verb=Creating
 	fi
 	echo "$verb $HOME/.$dotfile"
 	ln -fs "$PWD/$dotfile" "$HOME/.$dotfile"
@@ -40,7 +42,9 @@ if [ -d "$HOME/.ssh" ]; then
 	if [ -f "$HOME/.ssh/config" ] && [ ! -L "$HOME/.ssh/config" ]; then
 		echo Backing up old ssh config
 		mv -f "$HOME/.ssh/config" "backup/local-ssh-config"
-		verb=Updating
+		verb=Creating
+	elif [ ! -f "$HOME/.ssh/config" ]; then
+		verb=Creating
 	fi
 	echo "$verb $HOME/.ssh/config"
 	ln -fs "$PWD/ssh_config" "$HOME/.ssh/config"
@@ -56,6 +60,8 @@ elif [ -f "$HOME/.config/nvim/init.vim" ] && [ ! -L "$HOME/.config/nvim/init.vim
 	echo "Backing up old nvim config"
 	mv -f "$HOME/.config/nvim/init.vim" "backup/local-init.vim"
 	verb=Creating
+elif [ ! -f "$HOME/.config/nvim/init.vim" ]; then
+	verb=Creating
 fi
 echo "$verb $HOME/.config/nvim/init.vim"
 ln -fs "$PWD/vimrc" "$HOME/.config/nvim/init.vim"
@@ -68,6 +74,8 @@ if [ ! -d "$HOME/.config/fish" ]; then
 elif [ -f "$HOME/.config/fish/config.fish" ] && [ ! -L "$HOME/.config/fish/config.fish" ]; then
 	echo "Backing up old fish config"
 	mv -f "$HOME/.config/fish/config.fish" "backup/local-config.fish"
+	verb=Creating
+elif [ ! -f "$HOME/.config/fish/config.fish" ]; then
 	verb=Creating
 fi
 ln -fs "$PWD/config.fish" "$HOME/.config/fish/config.fish"
@@ -119,6 +127,8 @@ if [ "$VS_DIR" ]; then
 	if [ -f "$VS_SETTINGS" ] && [ ! -L "$VS_SETTINGS" ]; then
 		echo Backing up $VS_SETTINGS
 		mv "$VS_SETTINGS" "backup/local_settings.json"
+		verb=Creating
+	elif [ ! -f "$VS_SETTINGS" ]; then
 		verb=Creating
 	fi
 	echo $verb $VS_SETTINGS
