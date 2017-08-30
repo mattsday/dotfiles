@@ -11,7 +11,6 @@ cshrc
 tcsh_settings
 vimrc
 bashrc
-vimrc
 kshrc
 muttrc
 screenrc
@@ -26,7 +25,7 @@ mkdir backup > /dev/null 2>&1
 for dotfile in $dotfiles; do
 	verb=Updating
 	if [ -f "$HOME/.$dotfile" ] && [ ! -L "$HOME/.$dotfile" ]; then
-		echo Backing up local "$dotfile"
+		echo Backing up local ."$dotfile" to $PWD/backup/local-$dotfile
 		mv -f "$HOME/.$dotfile" "backup/local-$dotfile"
 		verb=Creating
 	elif [ ! -f "$HOME/.$dotfile" ]; then
@@ -40,7 +39,7 @@ done
 if [ -d "$HOME/.ssh" ]; then
 	verb=Updating
 	if [ -f "$HOME/.ssh/config" ] && [ ! -L "$HOME/.ssh/config" ]; then
-		echo Backing up old ssh config
+		echo Backing up local ssh .config to "backup/local-ssh-config"
 		mv -f "$HOME/.ssh/config" "backup/local-ssh-config"
 		verb=Creating
 	elif [ ! -f "$HOME/.ssh/config" ]; then
@@ -57,7 +56,7 @@ if [ ! -d "$HOME/.config/nvim" ]; then
 	mkdir -p "$HOME/.config/nvim"
 	verb=Creating
 elif [ -f "$HOME/.config/nvim/init.vim" ] && [ ! -L "$HOME/.config/nvim/init.vim" ]; then
-	echo "Backing up old nvim config"
+	echo "Backing local nvim config to backup/local-init.vim"
 	mv -f "$HOME/.config/nvim/init.vim" "backup/local-init.vim"
 	verb=Creating
 elif [ ! -f "$HOME/.config/nvim/init.vim" ]; then
@@ -72,7 +71,7 @@ if [ ! -d "$HOME/.config/fish" ]; then
 	mkdir -p "$HOME/.config/fish"
 	verb=Creating
 elif [ -f "$HOME/.config/fish/config.fish" ] && [ ! -L "$HOME/.config/fish/config.fish" ]; then
-	echo "Backing up old fish config"
+	echo "Backing up local fish config to backup/local-config.fish"
 	mv -f "$HOME/.config/fish/config.fish" "backup/local-config.fish"
 	verb=Creating
 elif [ ! -f "$HOME/.config/fish/config.fish" ]; then
@@ -106,7 +105,7 @@ if [ -f "$FF_PROFILE_INI" ]; then
 		fi
 		USER_CHROME="$FF_PROFILE_PATH/chrome/userChrome.css"
 		if [ -f "$USER_CHROME" ] && [ ! -L "$USER_CHROME" ]; then
-			echo Backing up $USER_CHROME
+			echo Backing local up $USER_CHROME to "backup/userChrome.css"
 			mv "$USER_CHROME" "backup/userChrome.css"
 			verb=Creating
 		fi
@@ -125,7 +124,7 @@ fi
 if [ "$VS_DIR" ]; then
 	VS_SETTINGS="$VS_DIR/settings.json"
 	if [ -f "$VS_SETTINGS" ] && [ ! -L "$VS_SETTINGS" ]; then
-		echo Backing up $VS_SETTINGS
+		echo Backing up local $VS_SETTINGS to backup/local_settings.json
 		mv "$VS_SETTINGS" "backup/local_settings.json"
 		verb=Creating
 	elif [ ! -f "$VS_SETTINGS" ]; then
