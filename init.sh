@@ -24,42 +24,54 @@ bash_profile
 mkdir backup > /dev/null 2>&1
 
 for dotfile in $dotfiles; do
+	verb=Updating
 	if [ -f "$HOME/.$dotfile" ] && [ ! -L "$HOME/.$dotfile" ]; then
 		echo Backing up local "$dotfile"
 		mv -f "$HOME/.$dotfile" "backup/local-$dotfile"
+		verb=Creating
 	fi
-	echo "Creating $HOME/.$dotfile"
+	echo "$verb $HOME/.$dotfile"
 	ln -fs "$PWD/$dotfile" "$HOME/.$dotfile"
 done
 
 # Add ssh config file:
 if [ -d "$HOME/.ssh" ]; then
+	verb=Updating
 	if [ -f "$HOME/.ssh/config" ] && [ ! -L "$HOME/.ssh/config" ]; then
 		echo Backing up old ssh config
 		mv -f "$HOME/.ssh/config" "backup/local-ssh-config"
+		verb=Updating
 	fi
-	echo "Creating $HOME/.ssh/config"
+	echo "$verb $HOME/.ssh/config"
 	ln -fs "$PWD/ssh_config" "$HOME/.ssh/config"
 	chmod 600 "$HOME/.ssh/config"
 fi
 
 # Add nvim config file (same as vimrc):
+verb=Updating
 if [ ! -d "$HOME/.config/nvim" ]; then
 	mkdir -p "$HOME/.config/nvim"
+	verb=Creating
 elif [ -f "$HOME/.config/nvim/init.vim" ] && [ ! -L "$HOME/.config/nvim/init.vim" ]; then
 	echo "Backing up old nvim config"
 	mv -f "$HOME/.config/nvim/init.vim" "backup/local-init.vim"
+	verb=Creating
 fi
+echo "$verb $HOME/.config/nvim/init.vim"
 ln -fs "$PWD/vimrc" "$HOME/.config/nvim/init.vim"
 
 # Add fish config file
+verb=Updating
 if [ ! -d "$HOME/.config/fish" ]; then
 	mkdir -p "$HOME/.config/fish"
+	verb=Creating
 elif [ -f "$HOME/.config/fish/config.fish" ] && [ ! -L "$HOME/.config/fish/config.fish" ]; then
 	echo "Backing up old fish config"
 	mv -f "$HOME/.config/fish/config.fish" "backup/local-config.fish"
+	verb=Creating
 fi
 ln -fs "$PWD/config.fish" "$HOME/.config/fish/config.fish"
+echo "$verb $HOME/.config/fish/config.fish"
 
 # Firefox userChrome.css file
 if [ -d "$HOME/Library/Application Support/Firefox" ]; then
@@ -69,6 +81,8 @@ elif [ -d "$HOME/.mozilla/firefox" ]; then
 fi
 FF_PROFILE_INI="$FF_PROFILE_PATH/profiles.ini"
 
+
+verb=Updating
 if [ -f "$FF_PROFILE_INI" ]; then
 	if [ `grep '\[Profile[^0]\]' "$FF_PROFILE_INI" 2>/dev/null` ]; then
 		FF_PROFILE=`tr < "$FF_PROFILE_INI" -s '\n' '|' | sed 's/\[Profile[0-9]\]/\x0/g; s/$/\x0/; s/.*\x0\([^\x0]*Default=1[^\x0]*\)\x0.*/\1/; s/.*Path=\([^|]*\)|.*/\1/'`
@@ -80,18 +94,21 @@ if [ -f "$FF_PROFILE_INI" ]; then
 	if [ -d "$FF_PROFILE_PATH" ]; then
 		if [ ! -d "$FF_PROFILE_PATH/chrome" ]; then
 			mkdir -p "$FF_PROFILE_PATH/chrome"
+			verb=Creating
 		fi
 		USER_CHROME="$FF_PROFILE_PATH/chrome/userChrome.css"
 		if [ -f "$USER_CHROME" ] && [ ! -L "$USER_CHROME" ]; then
 			echo Backing up $USER_CHROME
 			mv "$USER_CHROME" "backup/userChrome.css"
+			verb=Creating
 		fi
-		echo Creating $USER_CHROME
+		echo $verb $USER_CHROME
 		ln -fs "$PWD/userChrome.css" "$USER_CHROME"
 	fi
 fi
 
 # Visual studio code
+verb=Updating
 if [ -d "$HOME/Library/Application Support/Code/User" ]; then
 	VS_DIR="$HOME/Library/Application Support/Code/User"
 elif [ -d "$HOME/.config/Code/User" ]; then
@@ -102,8 +119,9 @@ if [ "$VS_DIR" ]; then
 	if [ -f "$VS_SETTINGS" ] && [ ! -L "$VS_SETTINGS" ]; then
 		echo Backing up $VS_SETTINGS
 		mv "$VS_SETTINGS" "backup/local_settings.json"
+		verb=Creating
 	fi
-	echo Creating $VS_SETTINGS
+	echo $verb $VS_SETTINGS
 	ln -fs "$PWD/settings.json" "$VS_SETTINGS"
 fi
 
