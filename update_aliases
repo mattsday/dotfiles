@@ -1,7 +1,6 @@
 #!/bin/sh
 # This parses the alias_list format and generates alias files for various
 # shell environments; currently supports (t)csh and bourne shells.
-
 msg() {
 	if [ "$VERBOSE" = 1 ]; then
 		echo $*
@@ -84,7 +83,6 @@ EOT
 add_alias() {
 	IFS='@'
 	for alias in $1; do
-		aliases=`expr $aliases + 1`
 		alias_name=`echo $alias | awk -F= '{print $1}' | xargs`
 		alias_data=`echo $alias | awk -F= '{print $2}'`
 		first_command=`echo $alias_data | awk '{ print $1 }' | sed 's/^!//'`
@@ -93,6 +91,7 @@ add_alias() {
 		if [ "$IS_ROOT" = 1 ] && [ "$first_command" = "sudo" ]; then
 			continue
 		fi
+		aliases=`expr $aliases + 1`
 		# Check if the command needs to be expanded
 		if echo $alias_data | egrep '^!.*' >/dev/null 2>&1; then
 			wcmd=`command -v $first_command 2>/dev/null`
