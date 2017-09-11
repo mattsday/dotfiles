@@ -2,6 +2,17 @@
 # This parses the alias_list format and generates alias files for various
 # shell environments; currently supports (t)csh and bourne shells.
 
+msg() {
+	if [ "$VERBOSE" = 1 ]; then
+		echo $*
+	fi
+}
+debug() {
+	if [ "$DEBUG" = 1 ]; then
+		echo $*
+	fi
+}
+
 week=604800
 # Get the date
 date=`date +%s 2>/dev/null | xargs`
@@ -9,7 +20,7 @@ if [ "$date" = "%s" ]; then
 	# Horrible Solaris workaround
 	date=`truss /usr/bin/date 2>&1 | grep ^time | awk -F= '{print $2}' | xargs`
 fi
-
+VERBOSE=0
 # If no argument is passed then check the last-updated time
 if [ -f "$HOME/.alias_update_time" ] && [ -z $1 ]; then
 	lastdate=`cat "$HOME/.alias_update_time"`
@@ -17,17 +28,24 @@ if [ -f "$HOME/.alias_update_time" ] && [ -z $1 ]; then
 	if [ $week -gt $diff ]; then
 		exit
 	fi
-fi
-IS_ROOT=0
-if command -v id >/dev/null 2>&1; then
-	if [ `id -u` = 0 ]; then
-		IS_ROOT=1
-	fi
+else
+	# If an argument is passed, go verbose
+	VERBOSE=1
 fi
 
 SH_ALIAS_FILE="$HOME/.aliases"
 CSH_ALIAS_FILE="$HOME/.csh_aliases"
 FISH_ALIAS_FILE="$HOME/.fish_aliases"
+
+msg Updating aliases and environment variables
+
+IS_ROOT=0
+if command -v id >/dev/null 2>&1; then
+	if [ `id -u` = 0 ]; then
+		msg "Updating as root (ignoring sudo aliases)"
+		IS_ROOT=1
+	fi
+fi
 
 rm $SH_ALIAS_FILE >/dev/null 2>&1
 rm $CSH_ALIAS_FILE >/dev/null 2>&1
@@ -66,6 +84,7 @@ EOT
 add_alias() {
 	IFS='@'
 	for alias in $1; do
+		aliases=`expr $aliases + 1`
 		alias_name=`echo $alias | awk -F= '{print $1}' | xargs`
 		alias_data=`echo $alias | awk -F= '{print $2}'`
 		first_command=`echo $alias_data | awk '{ print $1 }' | sed 's/^!//'`
@@ -85,12 +104,14 @@ add_alias() {
 		echo alias $alias_name=\'$alias_data\' >> $SH_ALIAS_FILE
 		echo alias $alias_name \'$alias_data\' >> $CSH_ALIAS_FILE
 		echo alias $alias_name \'$alias_data\' >> $FISH_ALIAS_FILE
+		debug alias $alias_name=\'$alias_data\'
 	done
 }
 
 add_export() {
 	IFS='@'
 	for export in $1; do
+		variables=`expr $variables + 1`
 		export_name=`echo $export | awk -F= '{print $1}' | xargs`
 		export_data=`echo $export | awk -F= '{print $2}' | xargs`
 		# Check if the command needs to be expanded
@@ -106,9 +127,11 @@ add_export() {
 		echo export $export_name >> $SH_ALIAS_FILE
 		echo setenv $export_name \'$export_data\' >> $CSH_ALIAS_FILE
 		echo set -u $export_name \'$export_data\' >> $FISH_ALIAS_FILE
+		debug export "$export_name='$export_data'"
 	done
 }
-
+aliases=0
+variables=0
 while IFS='' read -r line || [ -n "$line" ]; do
 	case $line in
 		# Ignore comments
@@ -178,13 +201,21 @@ case $grep_ver in *GNU*)
 	echo 'alias egrep "grep -E --color=auto"' >> $CSH_ALIAS_FILE
 	echo 'alias fgrep "grep -F --color=auto"' >> $CSH_ALIAS_FILE
 	echo 'setenv GREP_COLORS "ms=01;32:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36"' >> $CSH_ALIAS_FILE
+
+	echo 'alias grep "'$grep_cmd' --color=auto"' >> $FISH_ALIAS_FILE
+	echo 'alias egrep "grep -E --color=auto"' >> $FISH_ALIAS_FILE
+	echo 'alias fgrep "grep -F --color=auto"' >> $FISH_ALIAS_FILE
+	echo 'set -u GREP_COLORS "ms=01;32:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36"' >> $FISH_ALIAS_FILE
+
+	variables=`expr $variables + 1`
+	aliases=`expr $aliases + 3`
 	;;
 esac
 unset grep_ver
 
-
-
 # Write out last update time:
 echo $date>"$HOME/.alias_update_time"
+
+msg Created $aliases aliases and $variables environment variables
 
 # vim: syntax=sh

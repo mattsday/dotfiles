@@ -134,6 +134,5 @@ if [ "$VS_DIR" ]; then
 	ln -fs "$PWD/settings.json" "$VS_SETTINGS"
 fi
 
-echo Setting up aliases
 sh ./update_aliases force
 echo Done.
