@@ -19,6 +19,17 @@ if [[ ! -x /usr/local/bin/brew ]]; then
 	echo Homebrew installation failed. Aborting
 	exit
 fi
+
+# Update homebrew
+echo Updating homebrew
+brew update >/dev/null
+
+# Set up some taps
+echo Setting up brew taps
+brew tap caskroom/cask >/dev/null
+brew tap cloudfoundry/tap >/dev/null
+
+
 installed=$(brew list)
 features=(
 	gawk
