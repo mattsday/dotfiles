@@ -23,10 +23,13 @@ if [ -f "/etc/debian_version" ] && [ -x "/usr/bin/apt-get" ]; then
 fi
 
 # Perhaps a Red Hattish?
-if [ -f "/etc/os-version" ]; then
-	if [ -f "/usr/bin/yum" ] || [ -f "/usr/bin/dnf" ]; then
-		./centos-bootstrap.sh
-		exit
+if [ -f "/etc/os-release" ]; then
+	RELEASE=`cat /etc/os-release | grep '^ID=' | awk -F= '{print $2}' | sed 's/"//g'`
+	if [ "$RELEASE" = centos ] || [ $RELEASE = redhat ] || [ $RELEASE = fedora]; then
+		if [ -f ./centos-bootstrap.sh ]; then
+			./centos-bootstrap.sh
+			exit
+		fi
 	fi
 fi
 
