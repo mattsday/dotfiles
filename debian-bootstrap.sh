@@ -11,21 +11,21 @@ if [[ ! -x "/usr/bin/apt-get" ]] || [[ ! -x "/usr/bin/dpkg" ]]; then
 	exit
 fi
 
-echo Updating system
-sudo apt-get -y update >/dev/null && sudo apt-get -y upgrade >/dev/null
-
 # Check if sudo is installed
 if [[ ! -x /usr/bin/sudo ]]; then
 	if command -v id >/dev/null 2>&1; then
-    if [ `id -u` = 0 ]; then
-		echo Installing sudo
-		apt-get install -y sudo >/dev/null
-	else
-		echo "User is not root and sudo isn't installed. Install sudo first"
-		exit
+	    if [ `id -u` = 0 ]; then
+			echo Installing sudo
+			apt-get install -y sudo >/dev/null
+		else
+			echo "User is not root and sudo isn't installed. Install sudo first"
+			exit
+		fi
 	fi
 fi
-	
+
+echo Updating system
+sudo apt-get -y update >/dev/null && sudo apt-get -y upgrade >/dev/null
 
 # Get list of installed apps
 installed=$(dpkg --get-selections | grep -v deinstall |awk '{print $1}' 2>/dev/null)
