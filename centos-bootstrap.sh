@@ -7,7 +7,7 @@ if [[ -f /etc/os-release ]]; then
 		centos*)
 			echo Detected CentOS
 			;;
-		redhat*)
+		rhel*)
 			echo Detected Red Hat
 
 			;;
