@@ -20,6 +20,13 @@ if [ -f "/etc/debian_version" ] && [ -x "/usr/bin/apt-get" ]; then
 		./debian-bootstrap.sh
 		exit
 	fi
-	exit
+fi
+
+# Perhaps a Red Hattish?
+if [ -f "/etc/os-version" ]; then
+	if [ -f "/usr/bin/yum" ] || [ -f "/usr/bin/dnf" ]; then
+		./centos-bootstrap.sh
+		exit
+	fi
 fi
 
