@@ -25,7 +25,7 @@ fi
 # Perhaps a Red Hattish?
 if [ -f "/etc/os-release" ]; then
 	RELEASE=`cat /etc/os-release | grep '^ID=' | awk -F= '{print $2}' | sed 's/"//g'`
-	if [ "$RELEASE" = centos ] || [ $RELEASE = redhat ] || [ $RELEASE = fedora]; then
+	if [ "$RELEASE" = centos ] || [ $RELEASE = redhat ] || [ $RELEASE = fedora ]; then
 		if [ -f ./centos-bootstrap.sh ]; then
 			./centos-bootstrap.sh
 			exit
