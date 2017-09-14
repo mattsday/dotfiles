@@ -4,6 +4,7 @@
 OS=$(uname)
 if [[ "$OS" != "Darwin" ]]; then
 	echo Not OS X, stopping
+	exit
 fi
 
 # Is homebrew installed?
