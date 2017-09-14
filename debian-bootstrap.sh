@@ -6,7 +6,7 @@ if [[ ! -f "/etc/debian_version" ]]; then
 	exit
 fi
 # Use apt and assume somewhat recent versions
-if [[ ! -x "/usr/bin/apt" ]]; then
+if [[ ! -x "/usr/bin/apt-get" ]] || [[ ! -x "/usr/bin/dpkg" ]]; then
 	echo "You need apt to run this"
 	exit
 fi
