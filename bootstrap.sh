@@ -14,7 +14,7 @@ if [ "$SYSTEM" = Darwin ]; then
 		exit
 	fi
 elif [ "$SYSTEM" = FreeBSD ]; then
-	if [ -f ./mac-bootstrap.sh ]; then
+	if [ -f ./freebsd-bootstrap.sh ]; then
 		echo Detected FreeBSD
 		./freebsd-bootstrap.sh
 		exit
