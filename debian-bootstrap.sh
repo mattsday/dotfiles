@@ -47,6 +47,7 @@ openssh-client
 wget
 xz-utils
 zip
+tmux
 "
 for utility in $list; do
 	exists=$(echo $installed | tr " " "\n" | grep -wx $utility)

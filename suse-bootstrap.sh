@@ -52,6 +52,7 @@ tcsh
 wget
 xz
 zip
+tmux
 "
 for utility in $list; do
 	exists=$(echo $installed | tr " " "\n" | grep -wx $utility)

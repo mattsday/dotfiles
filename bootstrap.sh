@@ -13,6 +13,12 @@ if [ "$SYSTEM" = Darwin ]; then
 		./mac-bootstrap.sh
 		exit
 	fi
+elif [ "$SYSTEM" = FreeBSD ]; then
+	if [ -f ./mac-bootstrap.sh ]; then
+		echo Detected FreeBSD
+		./freebsd-bootstrap.sh
+		exit
+	fi
 fi
 
 # Maybe Debian?
