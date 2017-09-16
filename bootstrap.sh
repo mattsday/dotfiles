@@ -24,15 +24,20 @@ if [ -f "/etc/debian_version" ] && [ -x "/usr/bin/apt-get" ]; then
 	fi
 fi
 
-# Perhaps a Red Hattish?
 if [ -f "/etc/os-release" ]; then
 	RELEASE=`cat /etc/os-release | grep '^ID=' | awk -F= '{print $2}' | sed 's/"//g'`
+	# Perhaps a Red Hattish?
 	if [ "$RELEASE" = centos ] || [ $RELEASE = rhel ] || [ $RELEASE = fedora ]; then
 		if [ -f ./centos-bootstrap.sh ]; then
 			echo Detected Red Hat flavoured
 			./centos-bootstrap.sh
 			exit
 		fi
+	elif [ "$RELEASE" = suse ] || [ $RELEASE = opensuse ]; then
+	        if [ -f ./suse-bootstrap.sh ]; then
+	            echo Detected SuSE flavoured
+	            ./suse-bootstrap.sh
+	            exit
+	        fi
 	fi
 fi
-
