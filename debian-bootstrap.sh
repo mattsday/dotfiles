@@ -31,6 +31,7 @@ sudo apt-get -y update >/dev/null && sudo apt-get -y upgrade >/dev/null
 installed=$(dpkg --get-selections | grep -v deinstall |awk '{print $1}' 2>/dev/null)
 
 list="
+apt-utils
 zsh
 vim
 aptitude
