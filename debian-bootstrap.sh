@@ -1,5 +1,7 @@
 #!/bin/bash
 
+DEBIAN_FRONTEND=noninteractive
+
 # Only run on Debian and derivatives
 if [[ ! -f "/etc/debian_version" ]]; then
 	echo Not Debian, stopping
@@ -31,6 +33,7 @@ sudo apt-get -y update >/dev/null && sudo apt-get -y upgrade >/dev/null
 installed=$(dpkg --get-selections | grep -v deinstall |awk '{print $1}' 2>/dev/null)
 
 list="
+dialog
 apt-utils
 zsh
 vim
