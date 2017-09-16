@@ -10,9 +10,6 @@
 # Allow sudo expansion
 alias @sudo sudo='sudo '
 
-# Git aliases
-alias @git gipl='!git pull'@gicl='!git clone'@gic='!git commit'@gipush='!git push'
-
 # Common shortcuts
 alias @/usr/bin/dircolors ls='ls --color=auto'
 alias ll='ls -lah'
