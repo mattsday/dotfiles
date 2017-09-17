@@ -23,6 +23,9 @@ fi
 # Update homebrew
 echo Updating homebrew
 brew update >/dev/null
+echo Updating system
+brew upgrade >/dev/null
+brew cleanup >/dev/null
 
 # Set up some taps
 echo Setting up brew taps
