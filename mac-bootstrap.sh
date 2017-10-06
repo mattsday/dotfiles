@@ -61,7 +61,6 @@ features=(
 	cmake
 	awscli
 	bosh-init
-	bosh-cli
 	gradle
 	mutt
 	node

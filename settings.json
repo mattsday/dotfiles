@@ -42,7 +42,7 @@
     // @see Silicon Valley
     "editor.insertSpaces": true,
     "editor.tabSize": 4,
-    "window.zoomLevel": 1,
+    "window.zoomLevel": 3,
     "vim.disableAnnoyingNeovimMessage": true,
     "extensions.ignoreRecommendations": false
 }

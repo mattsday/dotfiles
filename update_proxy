@@ -4,15 +4,16 @@
 # (~/.update_proxy write) - the latter will cause it to create csh files
 # too
 
-# Full proxy server
-proxy="http://proxy.esl.cisco.com:80/"
-
-# Comma separated list of hosts to ignore
-ignore_hosts="cisco.com, 169.254.169.254, .cisco.com, 127.0.0.1, localhost, local.home, 0.0.0.0"
-
-# Comma separted list of IP prefixes to ignore in CIDR notation
-# Note only /24 is supported today
-ignore_prefixes="10.0.0.0/24, 10.52.208.0/24, 10.51.8.0/24"
+if [ ! -f "./proxy_settings" ]; then
+	echo "You need to provide a proxy_settings file"
+	echo "Format:"
+	echo proxy=\"http://host:port\"
+	echo ignore_hosts=\"domain_a, ip_b\"
+	echo ignore_prefixes=\"10.0.0.0/24, 10.0.1.0/24\"
+	exit
+fi
+# Load settings
+. ./proxy_settings
 
 ip_sequence() {
 	if command -v jot > /dev/null 2>&1; then

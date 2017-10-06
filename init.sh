@@ -35,21 +35,6 @@ for dotfile in $dotfiles; do
 	ln -fs "$PWD/$dotfile" "$HOME/.$dotfile"
 done
 
-# Add ssh config file:
-if [ -d "$HOME/.ssh" ]; then
-	verb=Updating
-	if [ -f "$HOME/.ssh/config" ] && [ ! -L "$HOME/.ssh/config" ]; then
-		echo Backing up local ssh .config to "backup/local-ssh-config"
-		mv -f "$HOME/.ssh/config" "backup/local-ssh-config"
-		verb=Creating
-	elif [ ! -f "$HOME/.ssh/config" ]; then
-		verb=Creating
-	fi
-	echo "$verb $HOME/.ssh/config"
-	ln -fs "$PWD/ssh_config" "$HOME/.ssh/config"
-	chmod 600 "$HOME/.ssh/config"
-fi
-
 # Add nvim config file (same as vimrc):
 verb=Updating
 if [ ! -d "$HOME/.config/nvim" ]; then
