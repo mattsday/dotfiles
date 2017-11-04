@@ -35,6 +35,9 @@ alias ..='cd ..'
 # Don't enable homebrew analytics
 export @/usr/local/bin/brew HOMEBREW_NO_ANALYTICS=1
 
+# ...not .NET ones
+export @dotnet DOTNET_CLI_TELEMETRY_OPTOUT=1
+
 # Single alias to upgrade homebrew
 alias @/usr/local/bin/brew update='brew update; brew upgrade; brew cleanup; brew doctor'
 
