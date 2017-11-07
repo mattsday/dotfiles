@@ -1,6 +1,6 @@
 #!/bin/sh
 # This parses the alias_list format and generates alias files for various
-# shell environments; currently supports (t)csh and bourne shells.
+# shell environments; currently supports (t)csh, fish and bourne shells.
 msg() {
 	if [ "$VERBOSE" = 1 ]; then
 		echo $*
@@ -50,13 +50,15 @@ rm $SH_ALIAS_FILE >/dev/null 2>&1
 rm $CSH_ALIAS_FILE >/dev/null 2>&1
 rm $FISH_ALIAS_FILE >/dev/null 2>&1
 
+updated=`date`
+
 cat <<EOT > $SH_ALIAS_FILE
 # Bourne shell alias file
 #
 # This file is auto generated and replaced every 7 days.
 # Edit '$HOME/.alias_list' to change them and then run
 # \`$HOME/.update_aliases force\` to update this file.
-# Last updated: `date`
+# Last updated: $updated
 
 EOT
 
@@ -66,7 +68,7 @@ cat <<EOT > $CSH_ALIAS_FILE
 # This file is auto generated and replaced every 7 days.
 # Edit '$HOME/.alias_list' to change them and then run
 # \`$HOME/.update_aliases force\` to update this file.
-# Last updated: `date`
+# Last updated: $updated
 
 EOT
 
@@ -76,7 +78,7 @@ cat <<EOT > $FISH_ALIAS_FILE
 # This file is auto generated and replaced every 7 days.
 # Edit '$HOME/.alias_list' to change them and then run
 # \`$HOME/.update_aliases force\` to update this file.
-# Last updated: `date`
+# Last updated: $updated
 
 EOT
 
