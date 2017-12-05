@@ -216,8 +216,8 @@ unset grep_ver
 
 # Add json paste command
 if command -v pbpaste >/dev/null 2>&1; then
-	echo 'json() {'"\n\t"'pbpaste | jq '"'"'.'"'"' | pbcopy'"\n\t"'pbpaste'"\n"'}' >> $SH_ALIAS_FILE
-	echo 'alias json '"'"'pbpaste | jq '"'.'"' | pbcopy; pbpaste'"'"'' >> $CSH_ALIAS_FILE
+	echo 'alias json="pbpaste | jq '"'.'"' | pbcopy; pbpaste"' >> $SH_ALIAS_FILE
+	echo 'alias json "pbpaste | jq '"'.'"' | pbcopy; pbpaste"' >> $CSH_ALIAS_FILE
 	aliases=`expr $aliases + 1`
 fi
 
