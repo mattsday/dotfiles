@@ -44,5 +44,17 @@
     "editor.tabSize": 4,
     "window.zoomLevel": 1,
     "vim.disableAnnoyingNeovimMessage": true,
-    "extensions.ignoreRecommendations": false
+    "extensions.ignoreRecommendations": false,
+    "mssql.connections": [
+        {
+            "server": "u011a3d881c9.database.windows.net",
+            "database": "uf9d94daeb6c",
+            "authenticationType": "SqlLogin",
+            "user": "u6c73bc24780",
+            "password": "",
+            "emptyPasswordInput": false,
+            "savePassword": true,
+            "profileName": "CFDB"
+        }
+    ]
 }

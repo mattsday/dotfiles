@@ -57,6 +57,7 @@ features=(
 	youtube-dl
 	cf-cli
 	dash
+	watch
 	kubernetes-cli
 	cmake
 	awscli
