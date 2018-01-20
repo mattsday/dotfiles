@@ -66,13 +66,24 @@ ln -fs "$PWD/config.fish" "$HOME/.config/fish/config.fish"
 echo "$verb $HOME/.config/fish/config.fish"
 
 # Firefox userChrome.css file
+FF_CHROME_FILE="userChrome.css"
+first=`echo $USER|cut -c1|tr [a-z] [A-Z]`
+second=`echo $USER|cut -c2-`
+WINUSER=$first$second
+
 if [ -d "$HOME/Library/Application Support/Firefox" ]; then
 	FF_PROFILE_PATH="$HOME/Library/Application Support/Firefox"
 elif [ -d "$HOME/.mozilla/firefox" ]; then
 	FF_PROFILE_PATH="$HOME/.mozilla/firefox"
+	FF_CHROME_FILE="userChrome-winlin.css"
+elif [ -d "/mnt/c/Users/$USER/AppData/Roaming/Mozilla/Firefox/" ]; then
+    FF_PROFILE_PATH="/mnt/c/Users/$USER/AppData/Roaming/Mozilla/Firefox/"
+    FF_CHROME_FILE="userChrome-winlin.css"
+elif [ -d "/mnt/c/Users/$WINUSER/AppData/Roaming/Mozilla/Firefox/" ]; then
+    FF_PROFILE_PATH="/mnt/c/Users/$WINUSER/AppData/Roaming/Mozilla/Firefox/"
+    FF_CHROME_FILE="userChrome-winlin.css"
 fi
 FF_PROFILE_INI="$FF_PROFILE_PATH/profiles.ini"
-
 
 verb=Updating
 if [ -f "$FF_PROFILE_INI" ]; then
@@ -81,6 +92,8 @@ if [ -f "$FF_PROFILE_INI" ]; then
 	else
 		FF_PROFILE=`grep 'Path=' "$FF_PROFILE_INI" 2>/dev/null | sed 's/^Path=//' 2>/dev/null`
 	fi
+	# Remove Windows crap from the end of the line
+	FF_PROFILE=`echo $FF_PROFILE | sed 's/\\r//g'`
 	FF_PROFILE_PATH="$FF_PROFILE_PATH/$FF_PROFILE"
 
 	if [ -d "$FF_PROFILE_PATH" ]; then
@@ -90,7 +103,7 @@ if [ -f "$FF_PROFILE_INI" ]; then
 		fi
 		USER_CHROME="$FF_PROFILE_PATH/chrome/userChrome.css"
 		if [ -f "$USER_CHROME" ] && [ ! -L "$USER_CHROME" ]; then
-			echo Backing local up $USER_CHROME to "backup/userChrome.css"
+			echo Backing up local $USER_CHROME to "backup/userChrome.css"
 			mv "$USER_CHROME" "backup/userChrome.css"
 			verb=Creating
 		fi
