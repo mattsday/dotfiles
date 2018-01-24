@@ -214,6 +214,18 @@ case $grep_ver in *GNU*)
 esac
 unset grep_ver
 
+# If using GNU du, df etc use si units
+if du /bin/ls --si >/dev/null 2>&1; then
+	echo 'alias du="du --si"' >> $SH_ALIAS_FILE
+	echo 'alias du "du --si"' >> $CSH_ALIAS_FILE
+	aliases=`expr $aliases + 1`
+fi
+if df --si >/dev/null 2>&1; then
+	echo 'alias df="df --si"' >> $SH_ALIAS_FILE
+	echo 'alias df "df --si"' >> $CSH_ALIAS_FILE
+	aliases=`expr $aliases + 1`
+fi
+
 # Add json paste command
 if command -v pbpaste >/dev/null 2>&1; then
 	echo 'alias json="pbpaste | jq '"'.'"' | pbcopy; pbpaste"' >> $SH_ALIAS_FILE
