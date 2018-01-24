@@ -141,10 +141,6 @@ if [ "$dynamic_prompt" = 1 ] || [ -f "$HOME/.full_shell" ]; then
 	fi
 	export PS1
 fi
-# Check if OpenStack RC file exists:
-if [ -f "$HOME/.openstack_credentials" ]; then
-	. "$HOME/.openstack_credentials"
-fi
 
 # Local bourne shell config (paths etc) (should be the last thing loaded)
 if [ -f "$HOME/.profile_local" ]; then
