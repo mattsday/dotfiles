@@ -22,7 +22,7 @@ alias j='jobs -l'
 
 # Use GNU tools if available
 alias @gls ls='!gls --si --color'
-alias @gls ll='ls -la'
+alias @gls ll='ls -laF'
 alias @gfind find='gfind'
 alias @gsed sed='gsed'
 alias @gtar tar='gtar'
