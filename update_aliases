@@ -36,6 +36,25 @@ SH_ALIAS_FILE="$HOME/.aliases"
 CSH_ALIAS_FILE="$HOME/.csh_aliases"
 FISH_ALIAS_FILE="$HOME/.fish_aliases"
 
+write_alias() {
+	alias_name=$1
+	alias_data=$2
+	echo alias $alias_name=\'$alias_data\' >> $SH_ALIAS_FILE
+	echo alias $alias_name \'$alias_data\' >> $CSH_ALIAS_FILE
+	echo alias $alias_name \'$alias_data\' >> $FISH_ALIAS_FILE
+	debug alias $alias_name=\'$alias_data\'
+}
+
+write_export() {
+	export_name=$1
+	export_data=$2
+	echo $export_name=\'$export_data\' >> $SH_ALIAS_FILE
+	echo export $export_name >> $SH_ALIAS_FILE
+	echo setenv $export_name \'$export_data\' >> $CSH_ALIAS_FILE
+	echo set -u $export_name \'$export_data\' >> $FISH_ALIAS_FILE
+	debug export "$export_name='$export_data'"
+}
+
 msg Updating aliases and environment variables
 
 IS_ROOT=0
@@ -102,10 +121,7 @@ add_alias() {
 			fi
 			unset wcmd first_command 
 		fi
-		echo alias $alias_name=\'$alias_data\' >> $SH_ALIAS_FILE
-		echo alias $alias_name \'$alias_data\' >> $CSH_ALIAS_FILE
-		echo alias $alias_name \'$alias_data\' >> $FISH_ALIAS_FILE
-		debug alias $alias_name=\'$alias_data\'
+		write_alias "$alias_name" "$alias_data"
 	done
 }
 
@@ -124,11 +140,7 @@ add_export() {
 			fi
 			unset wcmd ocmd
 		fi
-		echo $export_name=\'$export_data\' >> $SH_ALIAS_FILE
-		echo export $export_name >> $SH_ALIAS_FILE
-		echo setenv $export_name \'$export_data\' >> $CSH_ALIAS_FILE
-		echo set -u $export_name \'$export_data\' >> $FISH_ALIAS_FILE
-		debug export "$export_name='$export_data'"
+		write_export "$export_name" "$export_data"
 	done
 }
 aliases=0
@@ -192,21 +204,10 @@ fi
 # Colour grep output if GNU grep
 grep_ver=`$grep_cmd --version 2> /dev/null`
 case $grep_ver in *GNU*)
-	echo 'alias grep="'$grep_cmd' --color=auto"' >> $SH_ALIAS_FILE
-	echo 'alias egrep="grep -E --color=auto"' >> $SH_ALIAS_FILE
-	echo 'alias fgrep="grep -F --color=auto"' >> $SH_ALIAS_FILE
-	echo 'GREP_COLORS="ms=01;32:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36"' >> $SH_ALIAS_FILE
-	echo export GREP_COLORS >> $SH_ALIAS_FILE
-
-	echo 'alias grep "'$grep_cmd' --color=auto"' >> $CSH_ALIAS_FILE
-	echo 'alias egrep "grep -E --color=auto"' >> $CSH_ALIAS_FILE
-	echo 'alias fgrep "grep -F --color=auto"' >> $CSH_ALIAS_FILE
-	echo 'setenv GREP_COLORS "ms=01;32:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36"' >> $CSH_ALIAS_FILE
-
-	echo 'alias grep "'$grep_cmd' --color=auto"' >> $FISH_ALIAS_FILE
-	echo 'alias egrep "grep -E --color=auto"' >> $FISH_ALIAS_FILE
-	echo 'alias fgrep "grep -F --color=auto"' >> $FISH_ALIAS_FILE
-	echo 'set -u GREP_COLORS "ms=01;32:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36"' >> $FISH_ALIAS_FILE
+	write_alias grep "$grep_cmd --color=auto"
+	write_alias egrep "grep -E --color=auto"
+	write_alias fgrep "grep -F --color=auto"
+	write_export GREP_COLORS "ms=01;32:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36"
 
 	variables=`expr $variables + 1`
 	aliases=`expr $aliases + 3`
@@ -216,20 +217,17 @@ unset grep_ver
 
 # If using GNU du, df etc use si units
 if du /bin/ls --si >/dev/null 2>&1; then
-	echo 'alias du="du --si"' >> $SH_ALIAS_FILE
-	echo 'alias du "du --si"' >> $CSH_ALIAS_FILE
+	write_alias du "di --si"
 	aliases=`expr $aliases + 1`
 fi
 if df --si >/dev/null 2>&1; then
-	echo 'alias df="df --si"' >> $SH_ALIAS_FILE
-	echo 'alias df "df --si"' >> $CSH_ALIAS_FILE
+	write_alias df "df --si"
 	aliases=`expr $aliases + 1`
 fi
 
 # Add json paste command
 if command -v pbpaste >/dev/null 2>&1; then
-	echo 'alias json="pbpaste | jq '"'.'"' | pbcopy; pbpaste"' >> $SH_ALIAS_FILE
-	echo 'alias json "pbpaste | jq '"'.'"' | pbcopy; pbpaste"' >> $CSH_ALIAS_FILE
+	write_alias json "pbpaste | jq '"'.'"' | pbcopy; pbpaste"
 	aliases=`expr $aliases + 1`
 fi
 
