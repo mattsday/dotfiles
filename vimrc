@@ -66,6 +66,9 @@ set noerrorbells
 " Don't be fussy about case (e.g. searches)
 set ignorecase
 
+" OS X Crontab stuff
+autocmd filetype crontab setlocal nobackup nowritebackup
+
 "================
 " Numpad Hacks for Mac
 "================
