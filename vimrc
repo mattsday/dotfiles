@@ -27,31 +27,45 @@ endif
 "================
 "  Look & Feel
 "================
+
+" Show me where in the file I am at all times (col/line)
+set ruler
+
+" I always have a black-background in my terminals, tell vim this
+set background=dark
+
 " Syntax hilighting (if enabled and not running vim.tiny)
 if has("syntax")
 	syntax on
 endif
-" Show me where in the file I am at all times (col/line)
-set ruler
-" I always have a black-background in my terminals, tell vim this
-set background=dark
-" If using the VimR app, set the background to black
+
 if has("gui_vimr")
+	" If using the VimR app, set the background to black
 	highlight Normal guibg=Black
 endif
+
 " Disable the mouse (enabled by default in neovim)
 set mouse-=a
+
 " Enable auto indenting (maintain position between lines)
 set autoindent
+
 " Set tab width to 4
 set tabstop=4
 set shiftwidth=4
 set softtabstop=4
+
 " Hilight matching parenthesis etc
 set showmatch
-" Allow indentation based on file type if available
-if has("autocmd")
+
+if has("filetype")
+	" Allow indentation based on file type if available
 	filetype plugin indent on
+endif
+
+if has("autocmd")
+	" OS X Crontab stuff
+	autocmd filetype crontab setlocal nobackup nowritebackup
 endif
 
 "================
@@ -59,15 +73,15 @@ endif
 "================
 " Improve backspace's usefulness:
 set backspace=indent,eol,start
+
 " Support OS X weirdness (\r) files (iTunes uses this amongst others)
 set fileformats=unix,mac,dos
+
 " Don't beep. Ever.
 set noerrorbells
+
 " Don't be fussy about case (e.g. searches)
 set ignorecase
-
-" OS X Crontab stuff
-autocmd filetype crontab setlocal nobackup nowritebackup
 
 "================
 " Numpad Hacks for Mac
