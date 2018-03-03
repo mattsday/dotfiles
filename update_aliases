@@ -217,7 +217,7 @@ unset grep_ver
 
 # If using GNU du, df etc use si units
 if du /bin/ls --si >/dev/null 2>&1; then
-	write_alias du "di --si"
+	write_alias du "du --si"
 	aliases=`expr $aliases + 1`
 fi
 if df --si >/dev/null 2>&1; then
