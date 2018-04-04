@@ -38,7 +38,7 @@ features=(
 	gawk
 	grep
 	coreutils
-	android-platform-tools
+	android-sdk
 	zsh
 	bash
 	htop
