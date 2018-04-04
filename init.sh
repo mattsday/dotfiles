@@ -70,6 +70,7 @@ FF_CHROME_FILE="userChrome.css"
 first=`echo $USER|cut -c1|tr [a-z] [A-Z]`
 second=`echo $USER|cut -c2-`
 WINUSER=$first$second
+FF_WINDOWS=0
 
 if [ -d "$HOME/Library/Application Support/Firefox" ]; then
 	FF_PROFILE_PATH="$HOME/Library/Application Support/Firefox"
@@ -79,9 +80,11 @@ elif [ -d "$HOME/.mozilla/firefox" ]; then
 elif [ -d "/mnt/c/Users/$USER/AppData/Roaming/Mozilla/Firefox/" ]; then
     FF_PROFILE_PATH="/mnt/c/Users/$USER/AppData/Roaming/Mozilla/Firefox/"
     FF_CHROME_FILE="userChrome-winlin.css"
+	FF_WINDOWS=1
 elif [ -d "/mnt/c/Users/$WINUSER/AppData/Roaming/Mozilla/Firefox/" ]; then
     FF_PROFILE_PATH="/mnt/c/Users/$WINUSER/AppData/Roaming/Mozilla/Firefox/"
     FF_CHROME_FILE="userChrome-winlin.css"
+	FF_WINDOWS=1
 fi
 FF_PROFILE_INI="$FF_PROFILE_PATH/profiles.ini"
 
@@ -93,9 +96,10 @@ if [ -f "$FF_PROFILE_INI" ]; then
 		FF_PROFILE=`grep 'Path=' "$FF_PROFILE_INI" 2>/dev/null | sed 's/^Path=//' 2>/dev/null`
 	fi
 	# Remove Windows crap from the end of the line
-	FF_PROFILE=`echo $FF_PROFILE | sed 's/\\r//g'`
+	if [ "$FF_WINDOWS" = 1 ]; then
+		FF_PROFILE=`echo $FF_PROFILE | sed 's/\\r//g'`
+	fi
 	FF_PROFILE_PATH="$FF_PROFILE_PATH/$FF_PROFILE"
-
 	if [ -d "$FF_PROFILE_PATH" ]; then
 		if [ ! -d "$FF_PROFILE_PATH/chrome" ]; then
 			mkdir -p "$FF_PROFILE_PATH/chrome"
