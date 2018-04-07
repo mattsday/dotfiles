@@ -77,9 +77,24 @@ for feature in $features; do
 		brew install $feature > /dev/null 
 	fi
 done
-echo Installing Android SDK
-brew cask install android-sdk > /dev/null
+
+# Install casks
+installed=$(brew cask list)
+features=(
+	android-sdk
+	google-cloud-sdk
+	xquartz
+	fly
+)
+for feature in $features; do
+	exists=$(echo $installed | grep -w $feature)
+	if [[ -z $exists ]]; then
+		echo Installing $feature
+		brew cask install $feature > /dev/null 
+	fi
+done
 
 if [[ -x "$HOME/.update_aliases" ]]; then
 	$HOME/.update_aliases force
 fi
+
