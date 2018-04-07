@@ -38,7 +38,6 @@ features=(
 	gawk
 	grep
 	coreutils
-	android-sdk
 	zsh
 	bash
 	htop
@@ -78,6 +77,8 @@ for feature in $features; do
 		brew install $feature > /dev/null 
 	fi
 done
+echo Installing Android SDK
+brew cask install android-sdk > /dev/null
 
 if [[ -x "$HOME/.update_aliases" ]]; then
 	$HOME/.update_aliases force
