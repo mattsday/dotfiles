@@ -69,6 +69,7 @@ features=(
 	sqlite
 	tcsh
 	xz
+	azure-cli
 )
 for feature in $features; do
 	exists=$(echo $installed | grep -w $feature)
