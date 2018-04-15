@@ -93,15 +93,6 @@ case "$TERM" in xterm*|rxvt*)
 esac
 
 # Load local system stuff (local PATH, aliases etc)
-if [[ -f "$HOME/.bash_local" ]]; then
-	echo .bash_local is deprecated, moving to .bashrc_local
-	if [[ ! -f "$HOME/.bashrc_local" ]]; then
-		mv "$HOME/.bash_local" "$HOME/.bashrc_local"
-	else
-		echo 'Could not move file (.bashrc_local already exists)'
-	fi
-fi
-
 if [[ -f "$HOME/.bashrc_local" ]]; then
 	. "$HOME/.bashrc_local"
 fi
