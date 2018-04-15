@@ -71,7 +71,7 @@ case "$TERM" in xterm*|rxvt*)
 	PROMPT_COMMAND='echo -ne "\033]0;$HOSTNAME:${PWD/$HOME/~}\007"' ;; *)  ;;
 esac
 
-# Local bashrc config (paths etc) (should be the last thing loaded)
+# Local kshrc config (paths etc) (should be the last thing loaded)
 if [ -f "$HOME/.kshrc_local" ]; then
 	. "$HOME/.kshrc_local"
 fi

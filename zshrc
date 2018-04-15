@@ -180,17 +180,6 @@ esac
 # ======================
 # Check for (and source) additional plugins and resources, such as local config
 # files
-
-# Load local system stuff (local PATH, aliases etc)
-if [[ -f "$HOME/.zsh_local" ]]; then
-	echo .zsh_local is deprecated, moving to .zshrc_local
-	if [[ ! -f "$HOME/.zshrc_local" ]]; then
-		mv "$HOME/.zsh_local" "$HOME/.zshrc_local"
-	else
-		echo 'Could not move file (.zshrc_local already exists)'
-	fi
-fi
-
 if [[ -f "$HOME/.zshrc_local" ]]; then
 	. "$HOME/.zshrc_local"
 fi
