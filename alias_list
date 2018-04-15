@@ -2,10 +2,12 @@
 # Alias definitions
 # =================
 # This file sets all the alias definitions in a shell-agnostic fashion
+# The command `update_aliases` takes this file and creates output for
+# sh, csh, fish and any other shell I care to add in future.
 #
 # Format:
 # alias @requirement,/path/to/requirement alias1=value @ alias2=!which-this-value
-# Very exotic but it works :-). To update run init.sh
+# Very exotic but it works :-). To update run `update_aliases force`
 
 # Allow sudo expansion
 alias @sudo sudo='sudo '

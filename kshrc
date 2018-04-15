@@ -24,7 +24,7 @@ if [ -f "$HOME/.shell_common" ]; then
 	. "$HOME/.shell_common"
 fi
 
-shorthost=$(echo `hostname` | sed 's/\..*//')
+shorthost=`echo `hostname` | sed 's/\..*//'`
 
 if (( $colours >= 8 )); then
 	yellow="\033[01;33m"

@@ -75,18 +75,6 @@ extract () {
 # =====================
 # These affect most systems and are (usually) harmless if run without...
 
-# Migrate to new proxy configuration
-if [ -f "$HOME/.enable_proxy" ]; then
-	if [ -x "$HOME/.update_proxy" ]; then
-		echo Updating deprecated proxy settings
-		rm -f "$HOME/.enable_proxy" "$HOME/.proxy_settings"
-		"$HOME/.update_proxy" write
-	else
-		# Re-run the init script
-		echo Proxy settings updated, you should re-run the dotfiles ./init.sh script
-	fi
-fi
-
 # Check if proxy settings have been created
 if [ -f "$HOME/.sh_proxy_settings" ]; then
 	. "$HOME/.sh_proxy_settings"
