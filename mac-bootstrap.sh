@@ -47,6 +47,7 @@ features=(
 	maven
 	multimarkdown
 	flac
+	jq
 	fish
 	findutils
 	tmux
@@ -86,6 +87,7 @@ features=(
 	google-cloud-sdk
 	xquartz
 	fly
+	qlmarkdown
 )
 for feature in $features; do
 	exists=$(echo $installed | grep -w $feature)
