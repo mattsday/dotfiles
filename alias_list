@@ -36,6 +36,7 @@ alias @gdf df='gdf --si'
 alias 'cd..=cd ..'
 alias 'cd~=cd ~'
 alias 'tmuxa=tmux a'
+alias @tmux-next tmux='tmux-next'
 
 # If autocd doesn't work then at least give me this!
 alias ..='cd ..'

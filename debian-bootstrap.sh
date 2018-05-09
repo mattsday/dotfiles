@@ -26,11 +26,28 @@ if [[ ! -x /usr/bin/sudo ]]; then
 	fi
 fi
 
+# Install standard tmux
+tmux=tmux
+
+# Are we using trusty?
+if [ -f "/etc/os-release" ]; then
+	OS_VER=$(cat /etc/os-release | grep '^VERSION_ID' | awk -F= '{print $2}' | xargs)
+	if [ $OS_VER = "14.04" ]; then
+		echo Adding PPA repository
+		sudo add-apt-repository -y ppa:pi-rho/dev > /dev/null
+		# Install tmux-next instead
+		tmux=tmux-next
+	fi
+fi
+
 echo Updating system
 sudo apt-get -y update >/dev/null && sudo apt-get -y upgrade >/dev/null
 
 # Get list of installed apps
 installed=$(dpkg --get-selections | grep -v deinstall |awk '{print $1}' 2>/dev/null)
+
+
+
 
 list="
 dialog
@@ -45,9 +62,10 @@ htop
 tcsh
 openssh-client
 wget
+jq
 xz-utils
 zip
-tmux
+$tmux
 "
 for utility in $list; do
 	exists=$(echo $installed | tr " " "\n" | grep -wx $utility)
