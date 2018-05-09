@@ -34,6 +34,9 @@ if [ -f "/etc/os-release" ]; then
 	OS_VER=$(cat /etc/os-release | grep '^VERSION_ID' | awk -F= '{print $2}' | xargs)
 	if [ $OS_VER = "14.04" ]; then
 		echo Adding PPA repository
+		if [ ! -x "/usr/bin/apt-add-repository" ]; then
+			apt-get -y install software-properties-common > /dev/null
+		fi
 		sudo add-apt-repository -y ppa:pi-rho/dev > /dev/null
 		# Install tmux-next instead
 		tmux=tmux-next
