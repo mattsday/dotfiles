@@ -49,10 +49,8 @@ sudo apt-get -y update >/dev/null && sudo apt-get -y upgrade >/dev/null
 # Get list of installed apps
 installed=$(dpkg --get-selections | grep -v deinstall |awk '{print $1}' 2>/dev/null)
 
-
-
-
 list="
+dnsutils
 dialog
 apt-utils
 zsh
