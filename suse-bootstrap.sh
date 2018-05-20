@@ -53,6 +53,7 @@ wget
 xz
 zip
 tmux
+hostname
 "
 for utility in $list; do
 	exists=$(echo $installed | tr " " "\n" | grep -wx $utility)

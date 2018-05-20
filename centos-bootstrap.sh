@@ -69,6 +69,8 @@ wget
 xz
 zip
 centos
+findutils
+hostname
 "
 for utility in $list; do
 	exists=$(echo $installed | tr " " "\n" | grep -wx $utility)
