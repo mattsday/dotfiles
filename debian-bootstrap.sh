@@ -18,13 +18,18 @@ if [[ ! -x /usr/bin/sudo ]]; then
 	if command -v id >/dev/null 2>&1; then
 	    if [ `id -u` = 0 ]; then
 			echo Installing sudo
-			apt-get install -y sudo >/dev/null
+			apt-get update >/dev/null
+			apt-get install -y apt-utils sudo >/dev/null
 		else
 			echo "User is not root and sudo isn't installed. Install sudo first"
 			exit
 		fi
 	fi
 fi
+
+echo Installing apt-utils
+sudo apt-get update
+sudo apt-get -y install apt-utils
 
 # Install standard tmux
 tmux=tmux
@@ -35,7 +40,7 @@ if [ -f "/etc/os-release" ]; then
 	if [ ! -z "$OS_VER" ] && [ "$OS_VER" = "14.04" ]; then
 		echo Adding PPA repository
 		if [ ! -x "/usr/bin/apt-add-repository" ]; then
-			apt-get -y install software-properties-common > /dev/null
+			sudo apt-get -y install software-properties-common > /dev/null
 		fi
 		sudo add-apt-repository -y ppa:pi-rho/dev > /dev/null
 		# Install tmux-next instead
@@ -44,7 +49,7 @@ if [ -f "/etc/os-release" ]; then
 fi
 
 echo Updating system
-sudo apt-get -y update >/dev/null && sudo apt-get -y upgrade >/dev/null
+sudo apt-get -y upgrade >/dev/null
 
 # Get list of installed apps
 installed=$(dpkg --get-selections | grep -v deinstall |awk '{print $1}' 2>/dev/null)
@@ -52,7 +57,6 @@ installed=$(dpkg --get-selections | grep -v deinstall |awk '{print $1}' 2>/dev/n
 list="
 dnsutils
 dialog
-apt-utils
 zsh
 vim
 aptitude

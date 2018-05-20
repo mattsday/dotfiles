@@ -62,7 +62,6 @@ list="
 zsh
 vim-enhanced
 findutils
-coreutils
 git
 tcsh
 wget
