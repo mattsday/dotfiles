@@ -69,8 +69,8 @@ features=(
 	python3
 	sqlite
 	tcsh
-	xz
 	azure-cli
+	mkvtoolnix
 )
 for feature in $features; do
 	exists=$(echo $installed | grep -w $feature)
