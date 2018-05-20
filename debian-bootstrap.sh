@@ -27,9 +27,11 @@ if [[ ! -x /usr/bin/sudo ]]; then
 	fi
 fi
 
-echo Installing apt-utils
-sudo apt-get update >/dev/null
-sudo apt-get -y install apt-utils dialog >/dev/null
+if ! dpkg-query -W apt-utils >/dev/null; then
+	echo Installing apt-utils
+	sudo apt-get update >/dev/null
+	sudo apt-get -y install apt-utils dialog >/dev/null
+fi
 
 # Install standard tmux
 tmux=tmux
