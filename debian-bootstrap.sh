@@ -19,18 +19,12 @@ if [[ ! -x /usr/bin/sudo ]]; then
 	    if [ `id -u` = 0 ]; then
 			echo Installing sudo
 			apt-get update >/dev/null
-			apt-get install -y apt-utils dialog sudo >/dev/null
+			apt-get install -y sudo >/dev/null
 		else
 			echo "User is not root and sudo isn't installed. Install sudo first"
 			exit
 		fi
 	fi
-fi
-
-if ! dpkg-query -W apt-utils >/dev/null; then
-	echo Installing apt-utils
-	sudo apt-get update >/dev/null
-	sudo apt-get -y install apt-utils dialog >/dev/null
 fi
 
 # Install standard tmux
@@ -57,6 +51,8 @@ sudo apt-get -y upgrade >/dev/null
 installed=$(dpkg --get-selections | grep -v deinstall |awk '{print $1}' 2>/dev/null)
 
 list="
+apt-utils
+dialog
 dnsutils
 zsh
 vim
