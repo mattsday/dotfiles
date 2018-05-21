@@ -42,5 +42,3 @@ if [ -f "/etc/os-release" ]; then
 	        fi
 	fi
 fi
-echo Sourcing changes
-. $HOME/.profile
