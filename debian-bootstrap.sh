@@ -45,7 +45,7 @@ if [ -f "/etc/os-release" ]; then
 fi
 
 echo Updating system
-sudo apt-get -y upgrade >/dev/null
+sudo apt-get update && sudo apt-get -y upgrade >/dev/null
 
 # Get list of installed apps
 installed=$(dpkg --get-selections | grep -v deinstall |awk '{print $1}' 2>/dev/null)
