@@ -27,18 +27,17 @@ export HISTCONTROL=ignoredups
 # Update lines and columns
 shopt -s checkwinsize
 
-
-shopt -s extglob	# Expanded globbing (i.e. allow 'ls -d ^*.jpg' to show non-jpg files)
-shopt -s cdspell	# Mispelled directory names
-set -o noclobber	# Require '>|' instead of '>' to overwrite a file
-set +o histexpand	# Disable history expansion (i.e. make echo "Hello World!" work!)
+shopt -s extglob  # Expanded globbing (i.e. allow 'ls -d ^*.jpg' to show non-jpg files)
+shopt -s cdspell  # Mispelled directory names
+set -o noclobber  # Require '>|' instead of '>' to overwrite a file
+set +o histexpand # Disable history expansion (i.e. make echo "Hello World!" work!)
 
 # Apple bundle a ridiculously old version of bash with OSX due to their
 # objection to GPL3... Guess us users must write crappy hacks to work around
 # it... thanks Apple!
-if (( $BASH_VERSINFO >= 4 )); then
-	shopt -s autocd		# Auto CD (i.e. can type '..' to change to parent directory, or 'bin' to change to ./bin)
-	shopt -s dirspell	# Correct spelling on directory names during globbing
+if ((BASH_VERSINFO >= 4)); then
+	shopt -s autocd   # Auto CD (i.e. can type '..' to change to parent directory, or 'bin' to change to ./bin)
+	shopt -s dirspell # Correct spelling on directory names during globbing
 fi
 
 # Make auto completion more zsh-like
@@ -66,17 +65,17 @@ fi
 # ===========
 # Specific options that affect the L&F of the shell
 
-if (( $colours >= 8 )); then
-	yellow="\[\033[01;33m\]"
-	green="\[\033[01;32m\]"
-	cyan="\[\033[01;36m\]"
-	end="\[\033[00m\]" 
+if ((colours >= 8)); then
+	yellow="\\[\\033[01;33m\\]"
+	green="\\[\\033[01;32m\\]"
+	cyan="\\[\\033[01;36m\\]"
+	end="\\[\\033[00m\\]"
 
 	# Custom prompt (coloured in yellow and cyan): user@host:~%
 	if [[ $USER == "matt" ]]; then
-		PS1="$yellow\h$end:$cyan\w$end\$ "
+		PS1="$yellow\\h$end:$cyan\\w$end\$ "
 	else
-		PS1="$green\u$end@$yellow\h$end:$cyan\w$end\$ "
+		PS1="$green\\u$end@$yellow\\h$end:$cyan\\w$end\$ "
 	fi
 	unset yellow cyan green end
 else
@@ -88,8 +87,10 @@ else
 fi
 
 # If this is an xterm set the title to host:dir
-case "$TERM" in xterm*|rxvt*)
-	PROMPT_COMMAND='echo -ne "\033]0;$HOSTNAME:${PWD/$HOME/~}\007"' ;; *)	;;
+case "$TERM" in xterm* | rxvt*)
+	PROMPT_COMMAND='echo -ne "\033]0;$HOSTNAME:${PWD/$HOME/~}\007"'
+	;;
+*) ;;
 esac
 
 # Load local system stuff (local PATH, aliases etc)
