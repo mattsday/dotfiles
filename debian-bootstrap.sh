@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DEBIAN_FRONTEND=noninteractive
+DEBIAN_FRONTEND="noninteractive"
 
 # Only run on Debian and derivatives
 if [[ ! -f "/etc/debian_version" ]]; then
@@ -16,7 +16,7 @@ fi
 # Check if sudo is installed
 if [[ ! -x /usr/bin/sudo ]]; then
 	if command -v id >/dev/null 2>&1; then
-	    if [ `id -u` = 0 ]; then
+	    if [ "$(id -u)" = 0 ]; then
 			echo Installing sudo
 			apt-get update >/dev/null
 			apt-get install -y sudo >/dev/null
@@ -28,11 +28,11 @@ if [[ ! -x /usr/bin/sudo ]]; then
 fi
 
 # Install standard tmux
-tmux=tmux
+tmux="tmux"
 
 # Are we using trusty?
 if [ -f "/etc/os-release" ]; then
-	OS_VER=$(cat /etc/os-release | grep '^VERSION_ID' | awk -F= '{print $2}' | xargs)
+	OS_VER=$(grep '^VERSION_ID' /etc/os-release | awk -F= '{print $2}' | xargs)
 	if [ ! -z "$OS_VER" ] && [ "$OS_VER" = "14.04" ]; then
 		echo Adding PPA repository
 		if [ ! -x "/usr/bin/apt-add-repository" ]; then
@@ -40,7 +40,7 @@ if [ -f "/etc/os-release" ]; then
 		fi
 		sudo add-apt-repository -y ppa:pi-rho/dev > /dev/null
 		# Install tmux-next instead
-		tmux=tmux-next
+		tmux="tmux-next"
 	fi
 fi
 
@@ -48,7 +48,7 @@ echo Updating system
 sudo apt-get update >/dev/null && sudo apt-get -y upgrade >/dev/null
 
 # Get list of installed apps
-installed=$(dpkg --get-selections | grep -v deinstall |awk '{print $1}' 2>/dev/null)
+installed="$(dpkg --get-selections | grep -v deinstall |awk '{print $1}' 2>/dev/null)"
 
 list="
 apt-utils
@@ -70,12 +70,13 @@ zip
 $tmux
 "
 for utility in $list; do
-	exists=$(echo $installed | tr " " "\n" | grep -wx $utility)
-	if [[ -z $exists ]]; then
-		echo Installing $utility
-		sudo apt-get -y install $utility >/dev/null
+	exists="$(echo "$installed" | tr " " "\\n" | grep -wx "$utility")"
+	if [[ -z "$exists" ]]; then
+		echo Installing "$utility"
+		sudo apt-get -y install "$utility" >/dev/null
 	fi
 done
 if [[ -x "$HOME/.update_aliases" ]]; then
-	$HOME/.update_aliases force
+	"$HOME/.update_aliases" force
 fi
+

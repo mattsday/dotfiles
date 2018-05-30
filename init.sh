@@ -25,11 +25,11 @@ mkdir backup > /dev/null 2>&1
 for dotfile in $dotfiles; do
 	verb=Updating
 	if [ -f "$HOME/.$dotfile" ] && [ ! -L "$HOME/.$dotfile" ]; then
-		echo Backing up local ."$dotfile" to $PWD/backup/local-$dotfile
+		echo Backing up local ."$dotfile" to "$PWD/backup/local-$dotfile"
 		mv -f "$HOME/.$dotfile" "backup/local-$dotfile"
-		verb=Creating
+		verb="Creating"
 	elif [ ! -f "$HOME/.$dotfile" ]; then
-		verb=Creating
+		verb="Creating"
 	fi
 	echo "$verb $HOME/.$dotfile"
 	ln -fs "$PWD/$dotfile" "$HOME/.$dotfile"
@@ -67,9 +67,9 @@ echo "$verb $HOME/.config/fish/config.fish"
 
 # Firefox userChrome.css file
 FF_CHROME_FILE="userChrome.css"
-first=`echo $USER|cut -c1|tr [a-z] [A-Z]`
-second=`echo $USER|cut -c2-`
-WINUSER=$first$second
+first="`echo "$USER"|cut -c1|tr a-z A-Z`"
+second="`echo "$USER"|cut -c2-`"
+WINUSER="$first$second"
 FF_WINDOWS=0
 
 if [ -d "$HOME/Library/Application Support/Firefox" ]; then
@@ -88,16 +88,18 @@ elif [ -d "/mnt/c/Users/$WINUSER/AppData/Roaming/Mozilla/Firefox/" ]; then
 fi
 FF_PROFILE_INI="$FF_PROFILE_PATH/profiles.ini"
 
+LOCAL_CHROME="$PWD/$FF_CHROME_FILE"
+
 verb=Updating
 if [ -f "$FF_PROFILE_INI" ]; then
-	if [ `grep '\[Profile[^0]\]' "$FF_PROFILE_INI" 2>/dev/null` ]; then
+	if [ "`grep '\[Profile[^0]\]' "$FF_PROFILE_INI" 2>/dev/null`" ]; then
 		FF_PROFILE=`tr < "$FF_PROFILE_INI" -s '\n' '|' | sed 's/\[Profile[0-9]\]/\x0/g; s/$/\x0/; s/.*\x0\([^\x0]*Default=1[^\x0]*\)\x0.*/\1/; s/.*Path=\([^|]*\)|.*/\1/'`
 	else
-		FF_PROFILE=`grep 'Path=' "$FF_PROFILE_INI" 2>/dev/null | sed 's/^Path=//' 2>/dev/null`
+		FF_PROFILE="`grep 'Path=' "$FF_PROFILE_INI" 2>/dev/null | sed 's/^Path=//' 2>/dev/null`"
 	fi
 	# Remove Windows crap from the end of the line
 	if [ "$FF_WINDOWS" = 1 ]; then
-		FF_PROFILE=`echo $FF_PROFILE | sed 's/\\r//g'`
+		FF_PROFILE="`echo "$FF_PROFILE" | sed 's/\\r//g'`"
 	fi
 	FF_PROFILE_PATH="$FF_PROFILE_PATH/$FF_PROFILE"
 	if [ -d "$FF_PROFILE_PATH" ]; then
@@ -107,12 +109,12 @@ if [ -f "$FF_PROFILE_INI" ]; then
 		fi
 		USER_CHROME="$FF_PROFILE_PATH/chrome/userChrome.css"
 		if [ -f "$USER_CHROME" ] && [ ! -L "$USER_CHROME" ]; then
-			echo Backing up local $USER_CHROME to "backup/userChrome.css"
+			echo Backing up local "$USER_CHROME" to "backup/userChrome.css"
 			mv "$USER_CHROME" "backup/userChrome.css"
 			verb=Creating
 		fi
-		echo $verb $USER_CHROME
-		ln -fs "$PWD/userChrome.css" "$USER_CHROME"
+		echo "$verb" "$USER_CHROME"
+		ln -fs "$LOCAL_CHROME" "$USER_CHROME"
 	fi
 fi
 
@@ -126,13 +128,13 @@ fi
 if [ "$VS_DIR" ]; then
 	VS_SETTINGS="$VS_DIR/settings.json"
 	if [ -f "$VS_SETTINGS" ] && [ ! -L "$VS_SETTINGS" ]; then
-		echo Backing up local $VS_SETTINGS to backup/local_settings.json
+		echo Backing up local "$VS_SETTINGS" to backup/local_settings.json
 		mv "$VS_SETTINGS" "backup/local_settings.json"
 		verb=Creating
 	elif [ ! -f "$VS_SETTINGS" ]; then
 		verb=Creating
 	fi
-	echo $verb $VS_SETTINGS
+	echo "$verb" "$VS_SETTINGS"
 	ln -fs "$PWD/settings.json" "$VS_SETTINGS"
 fi
 
