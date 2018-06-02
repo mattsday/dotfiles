@@ -88,6 +88,11 @@ features=(
 	xquartz
 	fly
 	qlmarkdown
+	quicklook-json
+	qlcolorcode
+	qlstephen
+	qlimagesize
+	qlvideo
 )
 for feature in $features; do
 	exists=$(echo $installed | grep -w $feature)
