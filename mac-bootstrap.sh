@@ -35,6 +35,7 @@ brew tap cloudfoundry/tap >/dev/null
 
 installed=$(brew list)
 features=(
+	kubernetes-helm
 	gawk
 	grep
 	coreutils
