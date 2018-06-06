@@ -1,6 +1,6 @@
 #!/bin/sh
 
-OS=`uname`
+OS="$(uname)"
 
 if [ "$OS" != FreeBSD ]; then
 	echo Not FreeBSD, stopping
@@ -14,9 +14,9 @@ if [ ! -x "/usr/sbin/pkg" ]; then
 fi
 
 # Check if sudo is installed
-if [ ! -x /usr/bin/sudo ] && [ ! -x /usr/local/bin/sudo ]; then
+if [ ! -x "/usr/bin/sudo" ] && [ ! -x "/usr/local/bin/sudo" ]; then
     if command -v id >/dev/null 2>&1; then
-        if [ `id -u` = 0 ]; then
+        if [ "$(id -u)" = 0 ]; then
             echo Installing sudo
             pkg install -q sudo
         else
@@ -31,7 +31,7 @@ echo Updating system
 sudo pkg update -q
 sudo pkg upgrade -qy
 
-installed=`pkg info -a | awk '{print $1}' | awk -F- '{print $1}'`
+installed="$(pkg info -a | awk '{print $1}' | awk -F- '{print $1}')"
 
 list="
 zsh
@@ -51,13 +51,13 @@ gawk
 tmux
 "
 for utility in $list; do
-    exists=`echo $installed | tr " " "\n" | grep -wx $utility`
+    exists="$(echo "$installed" | tr " " "\\n" | grep -wx "$utility")"
     if [ -z "$exists" ]; then
-        echo Installing $utility
-        sudo pkg install -yq $utility
+        echo Installing "$utility"
+        sudo pkg install -yq "$utility"
     fi
 done
 if [ -x "$HOME/.update_aliases" ]; then
-    $HOME/.update_aliases force
+    "$HOME/.update_aliases" force
 fi
 

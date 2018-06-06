@@ -2,7 +2,7 @@
 
 # Only run on CentOS/RHEL and derivatives
 if [[ -f /etc/os-release ]]; then
-	RELEASE=$(cat /etc/os-release | grep '^ID=' | awk -F= '{print $2}' | sed 's/"//g')
+	RELEASE="$(grep '^ID=' /etc/os-release | awk -F= '{print $2}' | sed 's/"//g')"
 	case "$RELEASE" in
 		centos*)
 			echo Detected CentOS
@@ -42,7 +42,7 @@ fi
 # Check if sudo is installed
 if [[ ! -x /usr/bin/sudo ]]; then
 	if command -v id >/dev/null 2>&1; then
-	    if [ `id -u` = 0 ]; then
+	    if [ "$(id -u)" = 0 ]; then
 			echo Installing sudo
 			$package_mgr install -y sudo >/dev/null
 		else
@@ -72,12 +72,12 @@ findutils
 hostname
 "
 for utility in $list; do
-	exists=$(echo $installed | tr " " "\n" | grep -wx $utility)
-	if [[ -z $exists ]]; then
-		echo Installing $utility
-		sudo $package_mgr -y install $utility >/dev/null
+	exists="$(echo "$installed" | tr " " "\\n" | grep -wx "$utility")"
+	if [[ -z "$exists" ]]; then
+		echo Installing "$utility"
+		sudo "$package_mgr" -y install "$utility" >/dev/null
 	fi
 done
 if [[ -x "$HOME/.update_aliases" ]]; then
-	$HOME/.update_aliases force
+	"$HOME/.update_aliases" force
 fi

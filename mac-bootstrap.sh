@@ -1,7 +1,7 @@
-#!/bin/zsh
+#!/bin/bash
 
 # Only run on a mac
-OS=$(uname)
+OS="$(uname)"
 if [[ "$OS" != "Darwin" ]]; then
 	echo Not OS X, stopping
 	exit
@@ -33,8 +33,8 @@ brew tap caskroom/cask >/dev/null
 brew tap cloudfoundry/tap >/dev/null
 
 
-installed=$(brew list)
-features=(
+installed="$(brew list)"
+features="
 	kubernetes-helm
 	gawk
 	grep
@@ -72,18 +72,18 @@ features=(
 	tcsh
 	azure-cli
 	mkvtoolnix
-)
+"
 for feature in $features; do
-	exists=$(echo $installed | grep -w $feature)
-	if [[ -z $exists ]]; then
-		echo Installing $feature
-		brew install $feature > /dev/null 
+	exists="$(echo "$installed" | grep -w "$feature")"
+	if [[ -z "$exists" ]]; then
+		echo Installing "$feature"
+		brew install "$feature" > /dev/null 
 	fi
 done
 
 # Install casks
-installed=$(brew cask list)
-features=(
+installed="$(brew cask list)"
+features="
 	android-sdk
 	google-cloud-sdk
 	xquartz
@@ -94,16 +94,16 @@ features=(
 	qlstephen
 	qlimagesize
 	qlvideo
-)
+"
 for feature in $features; do
-	exists=$(echo $installed | grep -w $feature)
-	if [[ -z $exists ]]; then
-		echo Installing $feature
-		brew cask install $feature > /dev/null 
+	exists="$(echo "$installed" | grep -w "$feature")"
+	if [[ -z "$exists" ]]; then
+		echo Installing "$feature"
+		brew cask install "$feature" > /dev/null 
 	fi
 done
 
 if [[ -x "$HOME/.update_aliases" ]]; then
-	$HOME/.update_aliases force
+	"$HOME/.update_aliases" force
 fi
 

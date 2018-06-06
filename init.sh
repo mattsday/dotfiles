@@ -67,8 +67,8 @@ echo "$verb $HOME/.config/fish/config.fish"
 
 # Firefox userChrome.css file
 FF_CHROME_FILE="userChrome.css"
-first="`echo "$USER"|cut -c1|tr a-z A-Z`"
-second="`echo "$USER"|cut -c2-`"
+first="$(echo "$USER"|cut -c1|tr '[:lower:]' '[:upper:]')"
+second="$(echo "$USER"|cut -c2-)"
 WINUSER="$first$second"
 FF_WINDOWS=0
 
@@ -92,14 +92,15 @@ LOCAL_CHROME="$PWD/$FF_CHROME_FILE"
 
 verb=Updating
 if [ -f "$FF_PROFILE_INI" ]; then
-	if [ "`grep '\[Profile[^0]\]' "$FF_PROFILE_INI" 2>/dev/null`" ]; then
-		FF_PROFILE=`tr < "$FF_PROFILE_INI" -s '\n' '|' | sed 's/\[Profile[0-9]\]/\x0/g; s/$/\x0/; s/.*\x0\([^\x0]*Default=1[^\x0]*\)\x0.*/\1/; s/.*Path=\([^|]*\)|.*/\1/'`
+	# shellcheck disable=SC2143
+	if [ "$(grep '\[Profile[^0]\]' "$FF_PROFILE_INI" 2>/dev/null)" ]; then
+		FF_PROFILE="$(tr < "$FF_PROFILE_INI" -s '\n' '|' | sed 's/\[Profile[0-9]\]/\x0/g; s/$/\x0/; s/.*\x0\([^\x0]*Default=1[^\x0]*\)\x0.*/\1/; s/.*Path=\([^|]*\)|.*/\1/')"
 	else
-		FF_PROFILE="`grep 'Path=' "$FF_PROFILE_INI" 2>/dev/null | sed 's/^Path=//' 2>/dev/null`"
+		FF_PROFILE="$(grep 'Path=' "$FF_PROFILE_INI" 2>/dev/null | sed 's/^Path=//' 2>/dev/null)"
 	fi
 	# Remove Windows crap from the end of the line
 	if [ "$FF_WINDOWS" = 1 ]; then
-		FF_PROFILE="`echo "$FF_PROFILE" | sed 's/\\r//g'`"
+		FF_PROFILE="$(echo "$FF_PROFILE" | sed 's/\\r//g')"
 	fi
 	FF_PROFILE_PATH="$FF_PROFILE_PATH/$FF_PROFILE"
 	if [ -d "$FF_PROFILE_PATH" ]; then
