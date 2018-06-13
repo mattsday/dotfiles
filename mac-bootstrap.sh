@@ -38,6 +38,7 @@ features="
 	kubernetes-helm
 	gawk
 	grep
+	shellcheck
 	coreutils
 	zsh
 	bash
