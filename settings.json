@@ -56,5 +56,6 @@
             "savePassword": true,
             "profileName": "CFDB"
         }
-    ]
+    ],
+    "java.errors.incompleteClasspath.severity": "ignore"
 }

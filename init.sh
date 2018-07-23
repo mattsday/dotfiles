@@ -2,7 +2,7 @@
 # This should execute on pretty much any bourne shell in case the plan is to jump to zsh or tcsh asap...
 
 # Load dependencies
-. dependencies
+. ./dependencies
 
 mkdir backup > /dev/null 2>&1
 

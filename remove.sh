@@ -3,7 +3,7 @@
 echo Removing dotfiles
 
 # Load dependencies
-. dependencies
+. ./dependencies
 
 # Figure out what we've got linked
 for dotfile in ${dotfiles}; do
