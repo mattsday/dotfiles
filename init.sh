@@ -60,6 +60,9 @@ if [ -f "$FF_PROFILE_INI" ] && [ -d "$FF_PROFILE_PATH" ]; then
 		mv "$USER_CHROME" "${PWD}/backup/local-userChrome.css"
 		verb=Creating
 	fi
+	if [ ! -f "$USER_CHROME" ]; then
+		verb=Creating
+	fi
 	echo "$verb" "$USER_CHROME"
 	ln -fs "$LOCAL_CHROME" "$USER_CHROME"
 fi
