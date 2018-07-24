@@ -21,10 +21,8 @@ bash_profile
 "
 
 extra="
-$HOME/.config/nvim
 $HOME/.config/nvim/init.vim
-$HOME/.config/fish
-
+$HOME/.config/fish/config.fish
 "
 
 # Firefox userChrome.css file

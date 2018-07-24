@@ -57,7 +57,7 @@ if [ -f "$FF_PROFILE_INI" ] && [ -d "$FF_PROFILE_PATH" ]; then
 	fi
 	if [ -f "$USER_CHROME" ] && [ ! -L "$USER_CHROME" ]; then
 		echo Backing up local "$USER_CHROME" to "${PWD}/backup/userChrome.css"
-		mv "$USER_CHROME" "${PWD}/backup/userChrome.css"
+		mv "$USER_CHROME" "${PWD}/backup/local-userChrome.css"
 		verb=Creating
 	fi
 	echo "$verb" "$USER_CHROME"
@@ -69,8 +69,8 @@ verb=Updating
 if [ "$VS_DIR" ]; then
 	VS_SETTINGS="$VS_DIR/settings.json"
 	if [ -f "$VS_SETTINGS" ] && [ ! -L "$VS_SETTINGS" ]; then
-		echo Backing up local "$VS_SETTINGS" to "${PWD}"/backup/local_settings.json
-		mv "$VS_SETTINGS" "${PWD}/backup/local_settings.json"
+		echo Backing up local "$VS_SETTINGS" to "${PWD}"/backup/local-settings.json
+		mv "$VS_SETTINGS" "${PWD}/backup/local-settings.json"
 		verb=Creating
 	elif [ ! -f "$VS_SETTINGS" ]; then
 		verb=Creating
