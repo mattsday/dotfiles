@@ -14,7 +14,7 @@ for dotfile in ${dotfiles}; do
 	fi
 	BACKUP="$PWD/backup/local-$dotfile"
 	if [ -f "${BACKUP}" ]; then
-		echo Restoring backup from "${BACKUP}"
+		echo Restoring "${FILE}" from backup
 		mv "${BACKUP}" "${FILE}"
 	fi
 done
