@@ -51,7 +51,7 @@ elif [[ -f "/etc/bash_completion" ]]; then
 fi
 
 # Add GCP support
-if [ -d "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/" ]; then
+if [ -f "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc" ]; then
 	. /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc
 fi
 

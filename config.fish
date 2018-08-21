@@ -6,6 +6,10 @@ if test -e ~/.fish_aliases
 	source ~/.fish_aliases
 end
 
+if test -e /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.fish.inc
+	source /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.fish.inc
+end
+
 # Useful functions
 function f
 	find . -iname "*$argv*"
