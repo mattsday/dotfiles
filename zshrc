@@ -137,6 +137,11 @@ compdef mosh=ssh
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path ~/.zsh_cache
 
+# Add GCP support
+if [ -d "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/" ]; then
+	. /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc
+fi
+
 if (( $colours >= 8 )); then
 	# Custom prompt (coloured in yellow and cyan):
 	# If the user is 'matt' don't print it
