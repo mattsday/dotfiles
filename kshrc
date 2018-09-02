@@ -33,13 +33,13 @@ if (( $colours >= 8 )); then
 	grey="\033[01;30m"
 	end="\033[00m" 
 
-	if [ $USER = "matt" ]; then
+	if [[ "$USER" == matt ]] || [[ "$USER" == mattsday ]]; then
 		PS1='$(print -n "$yellow$shorthost$end:$cyan";if [ "${PWD#$HOME}" = "$PWD" ]; then print -n $PWD; else print -n "~${PWD#$HOME}";fi;print "$end$ ")'
 	else
 		PS1='$(print -n "$green$USER$end@$yellow$shorthost$end:$cyan";if [ "${PWD#$HOME}" = "$PWD" ]; then print -n $PWD; else print -n "~${PWD#$HOME}";fi;print "$end$ ")'
 	fi
 else
-	if [ $USER = "matt" ]; then
+	if [[ "$USER" == matt ]] || [[ "$USER" == mattsday ]]; then
 		PS1='$(print -n "$shorthost:";if [ "${PWD#$HOME}" = "$PWD" ]; then print -n "$PWD"; else print -n "~${PWD#$HOME}";fi;print "$ ")'
 
 	else
