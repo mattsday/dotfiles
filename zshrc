@@ -156,7 +156,7 @@ if (( $colours >= 8 )); then
 	RPROMPT='%{$reset_color%}%F{green}${vcs_info_msg_0_}%{$reset_color%}[%?]'
 	RPROMPT+='%{$fg_bold[grey]%}[%D{%H:%M:%S}]%{$reset_color%}'
 else
-	if [[ "$USER" == "matt" ]]; then
+	if [[ "$USER" == matt ]] || [[ "$USER" == mattsday ]]; then
 		PROMPT="%m:%~%# "
 	else
 		PROMPT="%n@%m:%~%# "
