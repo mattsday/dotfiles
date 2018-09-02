@@ -47,7 +47,7 @@ if ( $colours >= 8 ) then
 	set   grey = "%{\033[1;30m%}"
 	set    end = "%{\033[0m%}" 
 	# If the user is 'matt' don't print it
-	if ( $USER == "matt" ) then
+	if ( $USER == "matt" || $USER == "mattsday" ) then
 		set prompt = "${yellow}%m${end}:${cyan}%~${end}%# "
 	else
 		set prompt = "${green}%n${end}@${yellow}%m${end}:${cyan}%~${end}%# "
@@ -60,7 +60,7 @@ if ( $colours >= 8 ) then
 	# Cleanup
 	unset yellow cyan end grey green
 else
-	if ( $USER == "matt" ) then
+	if ( $USER == "matt" || $USER == "mattsday" ) then
 		set prompt = "%m:%~%# "
 	else
 		set prompt = "%n@%m:%~%# "
