@@ -77,14 +77,14 @@ if ((colours >= 8)); then
 	end="\\[\\033[00m\\]"
 
 	# Custom prompt (coloured in yellow and cyan): user@host:~%
-	if [[ $USER == "matt" ]]; then
+	if [[ "$USER" == matt ]] || [[ "$USER" == mattsday ]]; then
 		PS1="$yellow\\h$end:$cyan\\w$end\$ "
 	else
 		PS1="$green\\u$end@$yellow\\h$end:$cyan\\w$end\$ "
 	fi
 	unset yellow cyan green end
 else
-	if [[ $USER == "matt" ]]; then
+	if [[ "$USER" == matt ]] || [[ "$USER" == mattsday ]]; then
 		PS1='\h:\w\$ '
 	else
 		PS1='\u@\h:\w\$ '
