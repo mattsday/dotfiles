@@ -145,7 +145,7 @@ fi
 if (( $colours >= 8 )); then
 	# Custom prompt (coloured in yellow and cyan):
 	# If the user is 'matt' don't print it
-	if [[ "$USER" == "matt" ]]; then
+	if [[ "$USER" == matt ]] || [[ "$USER" == mattsday ]]; then
 		PROMPT="%{$fg_bold[yellow]%}%m%{$reset_color%}:%{$fg_bold[cyan]%}%~"
 	else
 		PROMPT="%{$fg_bold[green]%}%n%{$reset_color%}@%{$fg_bold[yellow]%}%m%{$reset_color%}:%{$fg_bold[cyan]%}%~"
