@@ -32,7 +32,8 @@
     // Markdown specific goodness
     "[markdown]": {
         "editor.wordWrap": "on",
-        "editor.quickSuggestions": false
+        "editor.quickSuggestions": false,
+        "editor.tabSize": 2
     },
     // Yaml specific goodness
     "[yaml]": {
@@ -42,7 +43,7 @@
     // @see Silicon Valley
     "editor.insertSpaces": true,
     "editor.tabSize": 4,
-    "window.zoomLevel": 2,
+    "window.zoomLevel": 1,
     "vim.disableAnnoyingNeovimMessage": true,
     "extensions.ignoreRecommendations": false,
     "mssql.connections": [
