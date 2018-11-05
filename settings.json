@@ -13,12 +13,11 @@
         }
     ],
     "vim.history": 50,
-    "workbench.welcome.enabled": false,
     // Disable word wrap
     "editor.wordWrap": "on",
     // I hate these
     "editor.quickSuggestions": false,
-    "editor.autoClosingBrackets": false,
+    "editor.autoClosingBrackets": "never",
     // Some Atom-esqueness
     "editor.minimap.enabled": true,
     // This allegedly uses 16% CPU if 'blinking'
@@ -40,23 +39,15 @@
         "editor.insertSpaces": true,
         "editor.tabSize": 2
     },
+    "[java]": {
+        "editor.tabSize": 4,
+        "editor.insertSpaces": false,
+    },
     // @see Silicon Valley
     "editor.insertSpaces": true,
     "editor.tabSize": 4,
     "window.zoomLevel": 1,
     "vim.disableAnnoyingNeovimMessage": true,
     "extensions.ignoreRecommendations": false,
-    "mssql.connections": [
-        {
-            "server": "u011a3d881c9.database.windows.net",
-            "database": "uf9d94daeb6c",
-            "authenticationType": "SqlLogin",
-            "user": "u6c73bc24780",
-            "password": "",
-            "emptyPasswordInput": false,
-            "savePassword": true,
-            "profileName": "CFDB"
-        }
-    ],
     "java.errors.incompleteClasspath.severity": "ignore"
 }
