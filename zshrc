@@ -146,9 +146,9 @@ if (( $colours >= 8 )); then
 	# Custom prompt (coloured in yellow and cyan):
 	# If the user is 'matt' don't print it
 	if [[ "$USER" == matt ]] || [[ "$USER" == mattsday ]]; then
-		PROMPT="%{$fg_bold[yellow]%}%m%{$reset_color%}:%{$fg_bold[cyan]%}%~"
+		PROMPT="%{$fg_bold[yellow]%}%2m%{$reset_color%}:%{$fg_bold[cyan]%}%~"
 	else
-		PROMPT="%{$fg_bold[green]%}%n%{$reset_color%}@%{$fg_bold[yellow]%}%m%{$reset_color%}:%{$fg_bold[cyan]%}%~"
+		PROMPT="%{$fg_bold[green]%}%n%{$reset_color%}@%{$fg_bold[yellow]%}%2m%{$reset_color%}:%{$fg_bold[cyan]%}%~"
 	fi
 	# Append directory info
 	PROMPT+="%{$reset_color%}%# %{$reset_color%}"
@@ -157,9 +157,9 @@ if (( $colours >= 8 )); then
 	RPROMPT+='%{$fg_bold[grey]%}[%D{%H:%M:%S}]%{$reset_color%}'
 else
 	if [[ "$USER" == matt ]] || [[ "$USER" == mattsday ]]; then
-		PROMPT="%m:%~%# "
+		PROMPT="%2m:%~%# "
 	else
-		PROMPT="%n@%m:%~%# "
+		PROMPT="%n@%2m:%~%# "
 	fi
 	# Date on right-side including return code + git info [0][09:30:00]
 	RPROMPT='${vcs_info_msg_0_}[%?][%D{%H:%M:%S}]'
