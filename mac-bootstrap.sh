@@ -32,7 +32,6 @@ echo Setting up brew taps
 brew tap caskroom/cask >/dev/null
 brew tap cloudfoundry/tap >/dev/null
 
-
 installed="$(brew list)"
 features="
 	kubernetes-helm
@@ -78,7 +77,7 @@ for feature in $features; do
 	exists="$(echo "$installed" | grep -w "$feature")"
 	if [[ -z "$exists" ]]; then
 		echo Installing "$feature"
-		brew install "$feature" > /dev/null 
+		brew install "$feature" >/dev/null
 	fi
 done
 
@@ -100,11 +99,10 @@ for feature in $features; do
 	exists="$(echo "$installed" | grep -w "$feature")"
 	if [[ -z "$exists" ]]; then
 		echo Installing "$feature"
-		brew cask install "$feature" > /dev/null 
+		brew cask install "$feature" >/dev/null
 	fi
 done
 
 if [[ -x "$HOME/.update_aliases" ]]; then
 	"$HOME/.update_aliases" force
 fi
-

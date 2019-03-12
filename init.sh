@@ -4,7 +4,7 @@
 # Load dependencies
 . ./dependencies
 
-mkdir backup > /dev/null 2>&1
+mkdir backup >/dev/null 2>&1
 
 for dotfile in $dotfiles; do
 	verb=Updating

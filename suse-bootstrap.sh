@@ -4,16 +4,16 @@
 if [[ -f /etc/os-release ]]; then
 	RELEASE="$(grep '^ID=' /etc/os-release | awk -F= '{print $2}' | sed 's/"//g')"
 	case "$RELEASE" in
-		suse*)
-			echo Detected SuSE
-			;;
-		opensuse*)
-			echo Detected OpenSuSE
-			;;
-		*)
-			echo Cannot detect supported OS, stopping
-			exit
-			;;
+	suse*)
+		echo Detected SuSE
+		;;
+	opensuse*)
+		echo Detected OpenSuSE
+		;;
+	*)
+		echo Cannot detect supported OS, stopping
+		exit
+		;;
 	esac
 else
 	echo Cannot detect OS, stopping
@@ -25,7 +25,7 @@ package_mgr="zypper"
 # Check if sudo is installed
 if [[ ! -x /usr/bin/sudo ]]; then
 	if command -v id >/dev/null 2>&1; then
-	    if [ "$(id -u)" = 0 ]; then
+		if [ "$(id -u)" = 0 ]; then
 			echo Installing sudo
 			"$package_mgr" --non-interactive install sudo >/dev/null
 		else
@@ -39,7 +39,7 @@ echo Updating system
 sudo "$package_mgr" update -y >/dev/null
 
 # Get list of installed apps
-installed="$(zypper packages -i | tail -n +5 | awk -F\| '{print $3}'|xargs)"
+installed="$(zypper packages -i | tail -n +5 | awk -F\| '{print $3}' | xargs)"
 
 list="
 zsh

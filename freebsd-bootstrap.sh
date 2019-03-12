@@ -15,15 +15,15 @@ fi
 
 # Check if sudo is installed
 if [ ! -x "/usr/bin/sudo" ] && [ ! -x "/usr/local/bin/sudo" ]; then
-    if command -v id >/dev/null 2>&1; then
-        if [ "$(id -u)" = 0 ]; then
-            echo Installing sudo
-            pkg install -q sudo
-        else
-            echo "User is not root and sudo isn't installed. Install sudo first"
-            exit
-        fi
-    fi
+	if command -v id >/dev/null 2>&1; then
+		if [ "$(id -u)" = 0 ]; then
+			echo Installing sudo
+			pkg install -q sudo
+		else
+			echo "User is not root and sudo isn't installed. Install sudo first"
+			exit
+		fi
+	fi
 fi
 
 # Update
@@ -51,13 +51,12 @@ gawk
 tmux
 "
 for utility in $list; do
-    exists="$(echo "$installed" | tr " " "\\n" | grep -wx "$utility")"
-    if [ -z "$exists" ]; then
-        echo Installing "$utility"
-        sudo pkg install -yq "$utility"
-    fi
+	exists="$(echo "$installed" | tr " " "\\n" | grep -wx "$utility")"
+	if [ -z "$exists" ]; then
+		echo Installing "$utility"
+		sudo pkg install -yq "$utility"
+	fi
 done
 if [ -x "$HOME/.update_aliases" ]; then
-    "$HOME/.update_aliases" force
+	"$HOME/.update_aliases" force
 fi
-

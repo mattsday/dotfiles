@@ -18,7 +18,7 @@ fi
 # Check if sudo is installed
 if [[ ! -x /usr/bin/sudo ]]; then
 	if command -v id >/dev/null 2>&1; then
-	    if [ "$(id -u)" = 0 ]; then
+		if [ "$(id -u)" = 0 ]; then
 			echo Installing sudo
 			DEBIAN_FRONTEND="noninteractive" apt-get update >/dev/null
 			DEBIAN_FRONTEND="noninteractive" apt-get install -y sudo >/dev/null
@@ -38,9 +38,9 @@ if [ -f "/etc/os-release" ]; then
 	if [ ! -z "$OS_VER" ] && [ "$OS_VER" = "14.04" ]; then
 		echo Adding PPA repository
 		if [ ! -x "/usr/bin/apt-add-repository" ]; then
-			_apt -y install software-properties-common > /dev/null
+			_apt -y install software-properties-common >/dev/null
 		fi
-		sudo add-apt-repository -y ppa:pi-rho/dev > /dev/null
+		sudo add-apt-repository -y ppa:pi-rho/dev >/dev/null
 		# Install tmux-next instead
 		tmux="tmux-next"
 	fi
@@ -54,7 +54,7 @@ if [ ! -d /var/tempest/workspaces/default ]; then
 fi
 
 # Get list of installed apps
-installed="$(dpkg --get-selections | grep -v deinstall |awk '{print $1}' 2>/dev/null)"
+installed="$(dpkg --get-selections | grep -v deinstall | awk '{print $1}' 2>/dev/null)"
 
 list="
 apt-utils
@@ -85,4 +85,3 @@ done
 if [[ -x "$HOME/.update_aliases" ]]; then
 	"$HOME/.update_aliases" force
 fi
-

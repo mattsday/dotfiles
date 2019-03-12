@@ -22,9 +22,9 @@ done
 for dotfile in ${extra}; do
 	FILE="${dotfile}"
 	if [ -L "${FILE}" ]; then
-        echo Removing "${FILE}"
+		echo Removing "${FILE}"
 		rm "${FILE}"
-    fi
+	fi
 	BACKUP="$PWD/backup/local-$(basename "${dotfile}" | xargs)"
 	if [ -f "${BACKUP}" ]; then
 		echo Restoring "${dotfile}" from backup
@@ -55,4 +55,3 @@ if [ -L "${VS_SETTINGS}" ]; then
 fi
 
 echo Done
-

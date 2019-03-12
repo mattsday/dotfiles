@@ -4,30 +4,29 @@
 # usable... An example is BusyBox
 # Latest copy always here: https://github.com/mattsday/dotfiles/
 
-
 # If being called from another bourne compatible shell, load those
 # specific rc files instead and stop this
 case "$0" in
-	-zsh)
-		if [ -f "$HOME/.zshrc" ]; then
-			. "$HOME/.zshrc"
-		fi
-		return
-		;;
-	-bash)
-		if [ -f "$HOME/.bashrc" ]; then
-			. "$HOME/.bashrc"
-		fi
-		return
-		;;
-	-ksh)
-		if [ -f "$HOME/.kshrc" ]; then
-			. "$HOME/.kshrc"
-		fi
-		return
-		;;
-	*)
-		;;
+-zsh)
+	if [ -f "$HOME/.zshrc" ]; then
+		. "$HOME/.zshrc"
+	fi
+	return
+	;;
+-bash)
+	if [ -f "$HOME/.bashrc" ]; then
+		. "$HOME/.bashrc"
+	fi
+	return
+	;;
+-ksh)
+	if [ -f "$HOME/.kshrc" ]; then
+		. "$HOME/.kshrc"
+	fi
+	return
+	;;
+*) ;;
+
 esac
 
 # ==========
@@ -42,7 +41,6 @@ esac
 if [ -f "$HOME/.profile_config" ]; then
 	. "$HOME/.profile_config"
 fi
-
 
 # =============
 # Shell Options
@@ -75,14 +73,14 @@ fi
 # ===========
 # Specific options that affect the L&F of the shell
 #
-hostname=`hostname`
+hostname=$(hostname)
 if [ -z $hostname ]; then
-	hostname=`cat /etc/hostname`
+	hostname=$(cat /etc/hostname)
 	if [ -z $hostname ]; then
 		hostname='(none)'
 	fi
 fi
-shorthost=`echo $hostname | sed 's/\..*//'`
+shorthost=$(echo $hostname | sed 's/\..*//')
 
 # Dynamic prompt
 # Some bourne shells don't support variables in the prompt, act to the lowest common denominator:
@@ -91,32 +89,32 @@ PS1="$USER@$shorthost$ "
 dynamic_prompt=0
 
 # If this doesn't fail then it's very likely a dynamic shell
-if $SHELL -c 'echo $(ls)' > /dev/null 2>&1; then
+if $SHELL -c 'echo $(ls)' >/dev/null 2>&1; then
 	dynamic_prompt=1
 fi
 
-if command -v readlink > /dev/null 2>&1; then
-	case `readlink /bin/sh 2>/dev/null` in
-		*busybox)
-			# Enable a dynamic shell
-			PS1=$USER'@\h:\w\$ '
-			export PS1
-			;;
-		*bash|*dash)
-			dynamic_prompt=1
-			;;
+if command -v readlink >/dev/null 2>&1; then
+	case $(readlink /bin/sh 2>/dev/null) in
+	*busybox)
+		# Enable a dynamic shell
+		PS1=$USER'@\h:\w\$ '
+		export PS1
+		;;
+	*bash | *dash)
+		dynamic_prompt=1
+		;;
 	esac
 fi
 
 # Another way to detect BusyBox...
-sh_ver=`sh --help 2>&1|grep -om 1 BusyBox 2>/dev/null`
+sh_ver=$(sh --help 2>&1 | grep -om 1 BusyBox 2>/dev/null)
 if [ "$sh_ver" = BusyBox ]; then
-        if [ -z $USER ] || [ "$USER" = matt ]; then
-                PS1='\h:\w\$ '
-        else
-                PS1=$USER'@\h:\w\$ '
-        fi
-        export PS1
+	if [ -z $USER ] || [ "$USER" = matt ]; then
+		PS1='\h:\w\$ '
+	else
+		PS1=$USER'@\h:\w\$ '
+	fi
+	export PS1
 fi
 
 if [ "$dynamic_prompt" = 1 ] || [ -f "$HOME/.full_shell" ]; then
@@ -125,7 +123,7 @@ if [ "$dynamic_prompt" = 1 ] || [ -f "$HOME/.full_shell" ]; then
 		green="\033[01;32m"
 		cyan="\033[01;36m"
 		grey="\033[01;30m"
-		end="\033[00m" 
+		end="\033[00m"
 
 		if [ "$USER" = "matt" ]; then
 			PS1='$(echo "$yellow$shorthost$end:$cyan\c";if [ "${PWD#$HOME}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#$HOME}\c";fi;echo "$end$ ")'

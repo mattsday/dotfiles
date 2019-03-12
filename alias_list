@@ -98,4 +98,3 @@ alias @/usr/bin/zypper,sudo zypper='sudo zypper'@update='zypper update'
 
 # Generic services
 alias @/usr/sbin/service service='sudo service'
-
