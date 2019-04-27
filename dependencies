@@ -21,6 +21,7 @@ bash_profile
 "
 
 extra="
+$HOME/.config/git/ignore
 $HOME/.config/nvim/init.vim
 $HOME/.config/fish/config.fish
 "
