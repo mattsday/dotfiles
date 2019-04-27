@@ -46,6 +46,7 @@ features="
 	gnu-tar
 	gnu-which
 	maven
+	terraform
 	multimarkdown
 	flac
 	jq
