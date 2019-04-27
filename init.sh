@@ -19,6 +19,18 @@ for dotfile in $dotfiles; do
 	ln -fs "$PWD/$dotfile" "$HOME/.$dotfile"
 done
 
+verb=Updating
+if [ ! -d "$HOME/.config/git" ]; then
+	mkdir -p "$HOME/.config/git"
+	verb=Creating
+fi
+if [ -f "$HOME/.config/git/ignore" ] && [ ! -L "$HOME/.config/git/ignore" ]; then
+	echo "Backing up local gitignore config to ${PWD}/backup/local-ignore"
+	mv -f "$HOME/.config/git/ignore" "${PWD}/backup/local-ignore"
+fi
+echo "$verb $HOME/.config/git/ignore"
+ln -fs "$PWD/gitignore" "$HOME/.config/git/ignore"
+
 # Add nvim config file (same as vimrc):
 verb=Updating
 if [ ! -d "$HOME/.config/nvim" ]; then
