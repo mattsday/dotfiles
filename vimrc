@@ -31,6 +31,18 @@ endif
 " Show me where in the file I am at all times (col/line)
 set ruler
 
+" Show line numbers
+set number
+
+" ...but make them grey
+highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE guifg=DarkGrey guibg=NONE
+
+" Highlight current line
+set cursorline
+
+" Show a tab-complete menu, e.g. when doing a :split
+set wildmenu
+
 " I always have a black-background in my terminals, tell vim this
 set background=dark
 
@@ -55,13 +67,14 @@ set tabstop=4
 set shiftwidth=4
 set softtabstop=4
 
+" Make tabs spaces
+set expandtab
+
 " Hilight matching parenthesis etc
 set showmatch
 
-if has("filetype")
-	" Allow indentation based on file type if available
-	filetype plugin indent on
-endif
+" Allow indentation based on file type if available
+filetype plugin indent on
 
 if has("autocmd")
 	" OS X Crontab stuff
@@ -84,6 +97,18 @@ set noerrorbells
 
 " Don't be fussy about case (e.g. searches)
 set ignorecase
+
+" Highlight search results
+set hlsearch
+
+" tmux support
+if exists('$TMUX')
+    let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+    let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+else
+    let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+    let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+endif
 
 "================
 " Numpad Hacks for Mac
