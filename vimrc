@@ -143,5 +143,8 @@ endif
 "================
 " Load Pathogen for local plugins
 "================
-execute pathogen#infect()
+runtime! autoload/pathogen.vim
+if exists("*pathogen#infect")
+    execute pathogen#infect()
+endif
 
