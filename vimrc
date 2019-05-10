@@ -140,3 +140,8 @@ endif
 " Finally map the 'enter' key
 :imap <Esc>OM <CR>
 
+"================
+" Load Pathogen for local plugins
+"================
+execute pathogen#infect()
+
