@@ -18,6 +18,7 @@ profile
 tmux.conf
 shell_common
 bash_profile
+inputrc
 "
 
 extra="
