@@ -148,3 +148,7 @@ if exists("*pathogen#infect")
     execute pathogen#infect()
 endif
 
+let g:solarized_termcolors=256 
+silent! colorscheme solarized
+
+

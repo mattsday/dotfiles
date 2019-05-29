@@ -46,7 +46,7 @@
     // @see Silicon Valley
     "editor.insertSpaces": true,
     "editor.tabSize": 4,
-    "window.zoomLevel": 5,
+    "window.zoomLevel": 2,
     "vim.disableAnnoyingNeovimMessage": true,
     "extensions.ignoreRecommendations": false,
     "java.errors.incompleteClasspath.severity": "ignore",

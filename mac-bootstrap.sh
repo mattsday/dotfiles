@@ -65,7 +65,6 @@ features="
 	awscli
 	bosh-init
 	gradle
-	mutt
 	node
 	python
 	python3
