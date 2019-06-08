@@ -29,8 +29,8 @@ $HOME/.config/fish/config.fish
 
 VIM_PATHOGEN_PLUGINS="
 https://github.com/udalov/kotlin-vim
-https://github.com/altercation/vim-colors-solarized
 "
+#https://github.com/altercation/vim-colors-solarized
 
 # Firefox userChrome.css file
 FF_CHROME_FILE="userChrome.css"
