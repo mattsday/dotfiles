@@ -142,6 +142,8 @@ zstyle ':completion:*' cache-path ~/.zsh_cache
 # Add GCP support
 if [ -f "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc" ]; then
 	. /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc
+elif [ -f "/usr/share/google-cloud-sdk/completion.zsh.inc" ]; then
+    . /usr/share/google-cloud-sdk/completion.zsh.inc
 fi
 
 if (( $colours >= 8 )); then

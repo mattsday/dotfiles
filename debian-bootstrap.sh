@@ -62,7 +62,6 @@ dialog
 dnsutils
 zsh
 vim
-aptitude
 findutils
 coreutils
 git

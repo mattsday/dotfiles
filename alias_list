@@ -78,7 +78,7 @@ alias @gosh bosh=!gosh
 
 # Debian Systems
 alias @sudo,/usr/bin/apt-get apt-get='sudo apt-get'@update='apt-get update && apt-get upgrade'
-alias @sudo,/usr/bin/aptitude aptitude='sudo aptitude'@apt-get='aptitude'
+alias @sudo,/usr/bin/apt apt='sudo apt'@apt-get='apt'
 
 # Red Hat
 alias @/usr/bin/yum,sudo yum='sudo yum'@update='yum update'
