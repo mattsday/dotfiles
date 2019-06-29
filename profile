@@ -88,56 +88,55 @@ PS1="$USER@$shorthost$ "
 
 dynamic_prompt=0
 
-# If this doesn't fail then it's very likely a dynamic shell
-if $SHELL -c 'echo $(ls)' >/dev/null 2>&1; then
-	dynamic_prompt=1
-fi
-
-if command -v readlink >/dev/null 2>&1; then
+if [ -f "$HOME/.simple_shell" ]; then
+    dynamic_prompt=2
+    colours=0
+elif command -v readlink >/dev/null 2>&1; then
 	case $(readlink /bin/sh 2>/dev/null) in
 	*busybox)
 		# Enable a dynamic shell
-		PS1=$USER'@\h:\w\$ '
-		export PS1
+        dynamic_prompt=2
 		;;
 	*bash | *dash)
 		dynamic_prompt=1
 		;;
 	esac
-fi
-
-# Another way to detect BusyBox...
-sh_ver=$(sh --help 2>&1 | grep -om 1 BusyBox 2>/dev/null)
-if [ "$sh_ver" = BusyBox ]; then
-	if [ -z $USER ] || [ "$USER" = matt ]; then
-		PS1='\h:\w\$ '
-	else
-		PS1=$USER'@\h:\w\$ '
-	fi
-	export PS1
+else
+    # Another way to detect BusyBox...
+    sh_ver=$(sh --help 2>&1 | grep -om 1 BusyBox 2>/dev/null)
+    if [ "$sh_ver" = BusyBox ]; then
+        dynamic_prompt=2
+    fi
 fi
 
 if [ "$dynamic_prompt" = 1 ] || [ -f "$HOME/.full_shell" ]; then
-	if [ $colours -ge 8 ]; then
-		yellow="\033[01;33m"
-		green="\033[01;32m"
-		cyan="\033[01;36m"
-		grey="\033[01;30m"
-		end="\033[00m"
+   	if [ $colours -ge 8 ]; then
+	    yellow="\033[01;33m"
+    	green="\033[01;32m"
+   		cyan="\033[01;36m"
+	    grey="\033[01;30m"
+    	end="\033[00m"
 
-		if [ "$USER" = "matt" ]; then
-			PS1='$(echo "$yellow$shorthost$end:$cyan\c";if [ "${PWD#$HOME}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#$HOME}\c";fi;echo "$end$ ")'
-		else
-			PS1='$(echo "$green$USER$end@$yellow$shorthost$end:$cyan\c";if [ "${PWD#$HOME}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#$HOME}\c";fi;echo "$end$ ")'
-		fi
-	else
-		if [ "$USER" = "matt" ]; then
-			PS1='$(echo "$shorthost:\c";if [ "${PWD#$HOME}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#$HOME}\c";fi;echo "$ ")'
-		else
-			PS1='$(echo "$USER@$shorthost:\c";if [ "${PWD#$HOME}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#$HOME}\c";fi;echo "$ ")'
-		fi
-	fi
-	export PS1
+   		if [ "$USER" = "matt" ]; then
+	    	PS1='$(echo "$yellow$shorthost$end:$cyan\c";if [ "${PWD#$HOME}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#$HOME}\c";fi;echo "$end$ ")'
+    	else
+   			PS1='$(echo "$green$USER$end@$yellow$shorthost$end:$cyan\c";if [ "${PWD#$HOME}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#$HOME}\c";fi;echo "$end$ ")'
+	    fi
+    else
+   		if [ "$USER" = "matt" ]; then
+	    	PS1='$(echo "$shorthost:\c";if [ "${PWD#$HOME}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#$HOME}\c";fi;echo "$ ")'
+    	else
+   			PS1='$(echo "$USER@$shorthost:\c";if [ "${PWD#$HOME}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#$HOME}\c";fi;echo "$ ")'
+	    fi
+    fi
+    export PS1
+elif [ "$dynamic_prompt" = 2 ]; then
+    if [ -z $USER ] || [ "$USER" = matt ] || [ "$USER" = mattsday ]; then
+	   	PS1='\h:\w\$ '
+   	else
+    	PS1=$USER'@\h:\w\$ '
+   	fi
+    export PS1
 fi
 
 # Local bourne shell config (paths etc) (should be the last thing loaded)

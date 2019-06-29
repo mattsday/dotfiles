@@ -1,7 +1,7 @@
 #!/bin/bash
 
 _apt() {
-	DEBIAN_FRONTEND="noninteractive" sudo apt-get "$@"
+	DEBIAN_FRONTEND="noninteractive" sudo apt "$@"
 }
 
 # Only run on Debian and derivatives
@@ -10,7 +10,7 @@ if [[ ! -f "/etc/debian_version" ]]; then
 	exit
 fi
 # Use apt and assume somewhat recent versions
-if [[ ! -x "/usr/bin/apt-get" ]] || [[ ! -x "/usr/bin/dpkg" ]]; then
+if [[ ! -x "/usr/bin/apt" ]] || [[ ! -x "/usr/bin/dpkg" ]]; then
 	echo "You need apt to run this"
 	exit
 fi

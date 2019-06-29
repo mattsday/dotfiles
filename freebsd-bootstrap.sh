@@ -7,6 +7,9 @@ if [ "$OS" != FreeBSD ]; then
 	exit
 fi
 
+echo Disabling clever prompt for /bin/sh
+touch "$HOME/.simple_shell"
+
 # Can I find pkg?
 if [ ! -x "/usr/sbin/pkg" ]; then
 	echo Cannot find package manager, stopping
@@ -49,6 +52,8 @@ gsed
 htop
 gawk
 tmux
+jq
+htop
 "
 for utility in $list; do
 	exists="$(echo "$installed" | tr " " "\\n" | grep -wx "$utility")"
