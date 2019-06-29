@@ -61,6 +61,7 @@ apt-utils
 dialog
 dnsutils
 zsh
+curl
 vim
 findutils
 coreutils
