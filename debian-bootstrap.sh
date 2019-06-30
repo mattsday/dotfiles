@@ -1,7 +1,7 @@
 #!/bin/bash
 
 _apt() {
-	DEBIAN_FRONTEND="noninteractive" sudo apt "$@"
+	DEBIAN_FRONTEND="noninteractive" sudo apt-get "$@"
 }
 
 # Only run on Debian and derivatives
@@ -10,7 +10,7 @@ if [[ ! -f "/etc/debian_version" ]]; then
 	exit
 fi
 # Use apt and assume somewhat recent versions
-if [[ ! -x "/usr/bin/apt" ]] || [[ ! -x "/usr/bin/dpkg" ]]; then
+if [[ ! -x "/usr/bin/apt-get" ]] || [[ ! -x "/usr/bin/dpkg" ]]; then
 	echo "You need apt to run this"
 	exit
 fi
@@ -20,8 +20,8 @@ if [[ ! -x /usr/bin/sudo ]]; then
 	if command -v id >/dev/null 2>&1; then
 		if [ "$(id -u)" = 0 ]; then
 			echo Installing sudo
-			DEBIAN_FRONTEND="noninteractive" apt-get update >/dev/null
-			DEBIAN_FRONTEND="noninteractive" apt-get install -y sudo >/dev/null
+			_apt update >/dev/null
+			_apt install -y sudo >/dev/null
 		else
 			echo "User is not root and sudo isn't installed. Install sudo first"
 			exit
