@@ -32,6 +32,7 @@ unsetopt BEEP
 zmodload zsh/complist
 autoload -U complist
 
+
 # Check if autocomplete will work via -Uz
 autoload -Uz compinit 2>/dev/null
 comp_support=$?
@@ -41,6 +42,10 @@ if (( $comp_support > 0 )); then
 fi
 if (( $comp_support == 0 )); then
 	compinit
+    # Enable Kubernetes autocompletion if available
+    if command -v kubectl >/dev/null 2>&1; then
+        . <(kubectl completion zsh)
+    fi
 fi
 
 # Load some utilities such as zstyle and zformat
