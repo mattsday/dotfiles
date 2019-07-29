@@ -74,6 +74,7 @@ jq
 xz-utils
 zip
 $tmux
+shellcheck
 "
 for utility in $list; do
 	exists="$(echo "$installed" | tr " " "\\n" | grep -wx "$utility")"
