@@ -41,16 +41,17 @@ FF_WINDOWS=0
 
 if [ -d "$HOME/Library/Application Support/Firefox" ]; then
 	FF_PROFILE_PATH="$HOME/Library/Application Support/Firefox"
+    FF_CHROME_FILE="userChrome-mac.css"
 elif [ -d "$HOME/.mozilla/firefox" ]; then
 	FF_PROFILE_PATH="$HOME/.mozilla/firefox"
-	FF_CHROME_FILE="userChrome-winlin.css"
+	FF_CHROME_FILE="userChrome-linux.css"
 elif [ -d "/mnt/c/Users/$USER/AppData/Roaming/Mozilla/Firefox/" ]; then
     FF_PROFILE_PATH="/mnt/c/Users/$USER/AppData/Roaming/Mozilla/Firefox/"
-    FF_CHROME_FILE="userChrome-winlin.css"
+    FF_CHROME_FILE="userChrome-windows.css"
 	FF_WINDOWS=1
 elif [ -d "/mnt/c/Users/$WINUSER/AppData/Roaming/Mozilla/Firefox/" ]; then
     FF_PROFILE_PATH="/mnt/c/Users/$WINUSER/AppData/Roaming/Mozilla/Firefox/"
-    FF_CHROME_FILE="userChrome-winlin.css"
+    FF_CHROME_FILE="userChrome-windows.css"
 	FF_WINDOWS=1
 fi
 FF_PROFILE_INI="$FF_PROFILE_PATH/profiles.ini"

@@ -1,3 +1,33 @@
+/* Tab close buttons left + disable tab favicons */
+.tabbrowser-tab .tab-close-button {
+    -moz-box-ordinal-group: 3 !important;
+}
+.tabbrowser-tab .tab-text {
+    -moz-box-ordinal-group: 2 !important;
+}
+.tabbrowser-tab .tab-throbber {
+    -moz-box-ordinal-group: 1 !important;
+}
+.tabbrowser-tab .tab-icon-image {
+    display: none !important;
+}
+.tabbrowser-tab[pinned] .tab-icon-image {
+    visibility: visible !important;
+}
+/* To hide tab close buttons */
+
+.tab-close-button {
+    visibility: hidden !important;
+}
+tab:hover .tab-close-button {
+    visibility: visible !important;
+}
+
+/* Disable toolbar favicons  */
+.bookmark-item>.toolbarbutton-icon {
+    display: none !important;
+}
+
 /* Personal bookmarks toolbar smaller  */
 #PersonalToolbar {
     padding-top: 0px !important;
@@ -95,4 +125,43 @@ treechildren::-moz-tree-separator {
     list-style-image: url("chrome://browser/skin/reload-stop-go.png") !important;
     -moz-image-region: rect(0px, 56px, 14px, 42px) !important;
 }
+#PanelUI-menu-button {
+    display: none !important;
+}
 
+/*Hide navigation bars except on hover*/
+
+#navigator-toolbox[inFullscreen] {
+    position: relative;
+    height: 8px;  /* Height of bar that needs to be hovered over */
+    transition:.2s linear all;
+    overflow: hidden;
+    opacity:0;
+    margin-bottom: 0px;
+    background:#999;
+    z-index: 1;
+}
+
+#navigator-toolbox[inFullscreen]:hover {
+    height: 72px;
+    margin-bottom: -64px;
+    opacity:1;
+}
+
+
+#content-deck[inFullscreen]{
+    position:relative;
+    z-index: 0;
+}
+
+#titlebar-buttonbox[inFullscreen]{
+    opacity:0;
+    height: 4px;
+    overflow: hidden;
+    transition:.2s linear all;
+}
+
+#titlebar-buttonbox[inFullscreen]:hover{
+    opacity:1;
+    height: auto;
+}

@@ -1,3 +1,17 @@
+/* To hide tab close buttons */
+
+.tab-close-button {
+    visibility: hidden !important;
+}
+tab:hover .tab-close-button {
+    visibility: visible !important;
+}
+
+/* Disable toolbar favicons  */
+.bookmark-item>.toolbarbutton-icon {
+    display: none !important;
+}
+
 /* Personal bookmarks toolbar smaller  */
 #PersonalToolbar {
     padding-top: 0px !important;
