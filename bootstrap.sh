@@ -40,5 +40,10 @@ if [ -f "/etc/os-release" ]; then
 			echo Detected SuSE flavoured
 			./suse-bootstrap.sh
 		fi
+    elif [ "$RELEASE" = arch ]; then
+        if [ -f ./arch-bootstrap.sh ]; then
+            echo Detected Arch flavoured
+            ./arch-bootstrap.sh
+        fi
 	fi
 fi

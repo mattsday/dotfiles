@@ -48,10 +48,6 @@ fi
 
 echo Updating system
 _apt update >/dev/null
-# If we're running PCF Ops Manager, don't upgrade
-if [ ! -d /var/tempest/workspaces/default ]; then
-	_apt -y upgrade >/dev/null
-fi
 
 # Get list of installed apps
 installed="$(dpkg --get-selections | grep -v deinstall | awk '{print $1}' 2>/dev/null)"
