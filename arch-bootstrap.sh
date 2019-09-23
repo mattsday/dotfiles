@@ -75,7 +75,6 @@ if [[ ! -z "$to_install" ]]; then
     _pacman -Sq --noconfirm $to_install >/dev/null
 fi
 
-echo Checking if yay is installed
 if ! command -v yay >/dev/null 2>&1; then
     echo Installing yay
     git clone https://aur.archlinux.org/yay.git /tmp/yay >/dev/null 2>&1
