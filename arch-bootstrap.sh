@@ -12,6 +12,9 @@ if [[ -f /etc/os-release ]]; then
 	arch*)
 		echo Detected Arch Linux
 		;;
+    manjaro*)
+        echo Detected Manjaro
+        ;;
 	*)
 		echo Cannot detect supported OS, stopping
 		exit
@@ -28,7 +31,7 @@ if [[ ! -x /usr/bin/sudo ]]; then
 	if command -v id >/dev/null 2>&1; then
 		if [ "$(id -u)" = 0 ]; then
 			echo Installing sudo
-			pacman -Sy sudo >/dev/null
+			pacman -Sy --noconfirm sudo >/dev/null
 		else
 			echo "User is not root and sudo isn't installed. Install sudo first"
 			exit
