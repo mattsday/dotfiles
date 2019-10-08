@@ -83,6 +83,7 @@ alias @sudo,/usr/bin/apt update='apt update && apt upgrade'
 # Arch Linux
 alias @sudo,/usr/bin/pacman pacman='sudo pacman '
 alias @sudo,/usr/bin/pacman update='pacman -Syu'
+alias @sudo,/usr/bin/yay update='yay -Syu'
 
 # Red Hat
 alias @/usr/bin/yum,sudo yum='sudo yum'@update='yum update'

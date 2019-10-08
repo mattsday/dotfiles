@@ -47,6 +47,8 @@ installed="$(pacman -Qe | awk '{print $1}' 2>/dev/null) "
 installed+="$(pacman -Qg | awk '{print $1}' 2>/dev/null) "
 
 list="
+base-devel
+openssh
 dialog
 bind-tools
 zsh
