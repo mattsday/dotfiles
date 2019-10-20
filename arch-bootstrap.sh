@@ -80,42 +80,20 @@ if [[ ! -z "$to_install" ]]; then
     _pacman -Sq --noconfirm $to_install >/dev/null
 fi
 
-# Apps to install with yay
-list="
-spotify
-google-chrome
-visual-studio-code-bin
-"
+if ! command -v yay >/dev/null 2>&1; then
+    echo Installing yay
+    git clone https://aur.archlinux.org/yay.git /tmp/yay >/dev/null 2>&1
+    pushd /tmp/yay >/dev/null 2>&1
+    makepkg -si --noconfirm >/dev/null 2>&1
+    popd >/dev/null 2>&1
+    rm -fr /tmp/yay
+fi
 
 # Only run yay if not root
 if [ "$(id -u)" != 0 ]; then
-    if ! command -v yay >/dev/null 2>&1; then
-        echo Installing yay
-        git clone https://aur.archlinux.org/yay.git /tmp/yay >/dev/null 2>&1
-        pushd /tmp/yay >/dev/null 2>&1
-        makepkg -si --noconfirm >/dev/null 2>&1
-        popd >/dev/null 2>&1
-        rm -fr /tmp/yay
-    else
+    if command -v yay >/dev/null 2>&1; then
         echo Updating yay
         yay -Syuq --noconfirm >/dev/null 2>&1
-    fi
-    
-    # Get list of installed apps
-    installed="$(yay -Qe | awk '{print $1}' 2>/dev/null) "
-    installed+="$(yay -Qg | awk '{print $1}' 2>/dev/null) "
-    
-    to_install=""
-
-    for utility in $list; do
-    	exists="$(echo "$installed" | tr " " "\\n" | grep -wx "$utility")"
-    	if [[ -z "$exists" ]]; then
-            to_install+="$utility "
-    	fi
-    done
-    if [[ ! -z "$to_install" ]]; then
-        echo Installing "$to_install"
-        yay -Sq --noconfirm $to_install >/dev/null 2>&1
     fi
 fi
 
