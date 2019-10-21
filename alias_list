@@ -30,7 +30,7 @@ alias @gsed sed='gsed'
 alias @gtar tar='gtar'
 alias @gawk awk='gawk'
 alias @gdu du='gdu --si'
-alias @gdf df='gdf --si'
+alias @gdf df='gdf --si -x tmpfs -x devtmpfs'
 
 # Shit happens...
 alias 'cd..=cd ..'
