@@ -215,13 +215,13 @@ case $grep_ver in *GNU*)
 esac
 unset grep_ver
 
-# If using GNU du, df etc use si units
+# If using GNU du, df etc use si units and by default hide tmp/dev volumes
 if du /bin/ls --si >/dev/null 2>&1; then
 	write_alias du "du --si"
 	aliases=$(expr $aliases + 1)
 fi
 if df --si >/dev/null 2>&1; then
-	write_alias df "df --si"
+	write_alias df "df --si -x tmpfs -x devtmpfs"
 	aliases=$(expr $aliases + 1)
 fi
 
