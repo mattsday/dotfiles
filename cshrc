@@ -26,6 +26,9 @@ endif
 if ( -d /usr/local/bin) then
 	set path = (/usr/local/bin $path)
 endif
+if ( -d /usr/local/sbin) then
+	set path = (/usr/local/sbin $path)
+endif
 
 # =================
 # Alias definitions

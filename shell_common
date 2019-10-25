@@ -13,11 +13,14 @@ fi
 
 # Set some local utilities as default (this must be top of this file after local config)
 if [ -d /usr/local/bin ]; then
-	# Affix /usr/local/bin to PATH as homebrew zsh doesn't do this for some
-	# reason
 	PATH=/usr/local/bin:$PATH
 	export PATH
 fi
+if [ -d /usr/local/sbin ]; then
+	PATH=/usr/local/sbin:$PATH
+	export PATH
+fi
+
 
 # =================
 # Alias definitions
