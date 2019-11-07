@@ -114,6 +114,11 @@ elif [ -z $colours ]; then
 	fi
 fi
 
+# Disable software flow control (XON/OFF) / AKA: why did ctrl-s pause my term?
+if command -v stty >/dev/null 2>&1; then
+    stty -ixon
+fi
+
 # Execute any local bourne scripts:
 if [ -f "$HOME/.shell_common_local" ]; then
 	. "$HOME/.shell_common_local"
