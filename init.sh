@@ -99,35 +99,5 @@ update_plugin() {
 
 }
 
-# Vim plugins
-if ! command -v git > /dev/null 2>&1; then
-    echo Git is not installed, skipping vim plugin installation
-elif ! command -v curl > /dev/null 2>&1; then
-    echo Curl is not installed, skipping vim plugin installation
-else
-    if [ ! -d "$HOME"/.vim/autoload ]; then
-        mkdir -p "$HOME"/.vim/autoload
-    fi
-    if [ ! -f "$HOME"/.vim/autoload/pathogen.vim ]; then
-        echo Installing Pathogen
-        curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim >/dev/null 2>&1
-    fi
-    verb=Installing
-    for i in $VIM_PATHOGEN_PLUGINS; do
-        PLUGIN_NAME="$(basename "$i")"
-        PLUGIN_DIR="$HOME/.vim/bundle/$PLUGIN_NAME"
-        if [ ! -d "$PLUGIN_DIR" ]; then
-            echo Installing vim plugin "$PLUGIN_NAME"
-            git clone "$i" "$PLUGIN_DIR" >/dev/null 2>&1
-        else
-            echo Updating vim plugin "$PLUGIN_NAME"
-            WDIR="$PWD"
-            cd "$PLUGIN_DIR" || continue
-            git pull >/dev/null 2>&1
-            cd "$WDIR" || continue
-        fi
-    done
-fi
-
 sh ./update_aliases force
 echo Done.
