@@ -55,7 +55,7 @@ if ( $colours >= 8 ) then
 	# For some reason the colour isn't resetting unless I put a space here (iTerm bug?)
 	# set rprompt = "${end}[%?]${grey}[%P]${end} "
 	# Removed colour for now:
-	set rprompt = "[%?][%P]"
+	#set rprompt = "[%?][%P]"
 
 	# Cleanup
 	unset yellow cyan end grey green
@@ -65,7 +65,7 @@ else
 	else
 		set prompt = "%n@%m:%~%# "
 	endif
-	set rprompt = "[%?][%P]"
+	#set rprompt = "[%?][%P]"
 endif
 
 # Use > and # prompts for users and root respectively
