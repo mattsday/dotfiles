@@ -32,7 +32,7 @@ endif
 set ruler
 
 " Show line numbers
-set number
+" set number
 
 " ...but make them grey
 highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE guifg=DarkGrey guibg=NONE
