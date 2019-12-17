@@ -31,6 +31,7 @@ alias @gtar tar='gtar'
 alias @gawk awk='gawk'
 alias @gdu du='gdu --si'
 alias @gdf df='gdf --si -x tmpfs -x devtmpfs'
+alias @rsync rsy='rsync --progress --partial --append-verify -a'
 
 # Shit happens...
 alias 'cd..=cd ..'
