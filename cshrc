@@ -89,7 +89,9 @@ set savehist = ($history merge)
 
 set HOSTNAME=localhost
 
-if ( `where hostname` != "") then
+if ( $HOST != "") then
+    set HOSTNAME=$HOST
+else if ( `where hostname` != "") then
     set HOSTNAME = `hostname|awk -F\. '{print $1}'`
 endif
 
