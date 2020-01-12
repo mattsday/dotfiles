@@ -57,20 +57,15 @@ features="
 	vim
 	wget
 	youtube-dl
-	cf-cli
 	dash
 	watch
 	kubernetes-cli
 	cmake
-	awscli
 	bosh-init
 	gradle
-	node
 	python
-	python3
 	sqlite
 	tcsh
-	azure-cli
 	mkvtoolnix
 "
 for feature in $features; do
