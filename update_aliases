@@ -3,26 +3,26 @@
 # shell environments; currently supports (t)csh, fish and bourne shells.
 msg() {
 	if [ "$VERBOSE" = 1 ]; then
-		echo $*
+		echo "$@"
 	fi
 }
 debug() {
 	if [ "$DEBUG" = 1 ]; then
-		echo $*
+		echo "$@"
 	fi
 }
 week=604800
 # Get the date
-date=$(date +%s 2>/dev/null | xargs)
+date="$(date +%s 2>/dev/null | xargs)"
 if [ "$date" = "%s" ]; then
 	# Horrible Solaris workaround
-	date=$(truss /usr/bin/date 2>&1 | grep ^time | awk -F= '{print $2}' | xargs)
+	date="$(truss /usr/bin/date 2>&1 | grep ^time | awk -F= '{print $2}' | xargs)"
 fi
 VERBOSE=0
 # If no argument is passed then check the last-updated time
-if [ -f "$HOME/.alias_update_time" ] && [ -z $1 ]; then
-	lastdate=$(cat "$HOME/.alias_update_time")
-	diff=$(expr $date - $lastdate)
+if [ -f "$HOME/.alias_update_time" ] && [ -z "$1" ]; then
+	lastdate="$(cat "$HOME/.alias_update_time")"
+    diff="$((date - lastdate))"
 	if [ $week -gt $diff ]; then
 		exit
 	fi
@@ -36,21 +36,21 @@ CSH_ALIAS_FILE="$HOME/.csh_aliases"
 FISH_ALIAS_FILE="$HOME/.fish_aliases"
 
 write_alias() {
-	alias_name=$1
-	alias_data=$2
-	echo alias $alias_name=\'$alias_data\' >>$SH_ALIAS_FILE
-	echo alias $alias_name \'$alias_data\' >>$CSH_ALIAS_FILE
-	echo alias $alias_name \'$alias_data\' >>$FISH_ALIAS_FILE
-	debug alias $alias_name=\'$alias_data\'
+	alias_name="$1"
+	alias_data="$2"
+	echo alias "$alias_name"=\'"$alias_data"\' >>"$SH_ALIAS_FILE"
+	echo alias "$alias_name" \'"$alias_data"\' >>"$CSH_ALIAS_FILE"
+	echo alias "$alias_name" \'"$alias_data"\' >>"$FISH_ALIAS_FILE"
+	debug alias "$alias_name"=\'"$alias_data"\'
 }
 
 write_export() {
-	export_name=$1
-	export_data=$2
-	echo $export_name=\'$export_data\' >>$SH_ALIAS_FILE
-	echo export $export_name >>$SH_ALIAS_FILE
-	echo setenv $export_name \'$export_data\' >>$CSH_ALIAS_FILE
-	echo set -u $export_name \'$export_data\' >>$FISH_ALIAS_FILE
+	export_name="$1"
+	export_data="$2"
+	echo "$export_name"=\'"$export_data"\' >>"$SH_ALIAS_FILE"
+	echo export "$export_name" >>"$SH_ALIAS_FILE"
+	echo setenv "$export_name" \'"$export_data"\' >>"$CSH_ALIAS_FILE"
+	echo set -u "$export_name" \'"$export_data"\' >>"$FISH_ALIAS_FILE"
 	debug export "$export_name='$export_data'"
 }
 
@@ -58,19 +58,19 @@ msg Updating aliases and environment variables
 
 IS_ROOT=0
 if command -v id >/dev/null 2>&1; then
-	if [ $(id -u) = 0 ]; then
+	if [ "$(id -u)" = 0 ]; then
 		msg "Updating as root (ignoring sudo aliases)"
 		IS_ROOT=1
 	fi
 fi
 
-rm $SH_ALIAS_FILE >/dev/null 2>&1
-rm $CSH_ALIAS_FILE >/dev/null 2>&1
-rm $FISH_ALIAS_FILE >/dev/null 2>&1
+rm "$SH_ALIAS_FILE" >/dev/null 2>&1
+rm "$CSH_ALIAS_FILE" >/dev/null 2>&1
+rm "$FISH_ALIAS_FILE" >/dev/null 2>&1
 
-updated=$(date)
+updated="$(date)"
 
-cat <<EOT >$SH_ALIAS_FILE
+cat <<EOT >"$SH_ALIAS_FILE"
 # Bourne shell alias file
 #
 # This file is auto generated and replaced every 7 days.
@@ -80,7 +80,7 @@ cat <<EOT >$SH_ALIAS_FILE
 
 EOT
 
-cat <<EOT >$CSH_ALIAS_FILE
+cat <<EOT >"$CSH_ALIAS_FILE"
 # csh and tcsh alias file
 #
 # This file is auto generated and replaced every 7 days.
@@ -90,7 +90,7 @@ cat <<EOT >$CSH_ALIAS_FILE
 
 EOT
 
-cat <<EOT >$FISH_ALIAS_FILE
+cat <<EOT >"$FISH_ALIAS_FILE"
 # Fish shell alias file
 #
 # This file is auto generated and replaced every 7 days.
@@ -103,20 +103,19 @@ EOT
 add_alias() {
 	IFS='@'
 	for alias in $1; do
-		alias_name=$(echo $alias | awk -F= '{print $1}' | xargs)
-		alias_data=$(echo $alias | awk -F= '{print $2}')
-		first_command=$(echo $alias_data | awk '{ print $1 }' | sed 's/^!//')
+		alias_name="$(echo "$alias" | awk -F= '{print $1}' | xargs)"
+		alias_data="$(echo "$alias" | awk -F= '{print $2}')"
+		first_command="$(echo "$alias_data" | awk '{ print $1 }' | sed 's/^!//')"
 
 		# If it's a sudo alias don't do it as root
 		if [ "$IS_ROOT" = 1 ] && [ "$first_command" = "sudo" ]; then
 			continue
 		fi
-		aliases=$(expr $aliases + 1)
+        aliases="$((aliases + 1))"
 		# Check if the command needs to be expanded
-		if echo $alias_data | egrep '^!.*' >/dev/null 2>&1; then
-			wcmd=$(command -v $first_command 2>/dev/null)
-			if [ $? = 0 ]; then
-				alias_data="$(echo $wcmd $alias_data | sed 's|!'$first_command'||' | xargs)"
+		if echo "$alias_data" | grep -E '^!.*' >/dev/null 2>&1; then
+			if wcmd="$(command -v "$first_command" 2>/dev/null)"; then
+				alias_data="$(echo "$wcmd" "$alias_data" | sed 's|!'"$first_command"'||' | xargs)"
 			fi
 			unset wcmd first_command
 		fi
@@ -127,15 +126,14 @@ add_alias() {
 add_export() {
 	IFS='@'
 	for export in $1; do
-		variables=$(expr $variables + 1)
-		export_name=$(echo $export | awk -F= '{print $1}' | xargs)
-		export_data=$(echo $export | awk -F= '{print $2}' | xargs)
+        variables="$((variables + 1))"
+		export_name="$(echo "$export" | awk -F= '{print $1}' | xargs)"
+        export_data="$(echo "$export" | awk -F= '{print $2}' | xargs)"
 		# Check if the command needs to be expanded
-		if echo $export_data | egrep '^!.*' >/dev/null 2>&1; then
-			ocmd=$(echo $export_data | awk '{ print $1 }' | sed 's/^!//')
-			wcmd=$(command -v $ocmd 2>/dev/null)
-			if [ $? = 0 ]; then
-				export_data="$(echo $wcmd $export_data | sed 's|!'$ocmd'||' | xargs)"
+		if echo "$export_data" | grep -E '^!.*' >/dev/null 2>&1; then
+			ocmd="$(echo "$export_data" | awk '{ print $1 }' | sed 's/^!//')"
+			if wcmd="$(command -v "$ocmd" 2>/dev/null)"; then
+				export_data="$(echo "$wcmd" "$export_data" | sed 's|!'"$ocmd"'||' | xargs)"
 			fi
 			unset wcmd ocmd
 		fi
@@ -152,13 +150,13 @@ while IFS='' read -r line || [ -n "$line" ]; do
 		# Check for executables
 	'alias @'* | 'export @'*)
 		# Get the list of command_list to test
-		command_list=$(echo $line | awk '{print $2}' | sed 's/^@//')
+		command_list="$(echo "$line" | awk '{print $2}' | sed 's/^@//')"
 		IFS=,
 		execute=1
 		for command in $command_list; do
 			case $command in
 			# If it's an absolute path just test if it is executable
-			*\/*)
+			*/*)
 				if [ ! -x "$command" ]; then
 					execute=0
 					break
@@ -166,7 +164,7 @@ while IFS='' read -r line || [ -n "$line" ]; do
 				;;
 			# Otherwise search the path for it
 			*)
-				if ! command -v $command >/dev/null 2>&1; then
+				if ! command -v "$command" >/dev/null 2>&1; then
 					execute=0
 					break
 				fi
@@ -175,42 +173,42 @@ while IFS='' read -r line || [ -n "$line" ]; do
 		done
 		IFS=''
 		if [ $execute = 1 ]; then
-			type=$(echo $line | awk '{ print $1 }' | xargs)
+			type="$(echo "$line" | awk '{ print $1 }' | xargs)"
 			if [ "$type" = alias ]; then
-				add_alias $(echo $line | awk '{ print $0 }' | sed 's/^alias//' | sed 's|@'"$command_list"'||' | xargs)
+				add_alias "$(echo "$line" | awk '{ print $0 }' | sed 's/^alias//' | sed 's|@'"$command_list"'||' | xargs)"
 			elif [ "$type" = export ]; then
-				add_export $(echo $line | awk '{ print $0 }' | sed 's/^export//' | sed 's|@'"$command_list"'||' | xargs)
+				add_export "$(echo "$line" | awk '{ print $0 }' | sed 's/^export//' | sed 's|@'"$command_list"'||' | xargs)"
 			fi
 		fi
 		;;
 	export*)
-		add_export $(echo $line | sed 's/^export//' | xargs)
+		add_export "$(echo "$line" | sed 's/^export//' | xargs)"
 		;;
 	alias*)
-		if [ ! -z "$line" ]; then
-			add_alias $(echo $line | sed 's/^alias//' | xargs)
+		if [ -n "$line" ]; then
+			add_alias "$(echo "$line" | sed 's/^alias//' | xargs)"
 		fi
 		;;
 	esac
 done <"$HOME/.alias_list"
 
 # Check if GNU grep is installed
-
+# shellcheck disable=SC2209
 grep_cmd=grep
 if command -v ggrep >/dev/null 2>&1; then
 	grep_cmd=ggrep
 fi
 
 # Colour grep output if GNU grep
-grep_ver=$($grep_cmd --version 2>/dev/null)
+grep_ver="$($grep_cmd --version 2>/dev/null)"
 case $grep_ver in *GNU*)
 	write_alias grep "$grep_cmd --color=auto"
 	write_alias egrep "grep -E --color=auto"
 	write_alias fgrep "grep -F --color=auto"
 	write_export GREP_COLORS "ms=01;32:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36"
 
-	variables=$(expr $variables + 1)
-	aliases=$(expr $aliases + 3)
+    variables="$((variables + 1))"
+    aliases="$((aliases + 3))"
 	;;
 esac
 unset grep_ver
@@ -218,34 +216,38 @@ unset grep_ver
 # If using GNU du, df etc use si units and by default hide tmp/dev volumes
 if du /bin/ls --si >/dev/null 2>&1; then
 	write_alias du "du --si"
-	aliases=$(expr $aliases + 1)
+    aliases="$((aliases + 1))"
 fi
 if df --si >/dev/null 2>&1; then
 	write_alias df "df --si -x tmpfs -x devtmpfs"
-	aliases=$(expr $aliases + 1)
+    aliases="$((aliases + 1))"
 fi
 
 # Add json paste command
 if command -v pbpaste >/dev/null 2>&1; then
 	write_alias json "pbpaste | jq '"'.'"' | pbcopy; pbpaste"
-	aliases=$(expr $aliases + 1)
+    aliases="$((aliases + 1))"
 fi
 
 # If apt exists, make apt info not use sudo for sh (but for csh and fish just do lazy defaults)
 if [ -x /usr/bin/apt ] && [ "$IS_ROOT" = 0 ]; then
-    echo 'apt() {' >>$SH_ALIAS_FILE
-    echo 'if [ "$1" = search ] || [ "$1" = list ]  || [ "$1" = info ] || [ "$1" = show ] || [ "$1" = policy ]; then /usr/bin/apt $@' >>$SH_ALIAS_FILE
-    echo 'else sudo /usr/bin/apt $@' >>$SH_ALIAS_FILE
-    echo 'fi' >>$SH_ALIAS_FILE
-    echo '}' >>$SH_ALIAS_FILE
-    echo 'alias apt '"'sudo apt'" >>$FISH_ALIAS_FILE
-    echo 'alias apt '"'sudo apt'" >>$CSH_ALIAS_FILE
-    aliases=$(expr $aliases + 1)
+    # shellcheck disable=SC2016
+    {
+        echo 'apt() {'
+        echo 'case "$1" in'
+        echo 'search|list|info|show|policy) /usr/bin/apt "$@" ;;'
+        echo '*) sudo /usr/bin/apt "$@" ;;'
+        echo 'esac'
+        echo '}'
+    }>>"$SH_ALIAS_FILE"
+    echo 'alias apt '"'sudo apt'" >>"$FISH_ALIAS_FILE"
+    echo 'alias apt '"'sudo apt'" >>"$CSH_ALIAS_FILE"
+    aliases="$((aliases + 1))"
 fi
 
 # Write out last update time:
-echo $date >"$HOME/.alias_update_time"
+echo "$date" >"$HOME/.alias_update_time"
 
-msg Created $aliases aliases and $variables environment variables
+msg Created "$aliases" aliases and "$variables" environment variables
 
 # vim: syntax=sh
