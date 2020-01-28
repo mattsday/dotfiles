@@ -35,7 +35,7 @@ tmux="tmux"
 # Are we using trusty?
 if [ -f "/etc/os-release" ]; then
 	OS_VER=$(grep '^VERSION_ID' /etc/os-release | awk -F= '{print $2}' | xargs)
-	if [ ! -z "$OS_VER" ] && [ "$OS_VER" = "14.04" ]; then
+	if [ -n "$OS_VER" ] && [ "$OS_VER" = "14.04" ]; then
 		echo Adding PPA repository
 		if [ ! -x "/usr/bin/apt-add-repository" ]; then
 			_apt -y install software-properties-common >/dev/null

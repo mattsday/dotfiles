@@ -1,3 +1,4 @@
+#!/bin/ksh
 # Matt Day's custom .kshrc file
 # If I'm desperate enough to use ksh in the modern era I might as
 # well have a few nice settings eh?
@@ -24,9 +25,9 @@ if [ -f "$HOME/.shell_common" ]; then
 	. "$HOME/.shell_common"
 fi
 
-shorthost=`hostname | sed 's/\..*//'`
+shorthost=$(hostname | sed 's/\..*//')
 
-if (( $colours >= 8 )); then
+if (( colours >= 8 )); then
 	yellow="\033[01;33m"
 	green="\033[01;32m"
 	cyan="\033[01;36m"
@@ -54,12 +55,12 @@ set -o ignoreeof
 set -o noclobber
 
 # For some environments where this doesn't get set by default:
-alias __A=`echo "\020"` # up arrow = ^p = back a command
-alias __B=`echo "\016"` # down arrow = ^n = down a command
-alias __C=`echo "\006"` # right arrow = ^f = forward a character
-alias __D=`echo "\002"` # left arrow = ^b = back a character
-alias __H=`echo "\001"` # home = ^a = start of line
 stty erase ^?		# bind backspace
+alias __A=$(print '\0020') # ^P = up = previous command
+alias __B=$(print '\0016') # ^N = down = next command
+alias __C=$(print '\0006') # ^F = right = forward a character
+alias __D=$(print '\0002') # ^B = left = back a character
+alias __H=$(print '\0001') # ^A = home = beginning of line
 
 # History management
 export HISTSIZE=25000

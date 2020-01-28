@@ -46,7 +46,7 @@ _pacman -Syuq --noconfirm >/dev/null
 installed="$(pacman -Qe | awk '{print $1}' 2>/dev/null) "
 installed+="$(pacman -Qg | awk '{print $1}' 2>/dev/null) "
 
-list="
+list=(
 base-devel
 openssh
 dialog
@@ -65,27 +65,27 @@ unrar
 tmux
 shellcheck
 base-devel
-"
+)
 
-to_install=""
+to_install=()
 
-for utility in $list; do
+for utility in "${list[@]}"; do
 	exists="$(echo "$installed" | tr " " "\\n" | grep -wx "$utility")"
 	if [[ -z "$exists" ]]; then
-        to_install+="$utility "
+        to_install+=("$utility")
 	fi
 done
-if [[ ! -z "$to_install" ]]; then
-    echo Installing "$to_install"
-    _pacman -Sq --noconfirm $to_install >/dev/null
+if (( ${#to_install[@]} )); then
+    echo Installing "${to_install[@]}"
+    _pacman -Sq --noconfirm "${to_install[@]}" >/dev/null
 fi
 
 if ! command -v yay >/dev/null 2>&1; then
     echo Installing yay
     git clone https://aur.archlinux.org/yay.git /tmp/yay >/dev/null 2>&1
-    pushd /tmp/yay >/dev/null 2>&1
+    pushd /tmp/yay >/dev/null 2>&1 || return
     makepkg -si --noconfirm >/dev/null 2>&1
-    popd >/dev/null 2>&1
+    popd >/dev/null 2>&1 || return
     rm -fr /tmp/yay
 fi
 

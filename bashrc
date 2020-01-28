@@ -1,3 +1,4 @@
+#!/bin/bash
 # Matt Day's custom .bashrc file
 # This sets a few useful bash options and loads most of my common
 # bourne shell settings from .shell_common
