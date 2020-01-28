@@ -2,6 +2,8 @@
 # This sets my favourite zsh features and loads most of my common
 # bourne shell settings from .shell_common
 # Latest copy always here: https://github.com/mattsday/dotfiles/
+#
+# shellcheck disable=SC1091,SC2148,SC1090,SC2154,SC2016
 
 # ==========
 # Shell Init
