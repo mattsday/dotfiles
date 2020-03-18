@@ -29,7 +29,7 @@ brew cleanup >/dev/null
 
 # Set up some taps
 echo Setting up brew taps
-brew tap caskroom/cask >/dev/null
+brew tap homebrew/cask-cask >/dev/null
 
 installed="$(brew list)"
 features="
