@@ -30,11 +30,9 @@ brew cleanup >/dev/null
 # Set up some taps
 echo Setting up brew taps
 brew tap caskroom/cask >/dev/null
-brew tap cloudfoundry/tap >/dev/null
 
 installed="$(brew list)"
 features="
-	kubernetes-helm
 	gawk
 	grep
 	shellcheck
@@ -45,12 +43,8 @@ features="
 	gnu-sed
 	gnu-tar
 	gnu-which
-	maven
-	terraform
 	multimarkdown
-	flac
 	jq
-	fish
 	findutils
 	tmux
 	unrar
@@ -59,12 +53,6 @@ features="
 	youtube-dl
 	dash
 	watch
-	kubernetes-cli
-	cmake
-	bosh-init
-	gradle
-	python
-	sqlite
 	tcsh
 	mkvtoolnix
 "
@@ -79,10 +67,6 @@ done
 # Install casks
 installed="$(brew cask list)"
 features="
-	android-sdk
-	google-cloud-sdk
-	xquartz
-	fly
 	qlmarkdown
 	quicklook-json
 	qlcolorcode
