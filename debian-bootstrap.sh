@@ -32,7 +32,7 @@ fi
 # Install standard tmux
 tmux="tmux"
 
-# Are we using trusty?
+# Are we using trusty? It's > 2020 so I hope not!
 if [ -f "/etc/os-release" ]; then
 	OS_VER=$(grep '^VERSION_ID' /etc/os-release | awk -F= '{print $2}' | xargs)
 	if [ ! -z "$OS_VER" ] && [ "$OS_VER" = "14.04" ]; then
