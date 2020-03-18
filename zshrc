@@ -2,6 +2,8 @@
 # This sets my favourite zsh features and loads most of my common
 # bourne shell settings from .shell_common
 # Latest copy always here: https://github.com/mattsday/dotfiles/
+#
+# shellcheck disable=SC1091,SC2148,SC1090,SC2154,SC2016
 
 # ==========
 # Shell Init
@@ -36,11 +38,11 @@ autoload -U complist
 # Check if autocomplete will work via -Uz
 autoload -Uz compinit 2>/dev/null
 comp_support=$?
-if (( $comp_support > 0 )); then
+if (( comp_support > 0 )); then
 	autoload -U compinit 2>/dev/null
 	comp_support=$?
 fi
-if (( $comp_support == 0 )); then
+if (( comp_support == 0 )); then
 	compinit
     # Enable Kubernetes autocompletion if available
     if command -v kubectl >/dev/null 2>&1; then
@@ -59,14 +61,18 @@ autoload -U zutil
 # =============
 # Various options, features and keybinds that make life a little bit better...
 
-for option (
+shell_options=(
 	noautomenu 	# don't select stuff automatically when tabbing if there are options
 	auto_cd 	# Auto CD (i.e. can type '..' to change to parent directory, or 'bin' to change to ./bin)
 	extendedglob 	# Expanded globbing (i.e. allow 'ls -d ^*.jpg' to show non-jpg files)
 	noclobber 	# Require '>!' instead of '>' to overwrite a file
 	correct		# Correct common errors
 	prompt_subst	# Allow dynamic prompt
-) setopt $option
+)
+
+for o in "${shell_options[@]}"; do
+    setopt "$o"
+done
 
 # Ensure ctrl-a/ctrl-e for home/end respectively (emacs compatibility):
 bindkey -e
@@ -96,7 +102,7 @@ setopt HIST_VERIFY
 
 # Load basic aliases from common set (zsh & bash compatible)
 if [[ -f "$HOME/.shell_common" ]]; then
-	. $HOME/.shell_common
+	. "$HOME/.shell_common"
 fi
 
 # ===========
@@ -106,11 +112,9 @@ fi
 
 # Evalate directory colours if gnu coreutils is present
 if command -v dircolors > /dev/null 2>&1; then
-	eval `$(command -v dircolors)` && zstyle ':completion:*' list-colors \
-		${(s.:.)LS_COLORS}
+    eval "$(dircolors -b)" && zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 elif command -v gdircolors > /dev/null 2>&1; then
-	eval `$(command -v gdircolors)` && zstyle ':completion:*' list-colors \
-		${(s.:.)LS_COLORS}
+    eval "$(gdircolors -b)" && zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 fi
 
 # Set some completion styles and features
@@ -125,13 +129,13 @@ zstyle ':completion:*' verbose yes
 zstyle ':completion:*' rehash yes
 
 # Native Git directory information
-autoload -Uz vcs_info 2>/dev/null
-vcs_support=$?
-# If the shell doesn't support -Uz then try -U
-if (( $? > 0 )); then
-	autoload -U vcs_info 2>/dev/null
-	vcs_support=$?
+vcs_support=true
+if ! autoload -Uz vcs_info 2>/dev/null; then
+	if ! autoload -U vcs_info 2>/dev/null; then
+        vcs_support=false
+    fi
 fi
+
 zstyle ':vcs_info:*' enable git svn
 zstyle ':vcs_info:*' actionformats '(%s)-[%b|%a] (%a)'
 zstyle ':vcs_info:*' formats       '(%s)-[%b]'
@@ -151,29 +155,30 @@ elif [ -f "/usr/share/google-cloud-sdk/completion.zsh.inc" ]; then
     . /usr/share/google-cloud-sdk/completion.zsh.inc
 fi
 
-if (( $colours >= 8 )); then
+if (( colours >= 8 )); then
+    unset PROMPT
 	# Custom prompt (coloured in yellow and cyan):
 	# If the user is 'matt' don't print it
-	if [[ "$USER" == matt ]] || [[ "$USER" == mattsday ]]; then
-		PROMPT="%{$fg_bold[yellow]%}%2m%{$reset_color%}:%{$fg_bold[cyan]%}"
-	else
-		PROMPT="%{$fg_bold[green]%}%n%{$reset_color%}@%{$fg_bold[yellow]%}%2m%{$reset_color%}:%{$fg_bold[cyan]%}"
-	fi
-	# Append directory info
-		# Date on right-side including return code + git info [0][09:30:00]
-	RPROMPT+='%{$reset_color%}%F{green}${vcs_info_msg_0_}%{$reset_color%}'
-	#RPROMPT+='%{$reset_color%}[%?]%{$fg_bold[grey]%}[%D{%H:%M:%S}]%{$reset_color%}'
-    # Add working directory 
-    PROMPT+="%~%{$reset_color%}%# %{$reset_color%}"
-
+    case "$USER" in
+        matt|mattsday)
+            ;;
+        *)
+            PROMPT="%B%F{green}%n%f%b@"
+            ;;
+    esac
+    PROMPT+="%B%F{yellow}%2m%f%b:%B%F{cyan}%~%f%b%# "
+    # Append git info
+	RPROMPT+='%B%F{green}${vcs_info_msg_0_}%b%f'
 else
-	if [[ "$USER" == matt ]] || [[ "$USER" == mattsday ]]; then
-		PROMPT="%2m:%~%# "
-	else
-		PROMPT="%n@%2m:%~%# "
-	fi
-	# Date on right-side including return code + git info [0][09:30:00]
-	#RPROMPT='${vcs_info_msg_0_}[%?][%D{%H:%M:%S}]'
+    case "$USER" in
+        matt|mattsday)
+    		PROMPT="%2m:%~%# "
+            ;;
+        *)
+		    PROMPT="%n@%2m:%~%# "
+            ;;
+    esac
+    # Append git info
     RPROMPT='${vcs_info_msg_0_}'
 fi
 
@@ -183,7 +188,7 @@ case $TERM in
 	xterm*)
 		precmd () {
 			# Check directory for git etc
-			if (( $vcs_support == 0 )); then
+			if [[ $vcs_support == true ]]; then
 				vcs_info
 			fi
 			# Print xterm title (user@host:~)

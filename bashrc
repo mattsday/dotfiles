@@ -1,7 +1,9 @@
+#!/bin/bash
 # Matt Day's custom .bashrc file
 # This sets a few useful bash options and loads most of my common
 # bourne shell settings from .shell_common
 # Latest copy always here: https://github.com/mattsday/dotfiles/
+# shellcheck disable=SC1090,SC1091
 
 # ==========
 # Shell Init
@@ -13,7 +15,7 @@
 
 # Load any local config first (aliases should go in _local file)
 if [[ -f "$HOME/.bashrc_config" ]]; then
-	. "$HOME/.bashrc_config"
+    . "$HOME/.bashrc_config"
 fi
 
 # =============
@@ -77,6 +79,7 @@ fi
 # ===========
 # Specific options that affect the L&F of the shell
 
+# shellcheck disable=SC2154
 if ((colours >= 8)); then
 	yellow="\\[\\033[01;33m\\]"
 	green="\\[\\033[01;32m\\]"
