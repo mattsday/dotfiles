@@ -13,6 +13,11 @@
 # If not running interactively, don't do anything
 [[ -z "$PS1" ]] && return
 
+# If there's a local /etc/profile then evaluate that
+if [ -f /etc/profile ]; then
+    emulate sh -c '. /etc/profile'
+fi
+
 # Load any local config first (aliases should go in _local file)
 if [[ -f "$HOME/.zshrc_config" ]]; then
 	. "$HOME/.zshrc_config"
