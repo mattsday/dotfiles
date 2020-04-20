@@ -57,6 +57,7 @@ apt-utils
 dialog
 dnsutils
 zsh
+rsync
 curl
 vim
 findutils

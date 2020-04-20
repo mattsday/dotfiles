@@ -11,7 +11,7 @@ fi
 if [[ ! -x /usr/local/bin/brew ]]; then
 	# Install homebrew
 	echo Installing homebrew
-	/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 fi
 
 # NOW is homebrew installed?
@@ -29,7 +29,7 @@ brew cleanup >/dev/null
 
 # Set up some taps
 echo Setting up brew taps
-brew tap homebrew/cask-cask >/dev/null
+#brew tap homebrew/cask-cask >/dev/null
 
 installed="$(brew list)"
 features="
