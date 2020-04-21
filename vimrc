@@ -101,6 +101,15 @@ set ignorecase
 " Highlight search results
 set hlsearch
 
+" Incrementally search
+set incsearch
+
+" Code folding
+set foldenable
+set foldlevelstart=10
+set foldnestmax=10
+
+
 " tmux support
 if exists('$TMUX')
     let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
@@ -139,14 +148,6 @@ endif
 
 " Finally map the 'enter' key
 :imap <Esc>OM <CR>
-
-"================
-" Load Pathogen for local plugins
-"================
-runtime! autoload/pathogen.vim
-if exists("*pathogen#infect")
-    execute pathogen#infect()
-endif
 
 let g:solarized_termcolors=256 
 silent! colorscheme solarized
