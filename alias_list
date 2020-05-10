@@ -103,3 +103,6 @@ alias @/usr/bin/zypper,sudo zypper='sudo zypper'@update='zypper update'
 
 # Generic services
 alias @/usr/sbin/service service='sudo service'
+
+# Use ksshaskpass for ssh passwords if present
+export @/usr/bin/ksshaskpass GIT_ASKPASS=/usr/bin/ksshaskpass
