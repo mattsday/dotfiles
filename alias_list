@@ -67,9 +67,8 @@ export BLOCKSIZE=k
 alias @vim vi=!vim
 export @vim VISUAL='!vim'@EDITOR='!vim'@USE_EDITOR='!vim'
 
-# Cloud Foundry-ness
-alias @cf cfa="cf a"@cfs="cf s"@cfm="cf m"@cfp="cf p"@cfl="cf logs"
-export @cf CF_COLOR=true
+# Snap always needs to run as root
+alias @sudo,/usr/bin/snap snap='sudo snap'
 
 # Use less as a pager
 export @less PAGER=less
@@ -78,7 +77,7 @@ export @less PAGER=less
 alias @gosh bosh=!gosh
 
 # Debian Systems
-alias @sudo,/usr/bin/apt update='apt update && apt upgrade'
+alias @sudo,/usr/bin/apt,/usr/bin/dpkg update='apt update && apt upgrade'
 #alias @sudo,/usr/bin/apt apt='sudo apt'@apt-get='apt'
 
 # Arch Linux
