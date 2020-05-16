@@ -29,6 +29,10 @@ endif
 if ( -d /usr/local/sbin) then
 	set path = (/usr/local/sbin $path)
 endif
+if ( -d /snap/bin) then
+	set path = ($path /snap/bin)
+endif
+
 
 # =================
 # Alias definitions
