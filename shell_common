@@ -20,7 +20,9 @@ if [ -d /usr/local/sbin ]; then
 	PATH=/usr/local/sbin:$PATH
 	export PATH
 fi
-
+if [ -d /snap/bin ]; then
+    PATH=$PATH:/snap/bin
+fi
 
 # =================
 # Alias definitions
