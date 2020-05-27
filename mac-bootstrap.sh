@@ -37,7 +37,6 @@ features="
 	grep
 	shellcheck
 	coreutils
-	zsh
 	bash
 	htop
 	gnu-sed
@@ -48,13 +47,10 @@ features="
 	findutils
 	tmux
 	unrar
-	vim
 	wget
 	youtube-dl
-	dash
 	watch
-	tcsh
-	mkvtoolnix
+    ffmpeg
 "
 for feature in $features; do
 	exists="$(echo "$installed" | grep -w "$feature")"
