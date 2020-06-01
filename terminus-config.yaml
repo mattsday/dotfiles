@@ -61,6 +61,17 @@ hotkeys:
   shell: {}
   settings:
     - - 'Ctrl-Shift-,'
+  zoom-out:
+    - - Ctrl--
+    - - Ctrl-Shift--
+    - - Ctrl-NumpadSubtract
+  zoom-in:
+    - - Ctrl-=
+    - - Ctrl-Shift-=
+    - - Ctrl-NumpadAdd
+  reset-zoom:
+    - - Ctrl-0
+    - - Ctrl-Numpad0
 serial: {}
 ssh: {}
 appearance:
