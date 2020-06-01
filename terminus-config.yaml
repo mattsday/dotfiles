@@ -1,26 +1,26 @@
 terminal:
   colorScheme:
-    name: Atom
-    foreground: '#c5c8c6'
-    background: '#161719'
-    cursor: '#d0d0d0'
+    name: Breeze Dark
+    foreground: '#fcfcfc'
+    background: '#232627'
+    cursor: '#bbbbbb'
     colors:
+      - '#232627'
+      - '#ed1515'
+      - '#11d116'
+      - '#f67400'
+      - '#1d99f3'
+      - '#9b59b6'
+      - '#1abc9c'
+      - '#fcfcfc'
       - '#000000'
-      - '#fd5ff1'
-      - '#87c38a'
-      - '#ffd7b1'
-      - '#85befd'
-      - '#b9b6fc'
-      - '#85befd'
-      - '#e0e0e0'
-      - '#000000'
-      - '#fd5ff1'
-      - '#94fa36'
-      - '#f5ffa8'
-      - '#96cbfe'
-      - '#b9b6fc'
-      - '#85befd'
-      - '#e0e0e0'
+      - '#c0392b'
+      - '#1cdc9a'
+      - '#fdbc4b'
+      - '#3daee9'
+      - '#8e44ad'
+      - '#16a085'
+      - '#ffffff'
   font: JetBrains Mono
   frontend: xterm
   environment: {}
@@ -29,8 +29,30 @@ terminal:
   autoOpen: true
   fontSize: 13
   ligatures: true
-  background: theme
+  background: colorScheme
   cursorBlink: false
+  customColorSchemes:
+    - name: Breeze Dark
+      foreground: '#fcfcfc'
+      background: '#232627'
+      cursor: '#bbbbbb'
+      colors:
+        - '#232627'
+        - '#ed1515'
+        - '#11d116'
+        - '#f67400'
+        - '#1d99f3'
+        - '#9b59b6'
+        - '#1abc9c'
+        - '#fcfcfc'
+        - '#000000'
+        - '#c0392b'
+        - '#1cdc9a'
+        - '#fdbc4b'
+        - '#3daee9'
+        - '#8e44ad'
+        - '#16a085'
+        - '#ffffff'
 hotkeys:
   profile: {}
   paste:
