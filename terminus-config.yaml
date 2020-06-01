@@ -1,0 +1,47 @@
+terminal:
+  colorScheme:
+    name: Atom
+    foreground: '#c5c8c6'
+    background: '#161719'
+    cursor: '#d0d0d0'
+    colors:
+      - '#000000'
+      - '#fd5ff1'
+      - '#87c38a'
+      - '#ffd7b1'
+      - '#85befd'
+      - '#b9b6fc'
+      - '#85befd'
+      - '#e0e0e0'
+      - '#000000'
+      - '#fd5ff1'
+      - '#94fa36'
+      - '#f5ffa8'
+      - '#96cbfe'
+      - '#b9b6fc'
+      - '#85befd'
+      - '#e0e0e0'
+  font: JetBrains Mono
+  frontend: xterm
+  environment: {}
+  profile: zsh
+  alwaysUseWorkingDirectory: true
+  autoOpen: true
+  fontSize: 13
+  ligatures: true
+  background: colorScheme
+hotkeys:
+  profile: {}
+  paste:
+    - - Ctrl-Shift-V
+    - - Ctrl-V
+  shell: {}
+serial: {}
+ssh: {}
+appearance:
+  theme: Standard
+  frame: native
+enableAnalytics: false
+enableWelcomeTab: false
+pluginBlacklist:
+  - ssh
