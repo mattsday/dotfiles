@@ -29,7 +29,8 @@ terminal:
   autoOpen: true
   fontSize: 13
   ligatures: true
-  background: colorScheme
+  background: theme
+  cursorBlink: false
 hotkeys:
   profile: {}
   paste:
