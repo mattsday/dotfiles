@@ -59,6 +59,8 @@ hotkeys:
     - - Ctrl-Shift-V
     - - Ctrl-V
   shell: {}
+  settings:
+    - - 'Ctrl-Shift-,'
 serial: {}
 ssh: {}
 appearance:
