@@ -22,7 +22,7 @@ terminal:
       - '#16a085'
       - '#ffffff'
   font: JetBrains Mono
-  frontend: xterm
+  frontend: xterm-webgl
   environment: {}
   profile: zsh
   alwaysUseWorkingDirectory: true
@@ -72,6 +72,14 @@ hotkeys:
   reset-zoom:
     - - Ctrl-0
     - - Ctrl-Numpad0
+  next-tab:
+    - - Ctrl-Shift-Right
+    - - Ctrl-Tab
+    - - Ctrl-PageUp
+  previous-tab:
+    - - Ctrl-Shift-Left
+    - - Ctrl-Shift-Tab
+    - - Ctrl-PageDown
 serial: {}
 ssh: {}
 appearance:
