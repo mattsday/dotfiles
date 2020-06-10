@@ -95,7 +95,7 @@ sudo service docker start
 emoji() {
     echo Setting up emoji
     if [ -f "$PWD/linux-emoji.sh" ]; then
-        "$PWD/linux-emoji.sh" >/dev/null
+        "$PWD/linux-emoji.sh"
     fi
 }
 
