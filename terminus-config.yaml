@@ -53,6 +53,7 @@ terminal:
         - '#8e44ad'
         - '#16a085'
         - '#ffffff'
+  bracketedPaste: true
 hotkeys:
   profile: {}
   paste:
