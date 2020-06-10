@@ -45,5 +45,12 @@ if [ -f "/etc/os-release" ]; then
             echo Detected Arch flavoured
             ./arch-bootstrap.sh
         fi
+    fi
+    RELEASE="$(grep '^VERSION_CODENAME=' /etc/os-release | awk -F= '{print $2}' | sed 's/"//g')"
+    if [ "$RELEASE" = rodete ]; then
+        if [ -f ./rodete-bootstrap.sh ]; then
+            echo Detected Rodete
+            ./rodete-bootstrap.sh
+        fi
 	fi
 fi
