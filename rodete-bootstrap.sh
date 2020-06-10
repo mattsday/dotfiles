@@ -71,7 +71,7 @@ sudo service docker stop
 sudo ip link set docker0 down
 sudo ip link del docker0
 sudo addgroup docker >/dev/null
-sudo adduser $USER docker >/dev/null
+sudo adduser "$USER" docker >/dev/null
 if [ ! -f /etc/docker/daemon.json ]; then
 cat <<EOF | sudo tee /etc/docker/daemon.json
 {
@@ -90,8 +90,13 @@ cat <<EOF | sudo tee /etc/docker/daemon.json
 EOF
 fi
 sudo service docker start
+}
 
-
+emoji() {
+    echo Setting up emoji
+    if [ -f "$PWD/linux-emoji.sh" ]; then
+        "$PWD/linux-emoji.sh" >/dev/null
+    fi
 }
 
 main() {
@@ -100,6 +105,7 @@ install_apt_packages
 install_snaps
 bluetooth_setup
 docker_setup
+emoji
 }
 
 
