@@ -20,8 +20,16 @@ APT_PACKAGES+=(libffmpegthumbnailer4v5 ffmpegthumbs ffmpegthumbnailer pulseaudio
 APT_PACKAGES+=(spotify-client sddm-theme-debian-breeze blueman google-cloud-sdk google-cloud-sdk-anthos-auth)
 APT_PACKAGES+=(google-cloud-sdk-kpt google-cloud-sdk-skaffold kubectl openjdk-8-jdk openjdk-11-jdk)
 APT_PACKAGES+=(gnucash kde-spectacle)
-echo Installing packages "${APT_PACKAGES[@]}"
-sudo apt-get -y install "${APT_PACKAGES[@]}" >/dev/null || fail "Failed installing packages"
+INSTALL_PACKAGES=()
+for package in "${APT_PACKAGES[@]}"; do
+    if ! dpkg -l "$package" >/dev/null 2>&1; then
+        INSTALL_PACKAGES+=("$package")
+    fi
+done
+if [ -n "${INSTALL_PACKAGES[*]}" ]; then
+    echo Installing packages "${INSTALL_PACKAGES[@]}"
+    sudo apt-get -y install "${INSTALL_PACKAGES[@]}" >/dev/null || fail "Failed installing packages"
+fi
 }
 
 install_snaps() {

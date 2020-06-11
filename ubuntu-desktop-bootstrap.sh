@@ -20,8 +20,16 @@ install_apt_packages() {
 APT_PACKAGES=(snapd kde-plasma-desktop plasma-widgets-addons plasma-wallpapers-addons)
 APT_PACKAGES+=(ffmpegthumbs ffmpegthumbnailer pulseaudio-module-bluetooth)
 APT_PACKAGES+=(kde-spectacle openjdk-8-jdk openjdk-11-jdk)
-echo Installing packages "${APT_PACKAGES[@]}"
-sudo apt-get -y install "${APT_PACKAGES[@]}" >/dev/null || fail "Failed installing packages"
+INSTALL_PACKAGES=()
+for package in "${APT_PACKAGES[@]}"; do
+    if ! dpkg -l "$package" >/dev/null 2>&1; then
+        INSTALL_PACKAGES+=("$package")
+    fi
+done
+if [ ! -n "${INSTALL_PACKAGES[*]}" ]; then
+    echo Installing packages "${INSTALL_PACKAGES[@]}"
+    sudo apt-get -y install "${INSTALL_PACKAGES[@]}" >/dev/null || fail "Failed installing packages"
+fi
 }
 
 install_snaps() {
