@@ -14,7 +14,7 @@ echo '[Info]' "$@"
 }
 
 install_apt_packages() {
-APT_PACKAGES=(snapd kde-plasma-desktop plasma-widgets-addons plasma-wallpapers-addons)
+APT_PACKAGES=(snapd kde-plasma-desktop plasma-widgets-addons plasma-wallpapers-addons plasma-nm)
 APT_PACKAGES+=(libffmpegthumbnailer4v5 ffmpegthumbs ffmpegthumbnailer pulseaudio-module-bluetooth)
 APT_PACKAGES+=(spotify-client sddm-theme-debian-breeze blueman google-cloud-sdk google-cloud-sdk-anthos-auth)
 APT_PACKAGES+=(google-cloud-sdk-kpt google-cloud-sdk-skaffold kubectl openjdk-8-jdk openjdk-11-jdk)
