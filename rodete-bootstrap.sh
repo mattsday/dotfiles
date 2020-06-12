@@ -40,7 +40,7 @@ sudo snap install intellij-idea-ultimate --classic >/dev/null || warn "Failed to
 
 passwordless_sudo() {
 if [ ! -f /etc/sudoers.d/nopasswd ]; then
-echo 'mattsday ALL=(ALL:ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/nopasswd
+echo "$USER"' ALL=(ALL:ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/nopasswd
 fi
 sudo AUTOMATIC_UPDATE=yes glinux-config set custom_etc_sudoers_d true
 }

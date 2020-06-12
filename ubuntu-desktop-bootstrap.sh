@@ -26,7 +26,7 @@ for package in "${APT_PACKAGES[@]}"; do
         INSTALL_PACKAGES+=("$package")
     fi
 done
-if [ ! -n "${INSTALL_PACKAGES[*]}" ]; then
+if [ -z "${INSTALL_PACKAGES[*]}" ]; then
     echo Installing packages "${INSTALL_PACKAGES[@]}"
     sudo apt-get -y install "${INSTALL_PACKAGES[@]}" >/dev/null || fail "Failed installing packages"
 fi
