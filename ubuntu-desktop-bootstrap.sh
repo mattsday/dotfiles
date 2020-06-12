@@ -22,7 +22,7 @@ APT_PACKAGES+=(ffmpegthumbs ffmpegthumbnailer pulseaudio-module-bluetooth)
 APT_PACKAGES+=(kde-spectacle openjdk-8-jdk openjdk-11-jdk)
 INSTALL_PACKAGES=()
 for package in "${APT_PACKAGES[@]}"; do
-    if ! dpkg -l "$package" >/dev/null 2>&1; then
+    if ! dpkg-query -W -f='${Status}' "$package" 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
         INSTALL_PACKAGES+=("$package")
     fi
 done
@@ -69,8 +69,14 @@ EOF
 fi
 }
 
+ferdi() {
+    if [ -x "$PWD"/ferdi.sh ]; then
+        info Setting up Ferdi
+    fi
+}
+
 emoji() {
-    echo Setting up emoji
+    info Setting up emoji
     if [ -f "$PWD/linux-emoji.sh" ]; then
         "$PWD/linux-emoji.sh"
     fi

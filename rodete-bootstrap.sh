@@ -13,7 +13,6 @@ info() {
 echo '[Info]' "$@"
 }
 
-
 install_apt_packages() {
 APT_PACKAGES=(snapd kde-plasma-desktop plasma-widgets-addons plasma-wallpapers-addons)
 APT_PACKAGES+=(libffmpegthumbnailer4v5 ffmpegthumbs ffmpegthumbnailer pulseaudio-module-bluetooth)
@@ -22,7 +21,7 @@ APT_PACKAGES+=(google-cloud-sdk-kpt google-cloud-sdk-skaffold kubectl openjdk-8-
 APT_PACKAGES+=(gnucash kde-spectacle)
 INSTALL_PACKAGES=()
 for package in "${APT_PACKAGES[@]}"; do
-    if ! dpkg -l "$package" >/dev/null 2>&1; then
+    if ! dpkg-query -W -f='${Status}' "$package" 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
         INSTALL_PACKAGES+=("$package")
     fi
 done
