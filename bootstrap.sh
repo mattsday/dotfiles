@@ -8,22 +8,22 @@ fi
 # Check if we're running OS X
 SYSTEM="$(uname)"
 if [ "$SYSTEM" = Darwin ]; then
-	if [ -f ./mac-bootstrap.sh ]; then
+	if [ -f ./os-bootstraps/mac-bootstrap.sh ]; then
 		echo Detected Mac OS X
-		./mac-bootstrap.sh
+		./os-bootstraps/mac-bootstrap.sh
 	fi
 elif [ "$SYSTEM" = FreeBSD ]; then
-	if [ -f ./freebsd-bootstrap.sh ]; then
+	if [ -f ./os-bootstraps/freebsd-bootstrap.sh ]; then
 		echo Detected FreeBSD
-		./freebsd-bootstrap.sh
+		./os-bootstraps/freebsd-bootstrap.sh
 	fi
 fi
 
 # Maybe Debian?
 if [ -f "/etc/debian_version" ] && [ -x "/usr/bin/apt-get" ]; then
-	if [ -f ./debian-bootstrap.sh ]; then
+	if [ -f ./os-bootstraps/debian-bootstrap.sh ]; then
 		echo Detected Debian flavoured
-		./debian-bootstrap.sh
+		./os-bootstraps/debian-bootstrap.sh
 	fi
 fi
 
@@ -31,31 +31,19 @@ if [ -f "/etc/os-release" ]; then
 	RELEASE="$(grep '^ID=' /etc/os-release | awk -F= '{print $2}' | sed 's/"//g')"
 	# Perhaps a Red Hattish?
 	if [ "$RELEASE" = centos ] || [ "$RELEASE" = rhel ] || [ "$RELEASE" = fedora ]; then
-		if [ -f ./centos-bootstrap.sh ]; then
+		if [ -f ./os-bootstraps/centos-bootstrap.sh ]; then
 			echo Detected Red Hat flavoured
-			./centos-bootstrap.sh
+			./bootstraps./centos-bootstrap.sh
 		fi
 	elif [ "$RELEASE" = suse ] || [ "$RELEASE" = opensuse ]; then
-		if [ -f ./suse-bootstrap.sh ]; then
+		if [ -f ./os-bootstraps/suse-bootstrap.sh ]; then
 			echo Detected SuSE flavoured
-			./suse-bootstrap.sh
+			./os-bootstraps/suse-bootstrap.sh
 		fi
-    elif [ "$RELEASE" = arch ] || [ "$RELEASE" = manjaro ]; then
-        if [ -f ./arch-bootstrap.sh ]; then
-            echo Detected Arch flavoured
-            ./arch-bootstrap.sh
-        fi
-	elif [ "$RELEASE" = neon ]; then
-        if [ -f ./ubuntu-desktop-bootstrap.sh ]; then
-            echo Detected Desktop
-            ./ubuntu-desktop-bootstrap.sh
-        fi
-    fi
-    RELEASE="$(grep '^VERSION_CODENAME=' /etc/os-release | awk -F= '{print $2}' | sed 's/"//g')"
-    if [ "$RELEASE" = rodete ]; then
-        if [ -f ./rodete-bootstrap.sh ]; then
-            echo Detected Rodete
-            ./rodete-bootstrap.sh
-        fi
+	elif [ "$RELEASE" = arch ] || [ "$RELEASE" = manjaro ]; then
+		if [ -f ./os-bootstraps/arch-bootstrap.sh ]; then
+			echo Detected Arch flavoured
+			./os-bootstraps/arch-bootstrap.sh
+		fi
 	fi
 fi

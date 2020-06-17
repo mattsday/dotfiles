@@ -14,7 +14,7 @@ warn() {
 }
 
 info() {
-    echo '[Info]' "$@"
+    echo "$@"
 }
 
 check_cmd() {
@@ -39,7 +39,7 @@ main() {
         git pull || error "Could not run a git pull"
     fi
 
-    info Installation successful
+    info Ferdi Shopping List installation successful
     
 }
 # Run main function

@@ -1,14 +1,33 @@
 #!/bin/bash
+#shellcheck disable=SC1091
 
 _apt() {
 	DEBIAN_FRONTEND="noninteractive" sudo apt-get "$@"
 }
+
+# Check for mixins
+export _debian_bootstrap_mattsday=1
+RELEASE="$(grep '^VERSION_CODENAME=' /etc/os-release | awk -F= '{print $2}' | sed 's/"//g')"
+if [ "$RELEASE" = rodete ]; then
+	if [ -f ./os-bootstraps/rodete-bootstrap.sh ]; then
+		echo Detected Rodete
+		. ./os-bootstraps/rodete-bootstrap.sh
+	fi
+fi
+RELEASE="$(grep '^ID=' /etc/os-release | awk -F= '{print $2}' | sed 's/"//g')"
+if [ "$RELEASE" = neon ]; then
+	if [ -f ./os-bootstraps/ubuntu-desktop-bootstrap.sh ]; then
+		echo Detected Ubuntu Desktop
+		. ./os-bootstraps/ubuntu-desktop-bootstrap.sh
+	fi
+fi
 
 # Only run on Debian and derivatives
 if [[ ! -f "/etc/debian_version" ]]; then
 	echo Not Debian, stopping
 	exit
 fi
+
 # Use apt and assume somewhat recent versions
 if [[ ! -x "/usr/bin/apt-get" ]] || [[ ! -x "/usr/bin/dpkg" ]]; then
 	echo "You need apt to run this"
@@ -49,37 +68,40 @@ fi
 echo Updating system
 _apt update >/dev/null
 
-# Get list of installed apps
-installed="$(dpkg --get-selections | grep -v deinstall | awk '{print $1}' 2>/dev/null)"
-
-list="
-apt-utils
-dialog
-dnsutils
-zsh
-rsync
-curl
-vim
-findutils
-coreutils
-git
-htop
-tcsh
-openssh-client
-wget
-jq
-xz-utils
-zip
-$tmux
-shellcheck
-"
-for utility in $list; do
-	exists="$(echo "$installed" | tr " " "\\n" | grep -wx "$utility")"
-	if [[ -z "$exists" ]]; then
-		echo Installing "$utility"
-		_apt -y install "$utility" >/dev/null
+APT_PACKAGES=(
+	apt-utils
+	dialog
+	dnsutils
+	zsh
+	rsync
+	curl
+	vim
+	findutils
+	coreutils
+	git
+	htop
+	tcsh
+	openssh-client
+	wget
+	jq
+	xz-utils
+	zip
+	"$tmux"
+	shellcheck
+)
+for package in "${APT_PACKAGES[@]}"; do
+	if ! dpkg-query -W -f='${Status}' "$package" 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
+		echo Installing "$package"
+		_apt -y install "$package" >/dev/null
 	fi
 done
 if [[ -x "$HOME/.update_aliases" ]]; then
 	"$HOME/.update_aliases" force
+fi
+
+if [ -n "$CALLBACKS" ]; then
+	echo Running platform specific callbacks
+	for callback in "${CALLBACKS[@]}"; do
+		"$callback"
+	done
 fi

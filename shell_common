@@ -8,7 +8,6 @@
 #
 # shellcheck disable=SC1090
 
-
 # Execute any local bourne script config - local config should go in _local below:
 if [ -f "$HOME/.shell_common_config" ]; then
 	. "$HOME/.shell_common_config"
@@ -24,7 +23,7 @@ if [ -d /usr/local/sbin ]; then
 	export PATH
 fi
 if [ -d /snap/bin ]; then
-    PATH=$PATH:/snap/bin
+	PATH=$PATH:/snap/bin
 fi
 
 # =================
@@ -53,34 +52,35 @@ gf() {
 # Disable shell history for session
 disable_hist() {
 	unset HISTFILE
+	#shellcheck disable=SC2039
 	set +o history 2>/dev/null
 }
 
 extract() {
-    extr "$@"
+	extr "$@"
 }
 
 # Extract archives
 extr() {
-    for file in "$@"; do
-	if [ -f "$file" ]; then
-		case $file in
-	    	*.tar.bz2) tar xvjf "$@" && rm "$@" ;;
-    		*.tar.gz) tar xvzf "$@" && rm "$@" ;;
-    		*.xz) tar xvJf "$@" && rm "$@" ;;
-    		*.bz2) bunzip2 "$@" && rm "$@" ;;
-    		*.rar) unrar x "$@" && rm "$@" ;;
-    		*.gz) gunzip "$@" && rm "$@" ;;
-    		*.tar) tar xvf "$@" && rm "$@" ;;
-    		*.tbz2) tar xvjf "$@" && rm "$@";;
-    		*.tgz) tar xvzf "$@" && rm "$@";;
-    		*.zip) unzip "$@" && rm "$@" ;;
-    		*.Z) uncompress "$@" && rm "$@" ;;
-    		*.7z) 7za x "$@" && rm "$@" ;;
-    		*) echo "don't know how to extract '$*'..." ;;
-		esac
-	fi
-    done
+	for file in "$@"; do
+		if [ -f "$file" ]; then
+			case $file in
+			*.tar.bz2) tar xvjf "$@" && rm "$@" ;;
+			*.tar.gz) tar xvzf "$@" && rm "$@" ;;
+			*.xz) tar xvJf "$@" && rm "$@" ;;
+			*.bz2) bunzip2 "$@" && rm "$@" ;;
+			*.rar) unrar x "$@" && rm "$@" ;;
+			*.gz) gunzip "$@" && rm "$@" ;;
+			*.tar) tar xvf "$@" && rm "$@" ;;
+			*.tbz2) tar xvjf "$@" && rm "$@" ;;
+			*.tgz) tar xvzf "$@" && rm "$@" ;;
+			*.zip) unzip "$@" && rm "$@" ;;
+			*.Z) uncompress "$@" && rm "$@" ;;
+			*.7z) 7za x "$@" && rm "$@" ;;
+			*) echo "don't know how to extract '$*'..." ;;
+			esac
+		fi
+	done
 }
 
 # =====================
@@ -111,11 +111,11 @@ elif [ -f "$HOME/.disable_shell_colour" ]; then
 elif [ -z $colours ]; then
 	# Test for number of colours
 	if ! colours=$(tput colors 2>/dev/null); then
-	    # If tput errors out then try and fix...
+		# If tput errors out then try and fix...
 		# If it's reporting as a 256-colour term try changing to just an xterm
 		[ "$TERM" = "xterm-256color" ] && TERM=xterm && export TERM
 		if ! colours=$(tput colors 2>/dev/null); then
-		    # If that still fails then disable colour
+			# If that still fails then disable colour
 			colours=7
 		fi
 	fi
@@ -123,7 +123,7 @@ fi
 
 # Disable software flow control (XON/OFF) / AKA: why did ctrl-s pause my term?
 if command -v stty >/dev/null 2>&1; then
-    stty -ixon
+	stty -ixon
 fi
 
 # Execute any local bourne scripts:
