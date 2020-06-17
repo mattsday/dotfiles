@@ -15,7 +15,7 @@
 
 # Load any local config first (aliases should go in _local file)
 if [[ -f "$HOME/.bashrc_config" ]]; then
-    . "$HOME/.bashrc_config"
+	. "$HOME/.bashrc_config"
 fi
 
 # =============
@@ -49,14 +49,14 @@ completion=0
 # Bash completion (check homebrew first on OS X)
 if [[ -f "/usr/local/etc/bash_completion" ]]; then
 	. "/usr/local/etc/bash_completion"
-    completion=1
+	completion=1
 elif [[ -f "/etc/bash_completion" ]]; then
 	. "/etc/bash_completion"
-    completion=1
+	completion=1
 fi
 
 if [ "$completion" = 1 ] && command -v kubectl >/dev/null 2>&1; then
-    . <(kubectl completion bash)
+	. <(kubectl completion bash)
 fi
 
 # Add GCP support

@@ -37,7 +37,8 @@
     // Yaml specific goodness
     "[yaml]": {
         "editor.insertSpaces": true,
-        "editor.tabSize": 2
+        "editor.tabSize": 2,
+        "editor.defaultFormatter": "googlecloudtools.cloudcode"
     },
     "[java]": {
         "editor.tabSize": 4,

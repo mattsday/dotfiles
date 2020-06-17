@@ -47,3 +47,7 @@ if [ -f "/etc/os-release" ]; then
 		fi
 	fi
 fi
+
+if [[ -x "$HOME/.update_aliases" ]]; then
+	"$HOME/.update_aliases" force
+fi

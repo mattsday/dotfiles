@@ -62,6 +62,3 @@ for utility in $list; do
 		sudo pkg install -yq "$utility"
 	fi
 done
-if [ -x "$HOME/.update_aliases" ]; then
-	"$HOME/.update_aliases" force
-fi

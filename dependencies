@@ -34,24 +34,24 @@ https://github.com/udalov/kotlin-vim
 
 # Firefox userChrome.css file
 FF_CHROME_FILE="userChrome.css"
-first="$(echo "$USER"|cut -c1|tr '[:lower:]' '[:upper:]')"
-second="$(echo "$USER"|cut -c2-)"
+first="$(echo "$USER" | cut -c1 | tr '[:lower:]' '[:upper:]')"
+second="$(echo "$USER" | cut -c2-)"
 WINUSER="$first$second"
 FF_WINDOWS=0
 
 if [ -d "$HOME/Library/Application Support/Firefox" ]; then
 	FF_PROFILE_PATH="$HOME/Library/Application Support/Firefox"
-    FF_CHROME_FILE="userChrome-mac.css"
+	FF_CHROME_FILE="userChrome-mac.css"
 elif [ -d "$HOME/.mozilla/firefox" ]; then
 	FF_PROFILE_PATH="$HOME/.mozilla/firefox"
 	FF_CHROME_FILE="userChrome-linux.css"
 elif [ -d "/mnt/c/Users/$USER/AppData/Roaming/Mozilla/Firefox/" ]; then
-    FF_PROFILE_PATH="/mnt/c/Users/$USER/AppData/Roaming/Mozilla/Firefox/"
-    FF_CHROME_FILE="userChrome-windows.css"
+	FF_PROFILE_PATH="/mnt/c/Users/$USER/AppData/Roaming/Mozilla/Firefox/"
+	FF_CHROME_FILE="userChrome-windows.css"
 	FF_WINDOWS=1
 elif [ -d "/mnt/c/Users/$WINUSER/AppData/Roaming/Mozilla/Firefox/" ]; then
-    FF_PROFILE_PATH="/mnt/c/Users/$WINUSER/AppData/Roaming/Mozilla/Firefox/"
-    FF_CHROME_FILE="userChrome-windows.css"
+	FF_PROFILE_PATH="/mnt/c/Users/$WINUSER/AppData/Roaming/Mozilla/Firefox/"
+	FF_CHROME_FILE="userChrome-windows.css"
 	FF_WINDOWS=1
 fi
 FF_PROFILE_INI="$FF_PROFILE_PATH/profiles.ini"
@@ -61,7 +61,7 @@ LOCAL_CHROME="$PWD/$FF_CHROME_FILE"
 if [ -f "$FF_PROFILE_INI" ]; then
 	# shellcheck disable=SC2143
 	if [ "$(grep '\[Profile[^0]\]' "$FF_PROFILE_INI" 2>/dev/null)" ]; then
-		FF_PROFILE="$(tr < "$FF_PROFILE_INI" -s '\n' '|' | sed 's/\[Profile[0-9]\]/\x0/g; s/$/\x0/; s/.*\x0\([^\x0]*Default=1[^\x0]*\)\x0.*/\1/; s/.*Path=\([^|]*\)|.*/\1/')"
+		FF_PROFILE="$(tr <"$FF_PROFILE_INI" -s '\n' '|' | sed 's/\[Profile[0-9]\]/\x0/g; s/$/\x0/; s/.*\x0\([^\x0]*Default=1[^\x0]*\)\x0.*/\1/; s/.*Path=\([^|]*\)|.*/\1/')"
 	else
 		FF_PROFILE="$(grep 'Path=' "$FF_PROFILE_INI" 2>/dev/null | sed 's/^Path=//' 2>/dev/null)"
 	fi
@@ -78,4 +78,3 @@ if [ -d "$HOME/Library/Application Support/Code/User" ]; then
 elif [ -d "$HOME/.config/Code/User" ]; then
 	VS_DIR="$HOME/.config/Code/User"
 fi
-

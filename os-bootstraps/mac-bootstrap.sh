@@ -77,7 +77,3 @@ for feature in $features; do
 		brew cask install "$feature" >/dev/null
 	fi
 done
-
-if [[ -x "$HOME/.update_aliases" ]]; then
-	"$HOME/.update_aliases" force
-fi

@@ -5,12 +5,12 @@ GIT_LOCATION="https://github.com/sharkpp/franz-recipe-google-shoppinglist"
 PLUGIN_DIR="google-shopping-list"
 
 error() {
-    >&2 echo '[Error]' "$@"
+    echo >&2 '[Error]' "$@"
     exit 1
 }
 
 warn() {
-    >&2 echo '[Warn]'  "$@"
+    echo >&2 '[Warn]' "$@"
 }
 
 info() {
@@ -40,9 +40,7 @@ main() {
     fi
 
     info Ferdi Shopping List installation successful
-    
+
 }
 # Run main function
 main
-
-

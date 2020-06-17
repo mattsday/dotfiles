@@ -49,14 +49,14 @@ ln -fs "$PWD/vimrc" "$HOME/.config/nvim/init.vim"
 # Add terminus (shell app) config file:
 verb=Updating
 if [ ! -d "$HOME/.config/terminus" ]; then
-    mkdir -p "$HOME/.config/terminus"
-    verb=Creating
+	mkdir -p "$HOME/.config/terminus"
+	verb=Creating
 elif [ -f "$HOME/.config/terminus/config.yaml" ] && [ ! -L "$HOME/.config/terminus/config.yaml" ]; then
-    echo "Backing local terminus config to ${PWD}/backup/local-terminus-config.yaml"
-    mv -f "$HOME/.config/terminus/config.yaml" "${PWD}/backup/local-terminus-config.yaml"
-    verb=Creating
+	echo "Backing local terminus config to ${PWD}/backup/local-terminus-config.yaml"
+	mv -f "$HOME/.config/terminus/config.yaml" "${PWD}/backup/local-terminus-config.yaml"
+	verb=Creating
 elif [ ! -f "$HOME/.config/terminus/config.yaml" ]; then
-    verb=Creating
+	verb=Creating
 fi
 echo "$verb $HOME/.config/terminus/config.yaml"
 ln -fs "$PWD/terminus-config.yaml" "$HOME/.config/terminus/config.yaml"
@@ -110,7 +110,7 @@ if [ "$VS_DIR" ]; then
 fi
 
 update_plugin() {
-    echo "$1"
+	echo "$1"
 
 }
 

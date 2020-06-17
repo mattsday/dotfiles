@@ -15,7 +15,7 @@ if [ ! -f "./proxy_settings" ]; then
 	echo ignore_prefixes=\"10.0.0.0/24, 10.0.1.0/24\"
 	exit
 else
-    . ./proxy_settings
+	. ./proxy_settings
 fi
 
 ip_sequence() {
@@ -27,7 +27,7 @@ ip_sequence() {
 		i=0
 		while [ "$i" -le 255 ]; do
 			buffer="$buffer$1$i,"
-            i=$((i + 1))
+			i=$((i + 1))
 		done
 		echo "$buffer" | sed 's/,$//'
 	fi

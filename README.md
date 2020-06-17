@@ -1,7 +1,8 @@
 # Matt Day's dotfiles
 
 ## Getting Started
-```bash
+
+``` bash
 git clone "https://github.com/mattsday/dotfiles/" "$HOME/.dotfiles"
 cd "$HOME/.dotfiles"
 chmod +x init.sh
@@ -9,20 +10,13 @@ chmod +x init.sh
 ```
 
 ## About
-These are the configuration files I use for my shells and applications. Most of the work is in maintaining my shell configuration, so I can step between systems with a consistent look and feel.
 
-I maintain for the following shell environments:
+This started off as a simple place to store dotfiles... Now it's out of control.
 
-1. zsh (primary shell)
-2. bash (secondary for linux systems where installing zsh isn't worth it)
-3. tcsh (for BSD systems, e.g. FreeBSD)
-4. ksh (for BSD systems, e.g. NetBSD)
-5. sh (a basic ```.profile``` for everything else bourne-compatible, e.g. OpenBSD, SunOS)
+The goal is compatibility between the look, feel and features of shells (autocd, noclobber, prompt etc) wherever it's possible for bourne-compatible (ksh, bash and zsh), csh & tcsh, and fish environments. It also handles bootstrapping various systems (servers, desktops, ...) with common software I struggle to live without.
 
-The goal is compatibility betwee the look, feel and features of shells (autocd, noclobber, prompt etc)
+To get going either run `init.sh` to just deploy the dotfiles (existing files _should_ be backed up) or run `bootstrap.sh` to do a full system boostrap including installing tools and utilities (which likely requires root).
 
-There's a small bourne compatible `init.sh` file to create symlinks. It will do this without mercy, deleting any rc files in its path.
+For bourne shells `shell_common` is a bourne-compatible script that loads most stuff. `alias_list` is a weird way of handling aliases between both bourne and csh... I probably don't need it any more but it does no harm. Local changes can be made by creating a `dotfile_local` which will be sourced at the end of each file (e.g. `zsh_local` or `shell_common_local` all get called when their main piece has been run.
 
-The profile, bashrc, kshrc and zshrc all launch ```shell_common```, this is a bourne-compatible script that loads everything except shell-specific options. This makes these shells fairly consistent for things like aliases, environment variables etc. This file should work with any bourne compatible shell.
-
-I also maintain various rc files for programs like vim and mutt. I try and document the settings as comments inside each one. These are typically updated less frequently.
+I also maintain various rc files for programs like vim and mutt. I try and document the settings as comments inside each one.

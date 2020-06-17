@@ -1,98 +1,111 @@
 /* Personal bookmarks toolbar smaller  */
+
 #PersonalToolbar {
     padding-top: 0px !important;
     padding-bottom: 0px !important;
 }
+
 #zoom-controls {
     padding-top: 0px !important;
     padding-bottom: 0px !important;
 }
 
 /* Personal bookmarks menu smaller  */
-#personal-bookmarks menu,
-#personal-bookmarks menuitem {
+
+#personal-bookmarks menu, #personal-bookmarks menuitem {
     max-width: 460px !important;
     font-size: 10pt !important;
 }
 
 /* Awesome bar stuff */
+
 #urlbar .autocomplete-history-dropmarker {
     display: none !important;
 }
+
 .autocomplete-richlistitem:not(:first-child) {
     border-top: 1px solid #e6e6e6 !important;
 }
+
 .ac-url-text {
     color: #959595 !important;
 }
+
 .ac-url-text[selected="true"] {
     color: white !important;
 }
-.autocomplete-richlistitem[selected="true"],
-treechildren.autocomplete-treebody::-moz-tree-row(selected) {
+
+.autocomplete-richlistitem[selected="true"], treechildren.autocomplete-treebody::-moz-tree-row(selected) {
     text-shadow: rgba(000, 000, 000, 0.15) 0 1px !important;
     background: -moz-linear-gradient(top, #5c7efc, #0f49fb) repeat-x !important;
 }
-.autocomplete-richlistitem[selected="true"]:not(:first-child),
-treechildren.autocomplete-treebody::-moz-tree-row(selected) {
+
+.autocomplete-richlistitem[selected="true"]:not(:first-child), treechildren.autocomplete-treebody::-moz-tree-row(selected) {
     border-top: 1px solid #5275f3 !important;
 }
-.autocomplete-richlistitem[selected="true"]:-moz-system-metric(mac-graphite-theme),
-treechildren.autocomplete-treebody:-moz-system-metric(mac-graphite-theme)::-moz-tree-row(selected) {
+
+.autocomplete-richlistitem[selected="true"]:-moz-system-metric(mac-graphite-theme), treechildren.autocomplete-treebody:-moz-system-metric(mac-graphite-theme)::-moz-tree-row(selected) {
     text-shadow: rgba(000, 000, 000, 0.15) 0 1px !important;
     background: -moz-linear-gradient(top, #7c868e, #65717d) repeat-x !important;
 }
-.autocomplete-richlistitem[selected="true"]:-moz-system-metric(mac-graphite-theme):not(:first-child),
-treechildren.autocomplete-treebody:-moz-system-metric(mac-graphite-theme)::-moz-tree-row(selected) {
+
+.autocomplete-richlistitem[selected="true"]:-moz-system-metric(mac-graphite-theme):not(:first-child), treechildren.autocomplete-treebody:-moz-system-metric(mac-graphite-theme)::-moz-tree-row(selected) {
     border-top: 1px solid #717c85 !important;
 }
 
 /* Disable Searchbar favicons */
+
 .searchbar-engine-image {
     visibility: hidden !important;
     width: 9px !important;
 }
+
 .searchbar-textbox>.autocomplete-textbox-container {
     background-image: url("chrome://browser/skin/Search.png") !important;
     background-repeat: no-repeat !important;
     background-position: 4px 4px !important;
 }
+
 .search-go-button {
     display: none !important;
 }
 
 /* Sidebar design changes  */
+
 sidebarheader {
     -moz-box-direction: reverse !important;
     text-align: center !important;
     padding-right: 26px !important;
     padding-bottom: 0px !important;
 }
+
 treechildren::-moz-tree-separator {
     border-top: 1px dashed #6f8b9f !important;
 }
+
 #sidebar-splitter:-moz-window-inactive {
     -moz-border-end: 1px solid #8B8B8B !important;
 }
 
 /* Combined reload, stop and go buttons monochrome */
+
 #urlbar>toolbarbutton {
     -moz-padding-start: 2px !important;
     -moz-border-start: none !important;
 }
+
 #urlbar>toolbarbutton[disabled] {
     opacity: .65 !important;
 }
-#urlbar-go-button,
-#urlbar-reload-button,
-#urlbar-stop-button {
+
+#urlbar-go-button, #urlbar-reload-button, #urlbar-stop-button {
     background-image: none !important;
     box-shadow: none !important;
 }
 
 /* Go button monochrome  */
+
 #go-button {
     list-style-image: url("chrome://browser/skin/reload-stop-go.png") !important;
     -moz-image-region: rect(0px, 56px, 14px, 42px) !important;
 }
-

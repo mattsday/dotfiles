@@ -1,8 +1,7 @@
 #!/bin/bash
 
-
 _pacman() {
-    sudo pacman "$@"
+	sudo pacman "$@"
 }
 
 # Only run on Arch and derivatives
@@ -12,9 +11,9 @@ if [[ -f /etc/os-release ]]; then
 	arch*)
 		echo Detected Arch Linux
 		;;
-    manjaro*)
-        echo Detected Manjaro
-        ;;
+	manjaro*)
+		echo Detected Manjaro
+		;;
 	*)
 		echo Cannot detect supported OS, stopping
 		exit
@@ -24,7 +23,6 @@ else
 	echo Cannot detect OS, stopping
 	exit
 fi
-
 
 # Check if sudo is installed
 if [[ ! -x /usr/bin/sudo ]]; then
@@ -47,24 +45,24 @@ installed="$(pacman -Qe | awk '{print $1}' 2>/dev/null) "
 installed+="$(pacman -Qg | awk '{print $1}' 2>/dev/null) "
 
 list=(
-base-devel
-openssh
-dialog
-bind-tools
-zsh
-vim
-findutils
-coreutils
-git
-htop
-tcsh
-wget
-jq
-zip
-unrar
-tmux
-shellcheck
-base-devel
+	base-devel
+	openssh
+	dialog
+	bind-tools
+	zsh
+	vim
+	findutils
+	coreutils
+	git
+	htop
+	tcsh
+	wget
+	jq
+	zip
+	unrar
+	tmux
+	shellcheck
+	base-devel
 )
 
 to_install=()
@@ -72,31 +70,27 @@ to_install=()
 for utility in "${list[@]}"; do
 	exists="$(echo "$installed" | tr " " "\\n" | grep -wx "$utility")"
 	if [[ -z "$exists" ]]; then
-        to_install+=("$utility")
+		to_install+=("$utility")
 	fi
 done
-if (( ${#to_install[@]} )); then
-    echo Installing "${to_install[@]}"
-    _pacman -Sq --noconfirm "${to_install[@]}" >/dev/null
+if ((${#to_install[@]})); then
+	echo Installing "${to_install[@]}"
+	_pacman -Sq --noconfirm "${to_install[@]}" >/dev/null
 fi
 
 if ! command -v yay >/dev/null 2>&1; then
-    echo Installing yay
-    git clone https://aur.archlinux.org/yay.git /tmp/yay >/dev/null 2>&1
-    pushd /tmp/yay >/dev/null 2>&1 || return
-    makepkg -si --noconfirm >/dev/null 2>&1
-    popd >/dev/null 2>&1 || return
-    rm -fr /tmp/yay
+	echo Installing yay
+	git clone https://aur.archlinux.org/yay.git /tmp/yay >/dev/null 2>&1
+	pushd /tmp/yay >/dev/null 2>&1 || return
+	makepkg -si --noconfirm >/dev/null 2>&1
+	popd >/dev/null 2>&1 || return
+	rm -fr /tmp/yay
 fi
 
 # Only run yay if not root
 if [ "$(id -u)" != 0 ]; then
-    if command -v yay >/dev/null 2>&1; then
-        echo Updating yay
-        yay -Syuq --noconfirm >/dev/null 2>&1
-    fi
-fi
-
-if [[ -x "$HOME/.update_aliases" ]]; then
-	"$HOME/.update_aliases" force
+	if command -v yay >/dev/null 2>&1; then
+		echo Updating yay
+		yay -Syuq --noconfirm >/dev/null 2>&1
+	fi
 fi

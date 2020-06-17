@@ -14,7 +14,6 @@ if [[ -f "$HOME/.kshrc_config" ]]; then
 	. "$HOME/.kshrc_config"
 fi
 
-
 # =======================
 # Environment and Aliases
 # =======================
@@ -27,12 +26,12 @@ fi
 
 shorthost=$(hostname | sed 's/\..*//')
 
-if (( colours >= 8 )); then
+if ((colours >= 8)); then
 	yellow="\033[01;33m"
 	green="\033[01;32m"
 	cyan="\033[01;36m"
 	grey="\033[01;30m"
-	end="\033[00m" 
+	end="\033[00m"
 
 	if [[ "$USER" == matt ]] || [[ "$USER" == mattsday ]]; then
 		PS1='$(print -n "$yellow$shorthost$end:$cyan";if [ "${PWD#$HOME}" = "$PWD" ]; then print -n $PWD; else print -n "~${PWD#$HOME}";fi;print "$end$ ")'
@@ -55,7 +54,7 @@ set -o ignoreeof
 set -o noclobber
 
 # For some environments where this doesn't get set by default:
-stty erase ^?		# bind backspace
+stty erase ^?              # bind backspace
 alias __A=$(print '\0020') # ^P = up = previous command
 alias __B=$(print '\0016') # ^N = down = next command
 alias __C=$(print '\0006') # ^F = right = forward a character
@@ -68,8 +67,10 @@ export HISTFILE=~/.ksh_history
 export SAVEHIST=10000
 
 # If this is an xterm set the title to host:dir
-case "$TERM" in xterm*|rxvt*)
-	PROMPT_COMMAND='echo -ne "\033]0;$HOSTNAME:${PWD/$HOME/~}\007"' ;; *)  ;;
+case "$TERM" in xterm* | rxvt*)
+	PROMPT_COMMAND='echo -ne "\033]0;$HOSTNAME:${PWD/$HOME/~}\007"'
+	;;
+*) ;;
 esac
 
 # Local kshrc config (paths etc) (should be the last thing loaded)

@@ -22,7 +22,7 @@ VERBOSE=0
 # If no argument is passed then check the last-updated time
 if [ -f "$HOME/.alias_update_time" ] && [ -z "$1" ]; then
 	lastdate="$(cat "$HOME/.alias_update_time")"
-    diff="$((date - lastdate))"
+	diff="$((date - lastdate))"
 	if [ $week -gt $diff ]; then
 		exit
 	fi
@@ -111,7 +111,7 @@ add_alias() {
 		if [ "$IS_ROOT" = 1 ] && [ "$first_command" = "sudo" ]; then
 			continue
 		fi
-        aliases="$((aliases + 1))"
+		aliases="$((aliases + 1))"
 		# Check if the command needs to be expanded
 		if echo "$alias_data" | grep -E '^!.*' >/dev/null 2>&1; then
 			if wcmd="$(command -v "$first_command" 2>/dev/null)"; then
@@ -126,9 +126,9 @@ add_alias() {
 add_export() {
 	IFS='@'
 	for export in $1; do
-        variables="$((variables + 1))"
+		variables="$((variables + 1))"
 		export_name="$(echo "$export" | awk -F= '{print $1}' | xargs)"
-        export_data="$(echo "$export" | awk -F= '{print $2}' | xargs)"
+		export_data="$(echo "$export" | awk -F= '{print $2}' | xargs)"
 		# Check if the command needs to be expanded
 		if echo "$export_data" | grep -E '^!.*' >/dev/null 2>&1; then
 			ocmd="$(echo "$export_data" | awk '{ print $1 }' | sed 's/^!//')"
@@ -207,8 +207,8 @@ case $grep_ver in *GNU*)
 	write_alias fgrep "grep -F --color=auto"
 	write_export GREP_COLORS "ms=01;32:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36"
 
-    variables="$((variables + 1))"
-    aliases="$((aliases + 3))"
+	variables="$((variables + 1))"
+	aliases="$((aliases + 3))"
 	;;
 esac
 unset grep_ver
@@ -216,33 +216,33 @@ unset grep_ver
 # If using GNU du, df etc use si units and by default hide tmp/dev volumes
 if du /bin/ls --si >/dev/null 2>&1; then
 	write_alias du "du --si"
-    aliases="$((aliases + 1))"
+	aliases="$((aliases + 1))"
 fi
 if df --si >/dev/null 2>&1; then
 	write_alias df "df --si -x tmpfs -x devtmpfs"
-    aliases="$((aliases + 1))"
+	aliases="$((aliases + 1))"
 fi
 
 # Add json paste command
 if command -v pbpaste >/dev/null 2>&1; then
 	write_alias json "pbpaste | jq '"'.'"' | pbcopy; pbpaste"
-    aliases="$((aliases + 1))"
+	aliases="$((aliases + 1))"
 fi
 
 # If apt exists, make apt info not use sudo for sh (but for csh and fish just do lazy defaults)
 if [ -x /usr/bin/apt ] && [ "$IS_ROOT" = 0 ]; then
-    # shellcheck disable=SC2016
-    {
-        echo 'apt() {'
-        echo 'case "$1" in'
-        echo 'install|update|upgrade|dist-upgrade|remove|autoremove|full-upgrade|edit-sources|purge) sudo /usr/bin/apt "$@" ;;'
-        echo '*) /usr/bin/apt "$@" ;;'
-        echo 'esac'
-        echo '}'
-    }>>"$SH_ALIAS_FILE"
-    echo 'alias apt '"'sudo apt'" >>"$FISH_ALIAS_FILE"
-    echo 'alias apt '"'sudo apt'" >>"$CSH_ALIAS_FILE"
-    aliases="$((aliases + 1))"
+	# shellcheck disable=SC2016
+	{
+		echo 'apt() {'
+		echo 'case "$1" in'
+		echo 'install|update|upgrade|dist-upgrade|remove|autoremove|full-upgrade|edit-sources|purge) sudo /usr/bin/apt "$@" ;;'
+		echo '*) /usr/bin/apt "$@" ;;'
+		echo 'esac'
+		echo '}'
+	} >>"$SH_ALIAS_FILE"
+	echo 'alias apt '"'sudo apt'" >>"$FISH_ALIAS_FILE"
+	echo 'alias apt '"'sudo apt'" >>"$CSH_ALIAS_FILE"
+	aliases="$((aliases + 1))"
 fi
 
 # Write out last update time:

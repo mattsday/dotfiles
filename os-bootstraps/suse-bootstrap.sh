@@ -62,6 +62,3 @@ for utility in $list; do
 		sudo "$package_mgr" --non-interactive install "$utility" >/dev/null
 	fi
 done
-if [[ -x "$HOME/.update_aliases" ]]; then
-	"$HOME/.update_aliases" force
-fi

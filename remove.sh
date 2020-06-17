@@ -55,18 +55,18 @@ if [ -L "${VS_SETTINGS}" ]; then
 fi
 
 if [ -d "$HOME/.vim/bundle" ]; then
-    for i in $VIM_PATHOGEN_PLUGINS; do
-        PLUGIN_NAME="$(basename "$i")"
-        PLUGIN_DIR="$HOME/.vim/bundle/$PLUGIN_NAME"
-        if [ -d "$PLUGIN_DIR" ]; then
-            echo Removing vim plugin "$PLUGIN_NAME"
-            rm -fr "$PLUGIN_DIR"
-        fi
-    done
-    if [ -f "$HOME/.vim/autoload/pathogen.vim" ]; then
-        echo Removing Pathogen
-        rm "$HOME/.vim/autoload/pathogen.vim"
-    fi
+	for i in $VIM_PATHOGEN_PLUGINS; do
+		PLUGIN_NAME="$(basename "$i")"
+		PLUGIN_DIR="$HOME/.vim/bundle/$PLUGIN_NAME"
+		if [ -d "$PLUGIN_DIR" ]; then
+			echo Removing vim plugin "$PLUGIN_NAME"
+			rm -fr "$PLUGIN_DIR"
+		fi
+	done
+	if [ -f "$HOME/.vim/autoload/pathogen.vim" ]; then
+		echo Removing Pathogen
+		rm "$HOME/.vim/autoload/pathogen.vim"
+	fi
 fi
 
 echo Done
