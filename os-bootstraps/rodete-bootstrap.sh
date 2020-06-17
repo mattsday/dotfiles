@@ -9,7 +9,7 @@ if [ -f ./os-bootstraps/"$DEBIAN_DESKTOP_BOOTSTRAP" ]; then
 elif [ -f "$DEBIAN_DESKTOP_BOOTSTRAP" ]; then
   . ./"$DEBIAN_DESKTOP_BOOTSTRAP"
 else
-  echo Could not find Debian-desktop.sh
+  echo Could not find debian-desktop.sh
 fi
 
 fail() {

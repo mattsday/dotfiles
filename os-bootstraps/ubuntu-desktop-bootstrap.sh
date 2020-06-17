@@ -1,6 +1,16 @@
 #!/bin/bash
+#shellcheck disable=SC2154
+DEBIAN_DESKTOP_BOOTSTRAP=debian-desktop-bootstrap.sh
 
-# TODO install spotify
+# Load generic desktop bootstraps
+if [ -f ./os-bootstraps/"$DEBIAN_DESKTOP_BOOTSTRAP" ]; then
+    echo Detected generic Debian-derived desktop
+    . ./os-bootstraps/"$DEBIAN_DESKTOP_BOOTSTRAP"
+elif [ -f "$DEBIAN_DESKTOP_BOOTSTRAP" ]; then
+    . ./"$DEBIAN_DESKTOP_BOOTSTRAP"
+else
+    echo Could not find debian-desktop.sh
+fi
 
 fail() {
     echo >&2 '[Failure]' "$@"
@@ -39,10 +49,19 @@ passwordless_sudo() {
     fi
 }
 
+install_spotify() {
+    if ! dpkg-query -W -f='${Status}' spotify-client 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
+        curl -sS https://download.spotify.com/debian/pubkey.gpg | sudo apt-key add - >/dev/null
+        echo "deb http://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list >/dev/null
+        sudo apt-get update && sudo apt-get install -y spotify-client >/dev/null 2>&1
+    fi
+}
+
 main() {
     CALLBACKS+=(
         passwordless_sudo
         install_apt_packages
+        install_spotify
     )
     get_apt_packages
 
