@@ -17,9 +17,8 @@ info() {
 
 get_apt_packages() {
   APT_PACKAGES+=(snapd kde-plasma-desktop plasma-widgets-addons plasma-wallpapers-addons plasma-nm)
-  APT_PACKAGES+=(ffmpegthumbs ffmpegthumbnailer pulseaudio-module-bluetooth)
-  APT_PACKAGES+=(sddm-theme-debian-breeze blueman)
-  APT_PACKAGES+=(kde-spectacle)
+  APT_PACKAGES+=(ffmpegthumbs ffmpegthumbnailer pulseaudio-module-bluetooth blueman kamoso)
+  APT_PACKAGES+=(sddm-theme-debian-breeze kde-spectacle)
 }
 
 install_apt_packages() {
@@ -56,7 +55,7 @@ fix_chromium_desktop_entry() {
     return
   fi
   if [ ! -f "$SNAP_FILE" ]; then
-    warn Chromium desktop entry not found in "$SNAP_FILE"
+    warn "Chromium desktop entry not found in $SNAP_FILE"
     return
   fi
   cp "$SNAP_FILE" "$LOCAL_FILE"
@@ -108,3 +107,4 @@ main() {
 }
 
 main "$@"
+
