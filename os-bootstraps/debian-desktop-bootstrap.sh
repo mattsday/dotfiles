@@ -62,6 +62,14 @@ fix_chromium_desktop_entry() {
   sed -i 's/Exec=env/Exec=env GTK_THEME="Breeze-Dark"/g; s|Icon=.*|Icon=/snap/chromium/current/chromium.png|g' "$LOCAL_FILE"
 }
 
+configure_fonts() {
+    if [ -f jetbrains-mono-font.sh ]; then
+        ./jetbrains-mono-font.sh
+    elif [ -f ./os-bootstraps/jetbrains-mono-font.sh ]; then
+        ./os-bootstraps/jetbrains-mono-font.sh
+    fi
+}
+
 ferdi() {
   if ! dpkg-query -W -f='${Status}' ferdi 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
     info Installing Ferdi
@@ -94,6 +102,7 @@ main() {
     ferdi
     install_snaps
     fix_chromium_desktop_entry
+    configure_fonts
   )
   get_apt_packages
 
@@ -107,4 +116,3 @@ main() {
 }
 
 main "$@"
-

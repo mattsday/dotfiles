@@ -86,6 +86,8 @@ APT_PACKAGES=(
 	jq
 	xz-utils
 	zip
+    unzip
+    unrar
 	"$tmux"
 	shellcheck
 )
