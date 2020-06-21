@@ -4,7 +4,7 @@
 
 fail() {
   echo >&2 '[Failure]' "$@"
-  exit 1
+  return 1
 }
 
 warn() {
@@ -41,6 +41,52 @@ install_snaps() {
   install_snap intellij-idea-ultimate --classic
 }
 
+configure_logitech_mouse() {
+  if lsusb | grep 'Logitech, Inc. Unifying Receiver' >/dev/null 2>&1; then
+    if [ -f "$HOME/.logitech-installed-mattsday" ]; then
+      info Logitech mouse already configured - delete "$HOME/.logitech-installed-mattsday" to force
+      return
+    fi
+    info Setting up Logitech Mouse Configuration
+    # Back up current packages
+    OLD_APT_PACKAGES=("${APT_PACKAGES[@]}")
+    # Install build packages immediately
+    APT_PACKAGES=(cmake libevdev-dev libudev-dev libconfig++-dev solaar)
+    install_apt_packages
+    APT_PACKAGES=("${OLD_APT_PACKAGES[@]}")
+    if [ ! -d /tmp/logiops ]; then
+      git clone https://github.com/PixlOne/logiops /tmp/logiops >/dev/null || fail Failed to download Logitech options
+    else
+      cd /tmp/logiops || fail Failed to change to /tmp/logiops
+      git pull >/dev/null || fail Failed to pull latest version
+    fi
+    cd /tmp/logiops || fail Failed to change to /tmp/logiops
+    if [ ! -d release ]; then
+      mkdir release || fail Fail to create release directory
+    fi
+    cd release || fail Failed to change to release directory
+    cmake .. >/dev/null || fail Failed to configure project
+    make >/dev/null || fail Failed to build project
+    sudo make install >/dev/null || fail Failed to install project
+    if [ ! -f /usr/lib/libhidpp.so ]; then
+      sudo ln -s /usr/local/lib/libhidpp.so /usr/lib/libhidpp.so
+    fi
+    # Write config file
+    cat <<EOF | sudo tee /etc/logid.cfg >/dev/null
+devices: ({
+  name: "MX Master";
+  buttons: (
+    // Make thumb button send ctrl-F8 (show desktop grid)
+    { cid: 0xc3; action = { type: "Keypress"; keys: ["KEY_LEFTCTRL", "KEY_F8"]; }; }
+  );
+});
+EOF
+    sudo systemctl enable --now logid
+    info Success
+    touch "$HOME/.logitech-installed-mattsday"
+  fi
+}
+
 install_snap() {
   if ! snap info "${1}" | grep installed: >/dev/null 2>&1; then
     sudo snap install "${@}" >/dev/null || warn "Failed to install $1"
@@ -63,11 +109,11 @@ fix_chromium_desktop_entry() {
 }
 
 configure_fonts() {
-    if [ -f jetbrains-mono-font.sh ]; then
-        ./jetbrains-mono-font.sh
-    elif [ -f ./os-bootstraps/jetbrains-mono-font.sh ]; then
-        ./os-bootstraps/jetbrains-mono-font.sh
-    fi
+  if [ -f jetbrains-mono-font.sh ]; then
+    ./jetbrains-mono-font.sh
+  elif [ -f ./os-bootstraps/jetbrains-mono-font.sh ]; then
+    ./os-bootstraps/jetbrains-mono-font.sh
+  fi
 }
 
 ferdi() {
@@ -98,6 +144,7 @@ emoji() {
 
 main() {
   CALLBACKS+=(
+    configure_logitech_mouse
     emoji
     ferdi
     install_snaps
