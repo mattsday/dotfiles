@@ -18,7 +18,7 @@ info() {
 get_apt_packages() {
   APT_PACKAGES+=(snapd kde-plasma-desktop plasma-widgets-addons plasma-wallpapers-addons plasma-nm)
   APT_PACKAGES+=(ffmpegthumbs ffmpegthumbnailer pulseaudio-module-bluetooth blueman kamoso)
-  APT_PACKAGES+=(sddm-theme-debian-breeze kde-spectacle)
+  APT_PACKAGES+=(sddm-theme-debian-breeze kde-spectacle vlc)
 }
 
 install_apt_packages() {
