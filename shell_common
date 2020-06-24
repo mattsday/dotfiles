@@ -39,6 +39,11 @@ if [ -f "$HOME/.aliases" ]; then
 	. "$HOME/.aliases"
 fi
 
+# Check if sdkman is installed
+if [ -f "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
+	. "$HOME/.sdkman/bin/sdkman-init.sh"
+fi
+
 # Find function to quickly look for things in pwd
 f() {
 	find . -iname "*$1*"
