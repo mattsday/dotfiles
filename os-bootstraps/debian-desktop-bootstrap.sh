@@ -38,7 +38,7 @@ install_apt_packages() {
 install_snaps() {
   install_snap chromium
   install_snap code --classic
-  install_snap intellij-idea-ultimate --classic
+#  install_snap intellij-idea-ultimate --classic
 }
 
 configure_logitech_mouse() {
