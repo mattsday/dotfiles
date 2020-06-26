@@ -28,7 +28,7 @@ info() {
 get_apt_packages() {
   APT_PACKAGES+=(spotify-client google-cloud-sdk google-cloud-sdk-anthos-auth)
   APT_PACKAGES+=(google-cloud-sdk-kpt google-cloud-sdk-skaffold kubectl openjdk-8-jdk openjdk-11-jdk)
-  APT_PACKAGES+=(gnucash print-manager avahi-discover avahi-utils)
+  APT_PACKAGES+=(gnucash print-manager avahi-discover avahi-utils okular)
 }
 
 install_apt_packages() {
