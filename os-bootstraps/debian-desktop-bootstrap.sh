@@ -18,7 +18,7 @@ info() {
 get_apt_packages() {
   APT_PACKAGES+=(snapd kde-plasma-desktop plasma-widgets-addons plasma-wallpapers-addons plasma-nm)
   APT_PACKAGES+=(ffmpegthumbs ffmpegthumbnailer pulseaudio-module-bluetooth blueman kamoso)
-  APT_PACKAGES+=(sddm-theme-debian-breeze kde-spectacle)
+  APT_PACKAGES+=(sddm-theme-debian-breeze kde-spectacle ksshaskpass)
 }
 
 install_apt_packages() {
@@ -93,6 +93,20 @@ install_snap() {
   fi
 }
 
+ssh_configuration() {
+  SSH_FILE="$HOME"/.config/autostart-scripts/ssh.sh
+  if [ ! -f "$SSH_FILE" ]; then
+    mkdir -p "$HOME"/.config/autostart-scripts/ || fail Cannot create ssh dir
+    info Setting up ssh with ksshaskpass
+    cat <<EOF | tee "$SSH_FILE" >/dev/null
+#!/bin/bash
+SSH_ASKPASS=/usr/bin/ksshaskpass ssh-add "$HOME/.ssh/id_rsa" </dev/null
+}
+EOF
+    chmod +x "$SSH_FILE"
+  fi
+}
+
 fix_chromium_desktop_entry() {
   SNAP_FILE=/var/lib/snapd/desktop/applications/chromium_chromium.desktop
   LOCAL_FILE="$HOME"/.local/share/applications/chromium_chromium.desktop
@@ -150,6 +164,7 @@ main() {
     install_snaps
     fix_chromium_desktop_entry
     configure_fonts
+    ssh_configuration
   )
   get_apt_packages
 
