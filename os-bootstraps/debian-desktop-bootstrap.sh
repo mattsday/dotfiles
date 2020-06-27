@@ -18,7 +18,7 @@ info() {
 get_apt_packages() {
   APT_PACKAGES+=(snapd kde-plasma-desktop plasma-widgets-addons plasma-wallpapers-addons plasma-nm)
   APT_PACKAGES+=(ffmpegthumbs ffmpegthumbnailer pulseaudio-module-bluetooth blueman kamoso)
-  APT_PACKAGES+=(sddm-theme-debian-breeze kde-spectacle ksshaskpass)
+  APT_PACKAGES+=(sddm-theme-debian-breeze kde-spectacle vlc kdegames ksshaskpass)
 }
 
 install_apt_packages() {
@@ -38,7 +38,7 @@ install_apt_packages() {
 install_snaps() {
   install_snap chromium
   install_snap code --classic
-  install_snap intellij-idea-ultimate --classic
+#  install_snap intellij-idea-ultimate --classic
 }
 
 configure_logitech_mouse() {
