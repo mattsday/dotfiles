@@ -5,6 +5,8 @@ _apt() {
 	DEBIAN_FRONTEND="noninteractive" sudo apt-get "$@"
 }
 
+APT_PACKAGES=()
+
 # Check for mixins
 export _debian_bootstrap_mattsday=1
 RELEASE="$(grep '^VERSION_CODENAME=' /etc/os-release | awk -F= '{print $2}' | sed 's/"//g')"
@@ -68,7 +70,7 @@ fi
 echo Updating system
 _apt update >/dev/null
 
-APT_PACKAGES=(
+APT_PACKAGES+=(
 	apt-utils
 	dialog
 	dnsutils
