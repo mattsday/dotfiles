@@ -18,7 +18,7 @@ info() {
 get_apt_packages() {
   APT_PACKAGES+=(snapd kde-plasma-desktop plasma-widgets-addons plasma-wallpapers-addons plasma-nm)
   APT_PACKAGES+=(ffmpegthumbs ffmpegthumbnailer pulseaudio-module-bluetooth blueman kamoso)
-  APT_PACKAGES+=(sddm-theme-debian-breeze kde-spectacle vlc kdegames ksshaskpass)
+  APT_PACKAGES+=(sddm-theme-debian-breeze kde-spectacle vlc kdegames ksshaskpass flatpak)
 }
 
 install_apt_packages() {
@@ -39,6 +39,38 @@ install_snaps() {
   install_snap chromium
   install_snap code --classic
 #  install_snap intellij-idea-ultimate --classic
+}
+
+install_snap() {
+  if ! snap info "${1}" | grep installed: >/dev/null 2>&1; then
+    sudo snap install "${@}" >/dev/null || warn "Failed to install $1"
+  fi
+}
+
+install_gnucash() {
+  info Installing GnuCash
+  if dpkg-query -W -f='${Status}' "$package" 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
+    sudo apt-get -y remove gnucash >/dev/null
+  fi
+  if [ -f "$HOME/.local/share/applications/gnucash.desktop" ]; then
+    rm "$HOME/.local/share/applications/gnucash.desktop"
+  fi
+  sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo >/dev/null
+  sudo flatpak install --noninteractive flathub org.gnucash.GnuCash org.gtk.Gtk3theme.Adwaita-dark \
+    org.gtk.Gtk3theme.Breeze-Dark org.gtk.Gtk3theme.Breeze  >/dev/null
+  FLATPAK_FILE=/var/lib/flatpak/exports/share/applications/org.gnucash.GnuCash.desktop
+  LOCAL_FILE="$HOME"/.local/share/applications/org.gnucash.GnuCash.desktop
+  # if we exist just return
+  if [ -f "$LOCAL_FILE" ]; then
+    return
+  fi
+  if [ ! -f "$FLATPAK_FILE" ]; then
+    warn "GnuCash desktop entry not found in $FLATPAK_FILE"
+    return
+  fi
+  cp "$FLATPAK_FILE" "$LOCAL_FILE"
+  # Set theme to Adwaita-dark due to GnuCash theme bug and explicitly set icon location
+  sed -i 's|Exec=/usr/bin/flatpak|Exec=env GTK_THEME="Adwaita-dark" /usr/bin/flatpak|g; s|Icon=.*|Icon=/var/lib/flatpak/exports/share/icons/hicolor/scalable/apps/org.gnucash.GnuCash.svg|g' "$LOCAL_FILE"
 }
 
 configure_logitech_mouse() {
@@ -84,12 +116,6 @@ EOF
     sudo systemctl enable --now logid
     info Success
     touch "$HOME/.logitech-installed-mattsday"
-  fi
-}
-
-install_snap() {
-  if ! snap info "${1}" | grep installed: >/dev/null 2>&1; then
-    sudo snap install "${@}" >/dev/null || warn "Failed to install $1"
   fi
 }
 
@@ -165,6 +191,7 @@ main() {
     fix_chromium_desktop_entry
     configure_fonts
     ssh_configuration
+    install_gnucash
   )
   get_apt_packages
 
