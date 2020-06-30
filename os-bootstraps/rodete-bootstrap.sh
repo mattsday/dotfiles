@@ -56,7 +56,7 @@ passwordless_sudo() {
 install_vs_code() {
   if ! dpkg-query -W -f='${Status}' code 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
     sudo glinux-add-repo -b typescript stable >/dev/null || fail Failed to add Typescript repo
-    apt-get update >/dev/null 2>&1
+    sudo apt-get update >/dev/null 2>&1
     # Back up current packages
     BACKUP_APT_PACKAGES=("${APT_PACKAGES[@]}")
     # Install build packages immediately
