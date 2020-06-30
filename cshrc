@@ -92,13 +92,11 @@ set histfile = ~/.csh_history
 set savehist = ($history merge)
 
 set HOSTNAME=localhost
-
-if ( $HOST != "") then
+if ( $?HOST ) then
     set HOSTNAME=$HOST
-else if ( `where hostname` != "") then
-    set HOSTNAME = `hostname|awk -F\. '{print $1}'`
+else if ( `which hostname` != "") then
+    set HOSTNAME = `hostname|awk -F. '{print $1}'`
 endif
-
 set prompt = "$USER@$HOSTNAME> "
 
 # Load tcsh specific stuff
