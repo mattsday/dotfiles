@@ -6,6 +6,7 @@ _apt() {
 }
 
 APT_PACKAGES=()
+SNAP_PACKAGES=()
 
 # Check for mixins
 export _debian_bootstrap_mattsday=1
@@ -88,8 +89,8 @@ APT_PACKAGES+=(
 	jq
 	xz-utils
 	zip
-    unzip
-    unrar
+	unzip
+	unrar
 	"$tmux"
 	shellcheck
 )
@@ -99,6 +100,18 @@ for package in "${APT_PACKAGES[@]}"; do
 		_apt -y install "$package" >/dev/null
 	fi
 done
+
+if command -v snap >/dev/null 2>&1; then
+    for snap in "${SNAP_PACKAGES[@]}"; do
+        pkg_name="$(echo "$snap" | awk '{print $1}')"
+        if ! snap info "${pkg_name}" | grep installed: >/dev/null 2>&1; then
+			echo Installing snap package "${snap}"
+            # shellcheck disable=SC2086
+            sudo snap install ${snap} >/dev/null || warn "Failed to install ${snap}"
+        fi
+    done
+fi
+
 if [[ -x "$HOME/.update_aliases" ]]; then
 	"$HOME/.update_aliases" force
 fi

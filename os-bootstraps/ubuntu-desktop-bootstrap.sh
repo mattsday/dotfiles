@@ -29,6 +29,10 @@ get_apt_packages() {
     APT_PACKAGES+=(openjdk-8-jdk openjdk-11-jdk)
 }
 
+get_snap_packages() {
+    SNAP_PACKAGES+=("code --classic")
+}
+
 install_apt_packages() {
     get_apt_packages
     INSTALL_PACKAGES=()
@@ -64,6 +68,7 @@ main() {
         install_spotify
     )
     get_apt_packages
+    get_snap_packages
 
     # If we're not being sourced
     if [ -z "$_debian_bootstrap_mattsday" ]; then

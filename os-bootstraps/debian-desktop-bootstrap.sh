@@ -35,15 +35,19 @@ install_apt_packages() {
   fi
 }
 
-install_snaps() {
-  install_snap chromium
-  install_snap code --classic
-#  install_snap intellij-idea-ultimate --classic
+get_snap_packages() {
+  SNAP_PACKAGES+=(chromium)
 }
 
-install_snap() {
-  if ! snap info "${1}" | grep installed: >/dev/null 2>&1; then
-    sudo snap install "${@}" >/dev/null || warn "Failed to install $1"
+install_snap_packages() {
+  if command -v snap >/dev/null 2>&1; then
+    for snap in "${SNAP_PACKAGES[@]}"; do
+      pkg_name="$(echo "$snap" | awk '{print $1}')"
+      if ! snap info "${pkg_name}" | grep installed: >/dev/null 2>&1; then
+        # shellcheck disable=SC2086
+        sudo snap install ${snap} >/dev/null || warn "Failed to install ${snap}"
+      fi
+    done
   fi
 }
 
@@ -57,7 +61,7 @@ install_gnucash() {
   fi
   sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo >/dev/null
   sudo flatpak install --noninteractive flathub org.gnucash.GnuCash org.gtk.Gtk3theme.Adwaita-dark \
-    org.gtk.Gtk3theme.Breeze-Dark org.gtk.Gtk3theme.Breeze  >/dev/null
+    org.gtk.Gtk3theme.Breeze-Dark org.gtk.Gtk3theme.Breeze >/dev/null
   FLATPAK_FILE=/var/lib/flatpak/exports/share/applications/org.gnucash.GnuCash.desktop
   LOCAL_FILE="$HOME"/.local/share/applications/org.gnucash.GnuCash.desktop
   # if we exist just return
@@ -81,11 +85,11 @@ configure_logitech_mouse() {
     fi
     info Setting up Logitech Mouse Configuration
     # Back up current packages
-    OLD_APT_PACKAGES=("${APT_PACKAGES[@]}")
+    BACKUP_APT_PACKAGES=("${APT_PACKAGES[@]}")
     # Install build packages immediately
     APT_PACKAGES=(cmake libevdev-dev libudev-dev libconfig++-dev solaar)
     install_apt_packages
-    APT_PACKAGES=("${OLD_APT_PACKAGES[@]}")
+    APT_PACKAGES=("${BACKUP_APT_PACKAGES[@]}")
     if [ ! -d /tmp/logiops ]; then
       git clone https://github.com/PixlOne/logiops /tmp/logiops >/dev/null || fail Failed to download Logitech options
     else
@@ -187,17 +191,18 @@ main() {
     configure_logitech_mouse
     emoji
     ferdi
-    install_snaps
     fix_chromium_desktop_entry
     configure_fonts
     ssh_configuration
     install_gnucash
   )
   get_apt_packages
+  get_snap_packages
 
   # If we're not being sourced
   if [ -z "$_debian_bootstrap_mattsday" ]; then
     install_apt_packages
+    install_snap_packages
     for callback in "${CALLBACKS[@]}"; do
       "$callback"
     done

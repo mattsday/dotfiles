@@ -53,6 +53,22 @@ passwordless_sudo() {
   fi
 }
 
+install_vs_code() {
+  if ! dpkg-query -W -f='${Status}' code 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
+    sudo glinux-add-repo -b typescript stable >/dev/null || fail Failed to add Typescript repo
+    apt-get update >/dev/null 2>&1
+    # Back up current packages
+    BACKUP_APT_PACKAGES=("${APT_PACKAGES[@]}")
+    # Install build packages immediately
+    APT_PACKAGES=(code)
+    install_apt_packages
+    APT_PACKAGES=("${BACKUP_APT_PACKAGES[@]}")
+  fi
+  if [ -f /etc/apt/sources.list.d/vscode.list ]; then
+    sudo rm /etc/apt/sources.list.d/vscode.list
+  fi
+}
+
 bluetooth_setup() {
   if [ ! -f "$HOME/.config/pulse/default.pa" ]; then
     info Setting up bluetooth
@@ -118,6 +134,7 @@ main() {
     passwordless_sudo
     bluetooth_setup
     docker_setup
+    install_vs_code
   )
   get_apt_packages
 
