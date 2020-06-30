@@ -1,5 +1,6 @@
 #!/bin/bash
-#shellcheck disable=SC2154
+#shellcheck disable=SC1090
+
 DEBIAN_DESKTOP_BOOTSTRAP=debian-desktop-bootstrap.sh
 
 # Load generic desktop bootstraps
@@ -69,6 +70,26 @@ install_vs_code() {
   fi
 }
 
+install_sdk_man() {
+  if [ ! -f "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
+    info Installing sdkman
+    curl -s "https://get.sdkman.io?rcupdate=false" | bash >/dev/null
+    . "$HOME/.sdkman/bin/sdkman-init.sh"
+  fi
+  if [ -f "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
+    . "$HOME/.sdkman/bin/sdkman-init.sh"
+    sdk upgrade >/dev/null
+    if ! command -v gradle >/dev/null 2>&1; then
+      info Installing gradle
+      sdk install gradle >/dev/null
+    fi
+    if ! command -v mvn >/dev/null 2>&1; then
+      info Installing maven
+      sdk install maven >/dev/null  
+    fi
+  fi
+}
+
 bluetooth_setup() {
   if [ ! -f "$HOME/.config/pulse/default.pa" ]; then
     info Setting up bluetooth
@@ -135,10 +156,12 @@ main() {
     bluetooth_setup
     docker_setup
     install_vs_code
+    install_sdk_man
   )
   get_apt_packages
 
   # If we're not being sourced
+  #shellcheck disable=SC2154
   if [ -z "$_debian_bootstrap_mattsday" ]; then
     install_apt_packages
     for callback in "${CALLBACKS[@]}"; do

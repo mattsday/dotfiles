@@ -1,11 +1,13 @@
 #!/bin/sh
 # This should execute on pretty much any bourne shell in case the plan is to jump to zsh or tcsh asap...
+# shellcheck disable=SC1091
 
 # Load dependencies
 . ./dependencies
 
 mkdir backup >/dev/null 2>&1
 
+# shellcheck disable=SC2154
 for dotfile in $dotfiles; do
 	verb=Updating
 	if [ -f "$HOME/.$dotfile" ] && [ ! -L "$HOME/.$dotfile" ]; then

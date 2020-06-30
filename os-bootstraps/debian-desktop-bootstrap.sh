@@ -1,6 +1,6 @@
 #!/bin/bash
 # Generic bootstrapping for any debian-derived desktop (e.g. Ubuntu, Neon, Rodete, ...)
-#shellcheck disable=SC2154
+#shellcheck disable=SC1090
 
 fail() {
   echo >&2 '[Failure]' "$@"
@@ -60,8 +60,10 @@ install_gnucash() {
     rm "$HOME/.local/share/applications/gnucash.desktop"
   fi
   sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo >/dev/null
-  sudo flatpak install --noninteractive flathub org.gnucash.GnuCash org.gtk.Gtk3theme.Adwaita-dark \
+  sudo flatpak install --noninteractive --or-update flathub org.gnucash.GnuCash org.gtk.Gtk3theme.Adwaita-dark \
     org.gtk.Gtk3theme.Breeze-Dark org.gtk.Gtk3theme.Breeze >/dev/null
+
+  # Create local icon entry
   FLATPAK_FILE=/var/lib/flatpak/exports/share/applications/org.gnucash.GnuCash.desktop
   LOCAL_FILE="$HOME"/.local/share/applications/org.gnucash.GnuCash.desktop
   # if we exist just return
@@ -200,6 +202,7 @@ main() {
   get_snap_packages
 
   # If we're not being sourced
+  # shellcheck disable=SC2154
   if [ -z "$_debian_bootstrap_mattsday" ]; then
     install_apt_packages
     install_snap_packages

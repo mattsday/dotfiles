@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC1091
 
 echo Removing dotfiles
 
@@ -6,6 +7,7 @@ echo Removing dotfiles
 . ./dependencies
 
 # Figure out what we've got linked
+# shellcheck disable=SC2154
 for dotfile in ${dotfiles}; do
 	FILE="$HOME/.${dotfile}"
 	if [ -L "${FILE}" ]; then
@@ -18,7 +20,7 @@ for dotfile in ${dotfiles}; do
 		mv "${BACKUP}" "${FILE}"
 	fi
 done
-
+# shellcheck disable=SC2154
 for dotfile in ${extra}; do
 	FILE="${dotfile}"
 	if [ -L "${FILE}" ]; then

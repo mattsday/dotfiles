@@ -1,5 +1,5 @@
 #!/bin/bash
-#shellcheck disable=SC2154
+#shellcheck disable=SC1090
 DEBIAN_DESKTOP_BOOTSTRAP=debian-desktop-bootstrap.sh
 
 # Load generic desktop bootstraps
@@ -71,6 +71,7 @@ main() {
     get_snap_packages
 
     # If we're not being sourced
+    #shellcheck disable=SC2154
     if [ -z "$_debian_bootstrap_mattsday" ]; then
         install_apt_packages
         for callback in "${CALLBACKS[@]}"; do
