@@ -78,7 +78,6 @@ install_sdk_man() {
   fi
   if [ -f "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
     . "$HOME/.sdkman/bin/sdkman-init.sh"
-    sdk upgrade >/dev/null
     if ! command -v gradle >/dev/null 2>&1; then
       info Installing gradle
       sdk install gradle >/dev/null
