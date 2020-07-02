@@ -13,6 +13,9 @@
 # If not running interactively, don't do anything
 [[ -z "$PS1" ]] && return
 
+# Enable word splitting with IFS
+set -y
+
 # If there's a local /etc/profile then evaluate that
 if [ -f /etc/profile ]; then
     emulate sh -c '. /etc/profile'
@@ -159,6 +162,8 @@ if [ -f "/usr/share/google-cloud-sdk/completion.zsh.inc" ]; then
 elif [ -f "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc" ]; then
 	. /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc
 fi
+
+RPROMPT=""
 
 if (( colours >= 8 )); then
     unset PROMPT

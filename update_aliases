@@ -11,6 +11,7 @@ debug() {
 		echo "$@"
 	fi
 }
+
 week=604800
 # Get the date
 date="$(date +%s 2>/dev/null | xargs)"
@@ -123,6 +124,13 @@ add_alias() {
 	done
 }
 
+add_update() {
+	IFS='@'
+	for update in $1; do
+		UPDATE_CALLBACKS="$update":"$UPDATE_CALLBACKS"
+	done
+}
+
 add_export() {
 	IFS='@'
 	for export in $1; do
@@ -148,7 +156,7 @@ while IFS='' read -r line || [ -n "$line" ]; do
 	'#'*) ;;
 
 		# Check for executables
-	'alias @'* | 'export @'*)
+	'alias @'* | 'export @'* | 'update @'*)
 		# Get the list of command_list to test
 		command_list="$(echo "$line" | awk '{print $2}' | sed 's/^@//')"
 		IFS=,
@@ -178,6 +186,8 @@ while IFS='' read -r line || [ -n "$line" ]; do
 				add_alias "$(echo "$line" | awk '{ print $0 }' | sed 's/^alias//' | sed 's|@'"$command_list"'||' | xargs)"
 			elif [ "$type" = export ]; then
 				add_export "$(echo "$line" | awk '{ print $0 }' | sed 's/^export//' | sed 's|@'"$command_list"'||' | xargs)"
+			elif [ "$type" = update ]; then
+				add_update "$(echo "$line" | awk '{ print $0 }' | sed 's/^update//' | sed 's|@'"$command_list"'||' | xargs)"
 			fi
 		fi
 		;;
@@ -189,6 +199,10 @@ while IFS='' read -r line || [ -n "$line" ]; do
 			add_alias "$(echo "$line" | sed 's/^alias//' | xargs)"
 		fi
 		;;
+	update*)
+		add_update "$(echo "$line" | sed 's/^update//' | xargs)"
+		;;
+	*) ;;
 	esac
 done <"$HOME/.alias_list"
 
@@ -243,6 +257,10 @@ if [ -x /usr/bin/apt ] && [ "$IS_ROOT" = 0 ]; then
 	echo 'alias apt '"'sudo apt'" >>"$FISH_ALIAS_FILE"
 	echo 'alias apt '"'sudo apt'" >>"$CSH_ALIAS_FILE"
 	aliases="$((aliases + 1))"
+fi
+
+if [ -n "$UPDATE_CALLBACKS" ]; then
+	write_export _UPDATE_CALLBACKS "$UPDATE_CALLBACKS"
 fi
 
 # Write out last update time:

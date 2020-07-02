@@ -8,6 +8,9 @@
 #
 # shellcheck disable=SC1090
 
+# Reset upgrade callbacks
+export _UPDATE_CALLBACKS=""
+
 # Execute any local bourne script config - local config should go in _local below:
 if [ -f "$HOME/.shell_common_config" ]; then
 	. "$HOME/.shell_common_config"
@@ -42,6 +45,7 @@ fi
 # Check if sdkman is installed
 if [ -f "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
 	. "$HOME/.sdkman/bin/sdkman-init.sh"
+	export _UPDATE_CALLBACKS='yes|sdk update':"$_UPDATE_CALLBACKS"
 fi
 
 # Find function to quickly look for things in pwd
@@ -52,6 +56,61 @@ f() {
 # Grep find
 gf() {
 	grep -Ri "$1"
+}
+
+# Single command to keep a system up to date
+update() {
+	# Debian-based
+	if [ -x /usr/bin/apt ] && [ -x /usr/bin/dpkg ]; then
+		apt update && apt full-upgrade
+	# OS X
+	elif [ -x /usr/local/bin/brew ]; then
+		brew update
+		brew upgrade
+		brew cleanup
+		brew doctor
+	# Arch-based
+	elif [ -x /usr/bin/pacman ]; then
+		# Arch linux use yay if it's there
+		if [ -x /usr/bin/yay ]; then
+			yay -Syu
+		else
+			pacman -Syu
+		fi
+	# Fedora-based
+	elif [ -x /usr/bin/dnf ]; then
+		dnf update
+	# Red Hat-based
+	elif [ -x /usr/bin/yum ]; then
+		yum update
+	# OpenBSD
+	elif [ -x /usr/sbin/pkg_add ]; then
+		pkg_add -uvi
+	# FreeBSD
+	elif [ -x /usr/sbin/pkg ]; then
+		pkg update && pkg upgrade
+	# SuSE
+	elif [ -x /usr/bin/zypper ]; then
+		zypper update
+	fi
+	if [ -n "$_UPGRADE_CALLBACKS" ]; then
+		if LC_ALL=C type _update_callbacks 2>/dev/null | grep function >/dev/null; then
+			_update_callbacks
+		fi
+	fi
+	# Update flatpak
+	if [ -x /usr/bin/flatpak ]; then
+		flatpak -y update
+	fi
+	# If there are any callbacks process them
+	if [ -n "${_UPDATE_CALLBACKS}" ]; then
+		IFS=":"
+		for i in ${_UPDATE_CALLBACKS}; do
+			unset IFS
+			eval "$i"
+		done
+	fi
+
 }
 
 # Disable shell history for session

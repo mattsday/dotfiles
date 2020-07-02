@@ -48,9 +48,6 @@ export @/usr/local/bin/brew HOMEBREW_NO_ANALYTICS=1
 # ...not .NET ones
 export @dotnet DOTNET_CLI_TELEMETRY_OPTOUT=1
 
-# Single alias to upgrade homebrew
-alias @/usr/local/bin/brew update='brew update; brew upgrade; brew cleanup; brew doctor'
-
 # Give me readable times
 export TIME_STYLE="long-iso"
 
@@ -76,33 +73,30 @@ export @less PAGER=less
 # On OS X, the go version of bosh is called gosh, alias to it if it exists:
 alias @gosh bosh=!gosh
 
-# Debian Systems
-alias @sudo,/usr/bin/apt,/usr/bin/dpkg update='apt update && apt upgrade'
-#alias @sudo,/usr/bin/apt apt='sudo apt'@apt-get='apt'
-
 # Arch Linux
 alias @sudo,/usr/bin/pacman pacman='sudo pacman '
-alias @sudo,/usr/bin/pacman update='pacman -Syu'
-alias @sudo,/usr/bin/yay update='yay -Syu'
 
 # Red Hat
-alias @/usr/bin/yum,sudo yum='sudo yum'@update='yum update'
+alias @/usr/bin/yum,sudo yum='sudo yum'
 
 # OpenBSD
-alias @/usr/sbin/pkg_add,sudo pkg_add='sudo /usr/sbin/pkg_add'@pkg_delete='sudo /usr/sbin/pkg_delete'@update='pkg_add -uvi'
+alias @/usr/sbin/pkg_add,sudo pkg_add='sudo /usr/sbin/pkg_add'@pkg_delete='sudo /usr/sbin/pkg_delete'
 
 # FreeBSD
-alias @/usr/sbin/pkg,sudo pkg='sudo /usr/sbin/pkg'@update='pkg update && pkg upgrade'
+alias @/usr/sbin/pkg,sudo pkg='sudo /usr/sbin/pkg'
 alias @/usr/sbin/freebsd-update,sudo freebsd-update='sudo /usr/sbin/freebsd-update'
 
 # Fedora
-alias @/usr/bin/dnf,sudo dnf='sudo dnf'@yum='dnf'@update='dnf update'
+alias @/usr/bin/dnf,sudo dnf='sudo dnf'@yum='dnf'
 
 # SuSE
-alias @/usr/bin/zypper,sudo zypper='sudo zypper'@update='zypper update'
+alias @/usr/bin/zypper,sudo zypper='sudo zypper'
 
 # Generic services
 alias @/usr/sbin/service service='sudo service'
 
 # Use ksshaskpass for ssh passwords if present
 export @/usr/bin/ksshaskpass GIT_ASKPASS=/usr/bin/ksshaskpass
+
+# Update flatpak and sdkman if available
+update @/usr/bin/flatpak flatpak -y update
