@@ -68,8 +68,7 @@ list=(
 to_install=()
 
 for utility in "${list[@]}"; do
-	exists="$(echo "$installed" | tr " " "\\n" | grep -wx "$utility")"
-	if [[ -z "$exists" ]]; then
+	if ! pacman -Qi "$utility" >/dev/null 2>&1; then
 		to_install+=("$utility")
 	fi
 done
