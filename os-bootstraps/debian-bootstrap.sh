@@ -90,7 +90,6 @@ APT_PACKAGES+=(
 	xz-utils
 	zip
 	unzip
-	unrar
 	"$tmux"
 	shellcheck
 )
