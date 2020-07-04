@@ -93,22 +93,27 @@ APT_PACKAGES+=(
 	"$tmux"
 	shellcheck
 )
+
+INSTALL_PACKAGES=()
 for package in "${APT_PACKAGES[@]}"; do
 	if ! dpkg-query -W -f='${Status}' "$package" 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
-		echo Installing "$package"
-		_apt -y install "$package" >/dev/null
+		INSTALL_PACKAGES+=("$package")
 	fi
 done
+if [ -n "${INSTALL_PACKAGES[*]}" ]; then
+	info Installing packages "${INSTALL_PACKAGES[@]}"
+	sudo apt-get -y install "${INSTALL_PACKAGES[@]}" >/dev/null
+fi
 
 if command -v snap >/dev/null 2>&1; then
-    for snap in "${SNAP_PACKAGES[@]}"; do
-        pkg_name="$(echo "$snap" | awk '{print $1}')"
-        if ! snap info "${pkg_name}" | grep installed: >/dev/null 2>&1; then
+	for snap in "${SNAP_PACKAGES[@]}"; do
+		pkg_name="$(echo "$snap" | awk '{print $1}')"
+		if ! snap info "${pkg_name}" | grep installed: >/dev/null 2>&1; then
 			echo Installing snap package "${snap}"
-            # shellcheck disable=SC2086
-            sudo snap install ${snap} >/dev/null || warn "Failed to install ${snap}"
-        fi
-    done
+			# shellcheck disable=SC2086
+			sudo snap install ${snap} >/dev/null || warn "Failed to install ${snap}"
+		fi
+	done
 fi
 
 if [[ -x "$HOME/.update_aliases" ]]; then
