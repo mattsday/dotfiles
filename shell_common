@@ -93,15 +93,6 @@ update() {
 	elif [ -x /usr/bin/zypper ]; then
 		zypper update
 	fi
-	if [ -n "$_UPGRADE_CALLBACKS" ]; then
-		if LC_ALL=C type _update_callbacks 2>/dev/null | grep function >/dev/null; then
-			_update_callbacks
-		fi
-	fi
-	# Update flatpak
-	if [ -x /usr/bin/flatpak ]; then
-		flatpak -y update
-	fi
 	# If there are any callbacks process them
 	if [ -n "${_UPDATE_CALLBACKS}" ]; then
 		IFS=":"
@@ -110,7 +101,6 @@ update() {
 			eval "$i"
 		done
 	fi
-
 }
 
 # Disable shell history for session
