@@ -25,6 +25,11 @@ info() {
     echo "$@"
 }
 
+# Ensure apt runs in non-interactive mode
+_apt() {
+    DEBIAN_FRONTEND="noninteractive" sudo apt-get "$@"
+}
+
 get_apt_packages() {
     APT_PACKAGES+=(openjdk-8-jdk openjdk-11-jdk)
 }
@@ -43,7 +48,7 @@ install_apt_packages() {
     done
     if [ -n "${INSTALL_PACKAGES[*]}" ]; then
         info Installing packages "${INSTALL_PACKAGES[@]}"
-        sudo apt-get -y install "${INSTALL_PACKAGES[@]}" >/dev/null || fail "Failed installing packages"
+        _apt -y install "${INSTALL_PACKAGES[@]}" >/dev/null || fail "Failed installing packages"
     fi
 }
 
@@ -57,7 +62,7 @@ install_spotify() {
     if ! dpkg-query -W -f='${Status}' spotify-client 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
         curl -sS https://download.spotify.com/debian/pubkey.gpg | sudo apt-key add - >/dev/null
         echo "deb http://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list >/dev/null
-        sudo apt-get update && sudo apt-get install -y spotify-client >/dev/null 2>&1
+        _apt update && _apt install -y spotify-client >/dev/null 2>&1
     fi
 }
 

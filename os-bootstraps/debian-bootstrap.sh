@@ -102,7 +102,7 @@ for package in "${APT_PACKAGES[@]}"; do
 done
 if [ -n "${INSTALL_PACKAGES[*]}" ]; then
 	info Installing packages "${INSTALL_PACKAGES[@]}"
-	sudo apt-get -y install "${INSTALL_PACKAGES[@]}" >/dev/null
+	_apt -y install "${INSTALL_PACKAGES[@]}" >/dev/null
 fi
 
 if command -v snap >/dev/null 2>&1; then

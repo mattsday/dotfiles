@@ -15,6 +15,11 @@ info() {
   echo "$@"
 }
 
+# Ensure apt runs in non-interactive mode
+_apt() {
+  DEBIAN_FRONTEND="noninteractive" sudo apt-get "$@"
+}
+
 get_apt_packages() {
   APT_PACKAGES+=(snapd kde-plasma-desktop plasma-widgets-addons plasma-wallpapers-addons plasma-nm)
   APT_PACKAGES+=(ffmpegthumbs ffmpegthumbnailer pulseaudio-module-bluetooth blueman kamoso)
@@ -31,7 +36,7 @@ install_apt_packages() {
   done
   if [ -n "${INSTALL_PACKAGES[*]}" ]; then
     info Installing packages "${INSTALL_PACKAGES[@]}"
-    sudo apt-get -y install "${INSTALL_PACKAGES[@]}" >/dev/null || fail "Failed installing packages"
+    _apt -y install "${INSTALL_PACKAGES[@]}" >/dev/null || fail "Failed installing packages"
   fi
 }
 
@@ -52,9 +57,13 @@ install_snap_packages() {
 }
 
 install_gnucash() {
+  if ! command -v flatpak >/dev/null 2>&1; then
+    return
+  fi
+
   info Installing GnuCash
   if dpkg-query -W -f='${Status}' "$package" 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
-    sudo apt-get -y remove gnucash >/dev/null
+    _apt -y remove gnucash >/dev/null
   fi
   if [ -f "$HOME/.local/share/applications/gnucash.desktop" ]; then
     rm "$HOME/.local/share/applications/gnucash.desktop"

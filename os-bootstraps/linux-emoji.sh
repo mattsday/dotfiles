@@ -1,7 +1,7 @@
 #!/bin/sh
 echo Setting up linux emoji
 if [ -x /usr/bin/apt-get ]; then
-    sudo apt-get -y install fonts-noto'*' >/dev/null
+    DEBIAN_FRONTEND="noninteractive" sudo apt-get "$@" -y install fonts-noto'*' >/dev/null
 fi
 
 if [ -d "$HOME"/.config/fontconfig ]; then

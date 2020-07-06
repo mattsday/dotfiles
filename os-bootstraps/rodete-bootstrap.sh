@@ -26,6 +26,11 @@ info() {
   echo "$@"
 }
 
+# Ensure apt runs in non-interactive mode
+_apt() {
+  DEBIAN_FRONTEND="noninteractive" sudo apt-get "$@"
+}
+
 get_apt_packages() {
   APT_PACKAGES+=(spotify-client google-cloud-sdk google-cloud-sdk-anthos-auth)
   APT_PACKAGES+=(google-cloud-sdk-kpt google-cloud-sdk-skaffold kubectl openjdk-8-jdk openjdk-11-jdk)
@@ -42,7 +47,7 @@ install_apt_packages() {
   done
   if [ -n "${INSTALL_PACKAGES[*]}" ]; then
     info Installing packages "${INSTALL_PACKAGES[@]}"
-    sudo apt-get -y install "${INSTALL_PACKAGES[@]}" >/dev/null || fail "Failed installing packages"
+    _apt -y install "${INSTALL_PACKAGES[@]}" >/dev/null || fail "Failed installing packages"
   fi
 }
 
@@ -57,7 +62,7 @@ passwordless_sudo() {
 install_vs_code() {
   if ! dpkg-query -W -f='${Status}' code 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
     sudo glinux-add-repo -b typescript stable >/dev/null || fail Failed to add Typescript repo
-    sudo apt-get update >/dev/null 2>&1
+    _apt update >/dev/null 2>&1
     # Back up current packages
     BACKUP_APT_PACKAGES=("${APT_PACKAGES[@]}")
     # Install build packages immediately
@@ -119,8 +124,8 @@ docker_setup() {
   info Setting up Docker
   if ! dpkg-query -W -f='${Status}' docker-ce 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
     sudo glinux-add-repo -b docker-ce-"$(lsb_release -cs)" >/dev/null || fail Failed to add Docker repo
-    sudo apt-get update >/dev/null || fail Failed to update
-    sudo apt-get -y install docker-ce >/dev/null || fail Failed to install Docker
+    _apt update >/dev/null || fail Failed to update
+    _apt -y install docker-ce >/dev/null || fail Failed to install Docker
     sudo service docker stop
     sudo ip link set docker0 down
     sudo ip link del docker0
