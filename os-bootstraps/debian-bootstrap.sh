@@ -68,7 +68,7 @@ if [ -f "/etc/os-release" ]; then
 	fi
 fi
 
-echo Updating system
+echo Updating package list
 _apt update >/dev/null
 
 APT_PACKAGES+=(
