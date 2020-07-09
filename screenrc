@@ -1,6 +1,6 @@
 # Who the hell uses screen any more? tmux is where it's at man!
 # ...but seriously who the fuck thought ctrl-a was a good binding, rebind to `:
-escape ``
+escape ^bb
 # Go 256 colours :)
 term screen-256color
 # Don't welcome me...
