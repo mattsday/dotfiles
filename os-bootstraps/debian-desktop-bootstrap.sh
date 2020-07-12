@@ -207,7 +207,7 @@ emoji() {
 main() {
   CALLBACKS+=(
     configure_logitech_mouse
-    #emoji
+    emoji
     ferdi
     fix_chromium_desktop_entry
     configure_fonts
