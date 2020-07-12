@@ -172,15 +172,22 @@ configure_fonts() {
 }
 
 ferdi() {
+  FERDI_VERSION=5.5.0
   if ! dpkg-query -W -f='${Status}' ferdi 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
     info Installing Ferdi
+    UPDATE_FERDI=true
+  else
+    CURRENT_FERDI_VERSION="$(apt-cache policy ferdi | grep Installed: | awk -F ':' '{print $2}' | awk -F- '{print $1}' | xargs)"
+    if [ "$CURRENT_FERDI_VERSION" != "$FERDI_VERSION" ]; then
+      info "Updating Ferdi to $FERDI_VERSION (from $CURRENT_FERDI_VERSION)"
+      UPDATE_FERDI=true
+    fi
+  fi
+  if [ -n "$UPDATE_FERDI" ]; then
     # TODO - needs a lot of TLC
-    FERDI_VERSION=5.5.0
     FERDI_URL=https://github.com/getferdi/ferdi/releases/download/v"$FERDI_VERSION"/ferdi_"$FERDI_VERSION"_amd64.deb
-
-    wget -O /tmp/ferdi-"$FERDI_VERSION".deb "$FERDI_URL" || exit 1
-
-    sudo dpkg -i /tmp/ferdi-"$FERDI_VERSION".deb || exit 1
+    wget -O /tmp/ferdi-"$FERDI_VERSION".deb "$FERDI_URL" || return 1
+    sudo dpkg -i /tmp/ferdi-"$FERDI_VERSION".deb || return 1
   fi
   if [ -f "$PWD/ferdi-shopping-list.sh" ]; then
     "$PWD/ferdi-shopping-list.sh"
@@ -200,7 +207,7 @@ emoji() {
 main() {
   CALLBACKS+=(
     configure_logitech_mouse
-    emoji
+    #emoji
     ferdi
     fix_chromium_desktop_entry
     configure_fonts
