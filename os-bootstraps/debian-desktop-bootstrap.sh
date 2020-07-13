@@ -23,7 +23,7 @@ _apt() {
 get_apt_packages() {
   APT_PACKAGES+=(snapd plasma-widgets-addons plasma-wallpapers-addons plasma-nm)
   APT_PACKAGES+=(ffmpegthumbs ffmpegthumbnailer pulseaudio-module-bluetooth blueman kamoso)
-  APT_PACKAGES+=(kde-spectacle vlc kdegames ksshaskpass flatpak unrar)
+  APT_PACKAGES+=(kde-spectacle vlc kdegames ksshaskpass flatpak unrar wbritish)
 }
 
 install_apt_packages() {
