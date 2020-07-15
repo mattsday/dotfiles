@@ -101,7 +101,7 @@ for package in "${APT_PACKAGES[@]}"; do
 	fi
 done
 if [ -n "${INSTALL_PACKAGES[*]}" ]; then
-	info Installing packages "${INSTALL_PACKAGES[@]}"
+	echo Installing packages "${INSTALL_PACKAGES[@]}"
 	_apt -y install "${INSTALL_PACKAGES[@]}" >/dev/null
 fi
 
