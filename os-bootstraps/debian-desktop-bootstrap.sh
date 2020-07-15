@@ -212,7 +212,7 @@ main() {
     fix_chromium_desktop_entry
     configure_fonts
     ssh_configuration
-    install_gnucash
+    #install_gnucash
   )
   get_apt_packages
   get_snap_packages
