@@ -74,7 +74,6 @@ _apt update >/dev/null
 APT_PACKAGES+=(
 	apt-utils
 	bash-completion
-	dialog
 	dnsutils
 	zsh
 	rsync
