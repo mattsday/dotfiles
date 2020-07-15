@@ -60,7 +60,9 @@ if [ "$completion" = 1 ] && command -v kubectl >/dev/null 2>&1; then
 fi
 
 # Add GCP support
-if [ -f "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc" ]; then
+if [ -f /usr/share/google-cloud-sdk/completion.bash.inc ]; then
+	. /usr/share/google-cloud-sdk/completion.bash.inc
+elif [ -f "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc" ]; then
 	. /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc
 fi
 
