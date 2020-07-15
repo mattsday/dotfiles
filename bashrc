@@ -46,12 +46,12 @@ fi
 bind 'set show-all-if-ambiguous on'
 
 completion=0
-# Bash completion (check homebrew first on OS X)
-if [[ -f "/usr/local/etc/bash_completion" ]]; then
-	. "/usr/local/etc/bash_completion"
-	completion=1
-elif [[ -f "/etc/bash_completion" ]]; then
+# Bash completion (check linux first)
+if [[ -f "/etc/bash_completion" ]]; then
 	. "/etc/bash_completion"
+	completion=1
+elif [[ -f "/usr/local/etc/bash_completion" ]]; then
+	. "/usr/local/etc/bash_completion"
 	completion=1
 fi
 
