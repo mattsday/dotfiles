@@ -233,7 +233,7 @@ if du /bin/ls --si >/dev/null 2>&1; then
 	aliases="$((aliases + 1))"
 fi
 if df --si >/dev/null 2>&1; then
-	write_alias df "df --si -x tmpfs -x devtmpfs"
+	write_alias df "df --si -x tmpfs -x devtmpfs -x squashfs"
 	aliases="$((aliases + 1))"
 fi
 
