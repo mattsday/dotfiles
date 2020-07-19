@@ -65,6 +65,9 @@ install_gnucash() {
   if dpkg-query -W -f='${Status}' "$package" 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
     _apt -y remove gnucash >/dev/null
   fi
+  if [ ! -d "$HOME"/.local/share/applications ]; then
+    mkdir -p "$HOME"/.local/share/applications
+  fi
   if [ -f "$HOME/.local/share/applications/gnucash.desktop" ]; then
     rm "$HOME/.local/share/applications/gnucash.desktop"
   fi
@@ -141,8 +144,20 @@ ssh_configuration() {
     info Setting up ssh with ksshaskpass
     cat <<EOF | tee "$SSH_FILE" >/dev/null
 #!/bin/bash
+sleep 5
 SSH_ASKPASS=/usr/bin/ksshaskpass ssh-add "$HOME/.ssh/id_rsa" </dev/null
-}
+EOF
+    chmod +x "$SSH_FILE"
+  fi
+
+  SSH_FILE="$HOME"/.config/plasma-workspace/env/ssh-agent-startup.sh
+  if [ ! -f "$SSH_FILE" ]; then
+    mkdir -p "$HOME"/.config/plasma-workspace/env/ssh-agent-startup.sh || fail Cannot create ssh dir
+    info Setting up ssh agent autostart
+    cat <<EOF | tee "$SSH_FILE" >/dev/null
+#!/bin/sh
+[ -n "$SSH_AGENT_PID" ] || eval "$(ssh-agent -s)"
+export SSH_ASKPASS=/usr/bin/ksshaskpass
 EOF
     chmod +x "$SSH_FILE"
   fi
@@ -151,6 +166,9 @@ EOF
 fix_chromium_desktop_entry() {
   SNAP_FILE=/var/lib/snapd/desktop/applications/chromium_chromium.desktop
   LOCAL_FILE="$HOME"/.local/share/applications/chromium_chromium.desktop
+  if [ ! -d "$HOME"/.local/share/applications ]; then
+    mkdir -p "$HOME"/.local/share/applications
+  fi
   # if we exist just return
   if [ -f "$LOCAL_FILE" ]; then
     return

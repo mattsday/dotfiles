@@ -20,9 +20,14 @@ fi
 RELEASE="$(grep '^ID=' /etc/os-release | awk -F= '{print $2}' | sed 's/"//g')"
 if [ "$RELEASE" = neon ]; then
 	if [ -f ./os-bootstraps/ubuntu-desktop-bootstrap.sh ]; then
-		echo Detected Ubuntu Desktop
+		echo Detected KDE Neon Desktop
 		. ./os-bootstraps/ubuntu-desktop-bootstrap.sh
 	fi
+elif [ "$RELEASE" = ubuntu ]; then
+    if dpkg-query -W -f='${Status}' kwin-common 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
+        echo Detected Kubuntu
+        . ./os-bootstraps/ubuntu-desktop-bootstrap.sh
+    fi
 fi
 
 # Only run on Debian and derivatives
