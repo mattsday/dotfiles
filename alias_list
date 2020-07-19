@@ -70,8 +70,8 @@ alias @sudo,/usr/bin/snap snap='sudo snap'
 # Use less as a pager
 export @less PAGER=less
 
-# On OS X, the go version of bosh is called gosh, alias to it if it exists:
-alias @gosh bosh=!gosh
+# Debian/Apt
+alias @/usr/bin/apt,/usr/bin/dpkg,sudo apt='sudo apt'@apt-get='sudo apt-get'
 
 # Arch Linux
 alias @sudo,/usr/bin/pacman pacman='sudo pacman '

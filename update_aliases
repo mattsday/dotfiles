@@ -243,22 +243,6 @@ if command -v pbpaste >/dev/null 2>&1; then
 	aliases="$((aliases + 1))"
 fi
 
-# If apt exists, make apt info not use sudo for sh (but for csh and fish just do lazy defaults)
-if [ -x /usr/bin/apt ] && [ "$IS_ROOT" = 0 ]; then
-	# shellcheck disable=SC2016
-	{
-		echo 'apt() {'
-		echo 'case "$1" in'
-		echo 'install|update|upgrade|dist-upgrade|remove|autoremove|full-upgrade|edit-sources|purge) sudo /usr/bin/apt "$@" ;;'
-		echo '*) /usr/bin/apt "$@" ;;'
-		echo 'esac'
-		echo '}'
-	} >>"$SH_ALIAS_FILE"
-	echo 'alias apt '"'sudo apt'" >>"$FISH_ALIAS_FILE"
-	echo 'alias apt '"'sudo apt'" >>"$CSH_ALIAS_FILE"
-	aliases="$((aliases + 1))"
-fi
-
 if [ -n "$UPDATE_CALLBACKS" ]; then
 	write_export _UPDATE_CALLBACKS "$UPDATE_CALLBACKS"
 fi
