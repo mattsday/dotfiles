@@ -92,6 +92,7 @@ APT_PACKAGES+=(
 	unzip
 	"$tmux"
 	shellcheck
+	whois
 )
 
 INSTALL_PACKAGES=()
