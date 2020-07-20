@@ -101,7 +101,7 @@ configure_logitech_mouse() {
     # Back up current packages
     BACKUP_APT_PACKAGES=("${APT_PACKAGES[@]}")
     # Install build packages immediately
-    APT_PACKAGES=(cmake libevdev-dev libudev-dev libconfig++-dev solaar)
+    APT_PACKAGES=(cmake libevdev-dev libudev-dev libconfig++-dev solaar build-essential)
     install_apt_packages
     APT_PACKAGES=("${BACKUP_APT_PACKAGES[@]}")
     if [ ! -d /tmp/logiops ]; then
@@ -129,6 +129,12 @@ devices: ({
     // Make thumb button send ctrl-F8 (show desktop grid)
     { cid: 0xc3; action = { type: "Keypress"; keys: ["KEY_LEFTCTRL", "KEY_F8"]; }; }
   );
+},{
+  name: "Wireless Mouse MX Master";
+  buttons: (
+    // Make thumb button send ctrl-F8 (show desktop grid)
+    { cid: 0xc3; action = { type: "Keypress"; keys: ["KEY_LEFTCTRL", "KEY_F8"]; }; }
+  );
 });
 EOF
     sudo systemctl enable --now logid
@@ -152,7 +158,7 @@ EOF
 
   SSH_FILE="$HOME"/.config/plasma-workspace/env/ssh-agent-startup.sh
   if [ ! -f "$SSH_FILE" ]; then
-    mkdir -p "$HOME"/.config/plasma-workspace/env/ssh-agent-startup.sh || fail Cannot create ssh dir
+    mkdir -p "$HOME"/.config/plasma-workspace/env || fail Cannot create ssh dir
     info Setting up ssh agent autostart
     cat <<EOF | tee "$SSH_FILE" >/dev/null
 #!/bin/sh
