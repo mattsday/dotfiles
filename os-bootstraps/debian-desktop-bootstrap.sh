@@ -210,8 +210,11 @@ ferdi() {
   if [ -n "$UPDATE_FERDI" ]; then
     # TODO - needs a lot of TLC
     FERDI_URL=https://github.com/getferdi/ferdi/releases/download/v"$FERDI_VERSION"/ferdi_"$FERDI_VERSION"_amd64.deb
-    wget -O /tmp/ferdi-"$FERDI_VERSION".deb "$FERDI_URL" || return 1
-    sudo dpkg -i /tmp/ferdi-"$FERDI_VERSION".deb || return 1
+    if ! wget -O /tmp/ferdi-"$FERDI_VERSION".deb "$FERDI_URL"; then
+      FERDI_URL=https://github.com/getferdi/ferdi/releases/download/"$FERDI_VERSION"/ferdi_"$FERDI_VERSION"_amd64.deb
+      wget -O /tmp/ferdi-"$FERDI_VERSION".deb "$FERDI_URL" || fail Could not download Ferdi
+    fi
+    sudo dpkg -i /tmp/ferdi-"$FERDI_VERSION".deb || fail Could not install Ferdi
   fi
   if [ -f "$PWD/ferdi-shopping-list.sh" ]; then
     "$PWD/ferdi-shopping-list.sh"
