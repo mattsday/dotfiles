@@ -163,35 +163,52 @@ elif [ -f "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh
 	. /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc
 fi
 
-RPROMPT=""
+unset PROMPT
+unset RPROMPT
 
-if (( colours >= 8 )); then
-    unset PROMPT
-	# Custom prompt (coloured in yellow and cyan):
-	# If the user is 'matt' don't print it
-    case "$USER" in
-        matt|mattsday)
-            ;;
-        *)
-            PROMPT="%B%F{green}%n%f%b@"
-            ;;
-    esac
-    PROMPT+="%B%F{yellow}%2m%f%b:%B%F{cyan}%~%f%b%# "
-    # Append git info
-	RPROMPT+='%B%F{green}${vcs_info_msg_0_}%b%f'
-else
-    case "$USER" in
-        matt|mattsday)
-    		PROMPT="%2m:%~%# "
-            ;;
-        *)
-		    PROMPT="%n@%2m:%~%# "
-            ;;
-    esac
-    # Append git info
-    RPROMPT='${vcs_info_msg_0_}'
-fi
+_update_prompt() {
+	if (( colours >= 8 )); then
+		# Custom prompt (coloured in yellow and cyan):
+		# If the user is 'matt' don't print it
+		case "$USER" in
+			matt|mattsday)
+				;;
+			*)
+				OUT="%B%F{green}%n%f%b@"
+				;;
+		esac
+		# Only print hostname if accessed via ssh
+   		[[ -n "$SSH_TTY" ]] && OUT+='%B%F{yellow}%2m%f%b:'
+		# Print working directory
+		OUT+="%B%F{cyan}%~%f%b%# "
+	else
+		# If the user is 'matt' don't print it
+		case "$USER" in
+			matt|mattsday)
+				;;
+			*)
+				OUT="%n@"
+				;;
+		esac
+		# Only print hostname if accessed via ssh
+   		[[ -n "$SSH_TTY" ]] && OUT+='%2m:'
+		# Print working directory
+		OUT+="%~%# "
+	fi
+	print "$OUT"
+}
 
+_update_rprompt() {
+	if (( colours >= 8 )); then
+		OUT+='%B%F{green}'"${vcs_info_msg_0_}"'%b%f'
+	else
+		OUT+="${vcs_info_msg_0_}"
+	fi
+	print "$OUT"
+}
+
+PROMPT='$(_update_prompt)'
+RPROMPT='$(_update_rprompt)'
 
 # Update the terminal title and version control info
 case $TERM in

@@ -166,3 +166,5 @@ Documents/GnuCash/
 # Don't sync git or dotfiles
 .dotfiles/
 .git
+
+.xsession-errors
