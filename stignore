@@ -168,3 +168,15 @@ Documents/GnuCash/
 .git
 
 .xsession-errors
+.nv
+.config/spotify
+.config/pulse
+/.wine
+/.snap
+.config/terminus
+.config/systemd
+.zsh_history
+.history
+.viminfo
+.Xauthority
+/.gnupg
