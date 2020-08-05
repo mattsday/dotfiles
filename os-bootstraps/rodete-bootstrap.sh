@@ -89,7 +89,7 @@ install_sdk_man() {
     fi
     if ! command -v mvn >/dev/null 2>&1; then
       info Installing maven
-      sdk install maven >/dev/null  
+      sdk install maven >/dev/null
     fi
   fi
 }
@@ -117,6 +117,14 @@ bluetooth_setup() {
   load-module module-bluetooth-discover
 .endif
 EOF
+  fi
+}
+
+fix_ferdi_chat() {
+  CONFIG_FILE="$HOME"/.config/Ferdi/recipes/hangoutschat/index.js
+  if [ -f "$CONFIG_FILE" ]; then
+    info Fixing up Hangouts Chat Config
+    sed -i 's|https://chat.google.com|https://dynamite-preprod.sandbox.google.com|g' "$CONFIG_FILE"
   fi
 }
 
@@ -161,6 +169,7 @@ main() {
     docker_setup
     install_vs_code
     install_sdk_man
+    fix_ferdi_chat
   )
   get_apt_packages
 
