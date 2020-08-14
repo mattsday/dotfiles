@@ -22,7 +22,7 @@ _apt() {
 
 get_apt_packages() {
   APT_PACKAGES+=(snapd plasma-widgets-addons plasma-wallpapers-addons plasma-nm)
-  APT_PACKAGES+=(ffmpegthumbs ffmpegthumbnailer pulseaudio-module-bluetooth blueman kamoso)
+  APT_PACKAGES+=(ffmpegthumbs ffmpegthumbnailer blueman kamoso)
   APT_PACKAGES+=(kde-spectacle vlc kdegames ksshaskpass flatpak unrar wbritish)
 }
 
@@ -143,6 +143,17 @@ EOF
   fi
 }
 
+bluetooth_codecs() {
+  # Only do this on Ubuntu
+  RELEASE="$(grep '^ID=' /etc/os-release | awk -F= '{print $2}' | sed 's/"//g')"
+  if [ "$RELEASE" = neon ] || [ "$RELEASE" = ubuntu ]; then
+    sudo add-apt-repository -y ppa:berglh/pulseaudio-a2dp >/dev/null
+    APT_PACKAGES+=(pulseaudio-modules-bt libldac)
+  else
+    APT_PACKAGES+=(pulseaudio-module-bluetooth)
+  fi
+}
+
 ssh_configuration() {
   SSH_FILE="$HOME"/.config/autostart-scripts/ssh.sh
   if [ ! -f "$SSH_FILE" ]; then
@@ -240,6 +251,7 @@ main() {
     configure_fonts
     ssh_configuration
     #install_gnucash
+    bluetooth_codecs
   )
   get_apt_packages
   get_snap_packages
@@ -247,11 +259,11 @@ main() {
   # If we're not being sourced
   # shellcheck disable=SC2154
   if [ -z "$_debian_bootstrap_mattsday" ]; then
-    install_apt_packages
-    install_snap_packages
     for callback in "${CALLBACKS[@]}"; do
       "$callback"
     done
+    install_apt_packages
+    install_snap_packages
   fi
 }
 
