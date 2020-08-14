@@ -4,6 +4,10 @@ if [ -x /usr/bin/apt-get ]; then
     DEBIAN_FRONTEND="noninteractive" sudo apt-get "$@" -y install fonts-noto'*' >/dev/null
 fi
 
+if [ -L "$HOME"/.config/fontconfig ]; then
+    rm "$HOME"/.config/fontconfig
+fi
+
 if [ ! -d "$HOME"/.config/fontconfig ]; then
     mkdir -p "$HOME"/.config/fontconfig
 fi
