@@ -1,39 +1,14 @@
-#!/bin/bash
+#!/bin/sh
 # List of dependent files
 
-# horrible but I want it over multiple lines and usable by standard shells...
-dotfiles="
-alias_list
-update_aliases
-update_proxy
-zshrc
-cshrc
-tcsh_settings
-vimrc
-bashrc
-kshrc
-muttrc
-screenrc
-profile
-tmux.conf
-shell_common
-bash_profile
-inputrc
-stignore
-"
+#cd dotfiles/home || exit 1
 
-extra="
-$HOME/.config/git/ignore
-$HOME/.config/nvim/init.vim
-$HOME/.config/fish/config.fish
-"
-
-VIM_PATHOGEN_PLUGINS="
-https://github.com/udalov/kotlin-vim
-"
-#https://github.com/altercation/vim-colors-solarized
+for i in dotfiles/home/*; do
+	dotfiles="$i $dotfiles"
+done
 
 # Firefox userChrome.css file
+FF_BASE_DIR="$PWD"/dotfiles/firefox
 FF_CHROME_FILE="userChrome.css"
 first="$(echo "$USER" | cut -c1 | tr '[:lower:]' '[:upper:]')"
 second="$(echo "$USER" | cut -c2-)"
@@ -57,7 +32,7 @@ elif [ -d "/mnt/c/Users/$WINUSER/AppData/Roaming/Mozilla/Firefox/" ]; then
 fi
 FF_PROFILE_INI="$FF_PROFILE_PATH/profiles.ini"
 
-LOCAL_CHROME="$PWD/$FF_CHROME_FILE"
+LOCAL_CHROME="$FF_BASE_DIR/$FF_CHROME_FILE"
 
 if [ -f "$FF_PROFILE_INI" ]; then
 	# shellcheck disable=SC2143
@@ -79,3 +54,11 @@ if [ -d "$HOME/Library/Application Support/Code/User" ]; then
 elif [ -d "$HOME/.config/Code/User" ]; then
 	VS_DIR="$HOME/.config/Code/User"
 fi
+
+extra="
+$HOME/.config/git/ignore
+$HOME/.config/nvim/init.vim
+$HOME/.config/fish/config.fish
+$HOME/.config/terminus/config.yaml
+$VS_DIR/settings.json
+"

@@ -4,11 +4,12 @@
 echo Removing dotfiles
 
 # Load dependencies
-. ./dependencies
+. ./dotfiles/dependencies
 
 # Figure out what we've got linked
 # shellcheck disable=SC2154
-for dotfile in ${dotfiles}; do
+for i in ${dotfiles}; do
+	dotfile="$(basename "$i")"
 	FILE="$HOME/.${dotfile}"
 	if [ -L "${FILE}" ]; then
 		echo Removing "${FILE}"

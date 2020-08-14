@@ -160,23 +160,12 @@ Documents/GnuCash/
 .config/syncthing/
 
 # Some apps store cache data in .config, don't sync it
-.config/Ferdi
-.config/Code
+.config/Ferdi/Partitions
+.config/Ferdi/GPUCache
+.config/Ferdi/Cache
+.config/Code/User/workspaceStorage
+.config/Code/CachedData
 
 # Don't sync git or dotfiles
 .dotfiles/
 .git
-
-.xsession-errors
-.nv
-.config/spotify
-.config/pulse
-/.wine
-/.snap
-.config/terminus
-.config/systemd
-.zsh_history
-.history
-.viminfo
-.Xauthority
-/.gnupg

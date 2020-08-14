@@ -3,13 +3,14 @@
 # shellcheck disable=SC1091
 
 # Load dependencies
-. ./dependencies
+. ./dotfiles/dependencies
 
 mkdir backup >/dev/null 2>&1
 
 # shellcheck disable=SC2154
-for dotfile in $dotfiles; do
+for i in $dotfiles; do
 	verb=Updating
+	dotfile="$(basename "$i")"
 	if [ -f "$HOME/.$dotfile" ] && [ ! -L "$HOME/.$dotfile" ]; then
 		echo Backing up local ."$dotfile" to "${PWD}/backup/local-$dotfile"
 		mv -f "$HOME/.$dotfile" "${PWD}/backup/local-$dotfile"
@@ -18,7 +19,7 @@ for dotfile in $dotfiles; do
 		verb="Creating"
 	fi
 	echo "$verb $HOME/.$dotfile"
-	ln -fs "$PWD/$dotfile" "$HOME/.$dotfile"
+	ln -fs "$PWD/$i" "$HOME/.$dotfile"
 done
 
 verb=Updating
@@ -31,7 +32,7 @@ if [ -f "$HOME/.config/git/ignore" ] && [ ! -L "$HOME/.config/git/ignore" ]; the
 	mv -f "$HOME/.config/git/ignore" "${PWD}/backup/local-ignore"
 fi
 echo "$verb $HOME/.config/git/ignore"
-ln -fs "$PWD/gitignore" "$HOME/.config/git/ignore"
+ln -fs "$PWD/dotfiles/git/gitignore" "$HOME/.config/git/ignore"
 
 # Add nvim config file (same as vimrc):
 verb=Updating
@@ -46,7 +47,7 @@ elif [ ! -f "$HOME/.config/nvim/init.vim" ]; then
 	verb=Creating
 fi
 echo "$verb $HOME/.config/nvim/init.vim"
-ln -fs "$PWD/vimrc" "$HOME/.config/nvim/init.vim"
+ln -fs "$PWD/dotfiles/home/vimrc" "$HOME/.config/nvim/init.vim"
 
 # Add terminus (shell app) config file:
 verb=Updating
@@ -61,7 +62,7 @@ elif [ ! -f "$HOME/.config/terminus/config.yaml" ]; then
 	verb=Creating
 fi
 echo "$verb $HOME/.config/terminus/config.yaml"
-ln -fs "$PWD/terminus-config.yaml" "$HOME/.config/terminus/config.yaml"
+ln -fs "$PWD/dotfiles/terminus/terminus-config.yaml" "$HOME/.config/terminus/config.yaml"
 
 # Add fish config file
 verb=Updating
@@ -75,7 +76,7 @@ elif [ -f "$HOME/.config/fish/config.fish" ] && [ ! -L "$HOME/.config/fish/confi
 elif [ ! -f "$HOME/.config/fish/config.fish" ]; then
 	verb=Creating
 fi
-ln -fs "$PWD/config.fish" "$HOME/.config/fish/config.fish"
+ln -fs "$PWD/dotfiles/fish/config.fish" "$HOME/.config/fish/config.fish"
 echo "$verb $HOME/.config/fish/config.fish"
 
 verb=Updating
@@ -108,7 +109,7 @@ if [ "$VS_DIR" ]; then
 		verb=Creating
 	fi
 	echo "$verb" "$VS_SETTINGS"
-	ln -fs "$PWD/settings.json" "$VS_SETTINGS"
+	ln -fs "$PWD/dotfiles/vscode/settings.json" "$VS_SETTINGS"
 fi
 
 update_plugin() {
@@ -116,5 +117,5 @@ update_plugin() {
 
 }
 
-sh ./update_aliases force
+sh "$HOME"/.update_aliases force
 echo Done.
