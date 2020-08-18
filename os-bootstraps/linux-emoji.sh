@@ -2,6 +2,8 @@
 echo Setting up linux emoji
 if [ -x /usr/bin/apt-get ]; then
     DEBIAN_FRONTEND="noninteractive" sudo apt-get "$@" -y install fonts-noto'*' >/dev/null
+else
+    echo Note - you should install fonts-noto-'*' after this
 fi
 
 if [ -L "$HOME"/.config/fontconfig ]; then
@@ -17,10 +19,10 @@ if [ -f "$HOME"/.config/fontconfig/fonts.conf ] && [ ! -L "$HOME"/.config/fontco
     cp "$HOME"/.config/fontconfig/fonts.conf "$PWD"/backup/local-fonts.conf
 fi
 
-SOURCE_FILE="$PWD"/dotfiles/fonts/fonts.conf
+SOURCE_FILE="$PWD"/dotfiles/special/fontconfig/fonts.conf
 if [ ! -f "$SOURCE_FILE" ]; then
     BASE="$(dirname "$PWD" | xargs)"
-    SOURCE_FILE="$BASE"/dotfiles/fonts/fonts.conf
+    SOURCE_FILE="$BASE"/dotfiles/special/fontconfig/fonts.conf
 fi
 
 ln -fs "$SOURCE_FILE" "$HOME"/.config/fontconfig/fonts.conf >/dev/null

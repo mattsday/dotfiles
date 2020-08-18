@@ -22,17 +22,25 @@ for i in $dotfiles; do
 	ln -fs "$PWD/$i" "$HOME/.$dotfile"
 done
 
-verb=Updating
-if [ ! -d "$HOME/.config/git" ]; then
-	mkdir -p "$HOME/.config/git"
-	verb=Creating
-fi
-if [ -f "$HOME/.config/git/ignore" ] && [ ! -L "$HOME/.config/git/ignore" ]; then
-	echo "Backing up local gitignore config to ${PWD}/backup/local-ignore"
-	mv -f "$HOME/.config/git/ignore" "${PWD}/backup/local-ignore"
-fi
-echo "$verb $HOME/.config/git/ignore"
-ln -fs "$PWD/dotfiles/git/gitignore" "$HOME/.config/git/ignore"
+# shellcheck disable=SC2154
+for i in $configdirs; do
+	verb=Updating
+	destination_dir="$HOME"/.config/"$(basename "$i")"
+	if [ -d "$i" ]; then
+		for j in "$i"/*; do
+			destination_file="$destination_dir"/"$(basename "$j")"
+			if [ -f "$destination_file" ] && [ ! -L "$destination_file" ]; then
+				echo Backing up local "$destination_file" to "${PWD}/backup/local-$(basename "$j")"
+				mv -f "$destination_file" "${PWD}/backup/local-$(basename "$j")"
+				verb="Creating"
+			elif [ ! -f "$destination_file" ]; then
+				verb="Creating"
+			fi
+			echo "$verb $destination_file"
+			ln -fs "$PWD/$j" "$destination_file"
+		done
+	fi
+done
 
 # Add nvim config file (same as vimrc):
 verb=Updating
@@ -48,36 +56,6 @@ elif [ ! -f "$HOME/.config/nvim/init.vim" ]; then
 fi
 echo "$verb $HOME/.config/nvim/init.vim"
 ln -fs "$PWD/dotfiles/home/vimrc" "$HOME/.config/nvim/init.vim"
-
-# Add terminus (shell app) config file:
-verb=Updating
-if [ ! -d "$HOME/.config/terminus" ]; then
-	mkdir -p "$HOME/.config/terminus"
-	verb=Creating
-elif [ -f "$HOME/.config/terminus/config.yaml" ] && [ ! -L "$HOME/.config/terminus/config.yaml" ]; then
-	echo "Backing local terminus config to ${PWD}/backup/local-terminus-config.yaml"
-	mv -f "$HOME/.config/terminus/config.yaml" "${PWD}/backup/local-terminus-config.yaml"
-	verb=Creating
-elif [ ! -f "$HOME/.config/terminus/config.yaml" ]; then
-	verb=Creating
-fi
-echo "$verb $HOME/.config/terminus/config.yaml"
-ln -fs "$PWD/dotfiles/terminus/terminus-config.yaml" "$HOME/.config/terminus/config.yaml"
-
-# Add fish config file
-verb=Updating
-if [ ! -d "$HOME/.config/fish" ]; then
-	mkdir -p "$HOME/.config/fish"
-	verb=Creating
-elif [ -f "$HOME/.config/fish/config.fish" ] && [ ! -L "$HOME/.config/fish/config.fish" ]; then
-	echo "Backing up local fish config to ${PWD}/backup/local-config.fish"
-	mv -f "$HOME/.config/fish/config.fish" "${PWD}/backup/local-config.fish"
-	verb=Creating
-elif [ ! -f "$HOME/.config/fish/config.fish" ]; then
-	verb=Creating
-fi
-ln -fs "$PWD/dotfiles/fish/config.fish" "$HOME/.config/fish/config.fish"
-echo "$verb $HOME/.config/fish/config.fish"
 
 verb=Updating
 if [ -f "$FF_PROFILE_INI" ] && [ -d "$FF_PROFILE_PATH" ]; then
@@ -109,13 +87,8 @@ if [ "$VS_DIR" ]; then
 		verb=Creating
 	fi
 	echo "$verb" "$VS_SETTINGS"
-	ln -fs "$PWD/dotfiles/vscode/settings.json" "$VS_SETTINGS"
+	ln -fs "$PWD/dotfiles/special/vscode/settings.json" "$VS_SETTINGS"
 fi
-
-update_plugin() {
-	echo "$1"
-
-}
 
 sh "$HOME"/.update_aliases force
 echo Done.
