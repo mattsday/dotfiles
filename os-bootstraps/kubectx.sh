@@ -3,8 +3,11 @@
 KUBECTX_VERSION=v0.9.1
 KUBECTX_URL=(https://github.com/ahmetb/kubectx/releases/download/"$KUBECTX_VERSION"/kubectx https://github.com/ahmetb/kubectx/releases/download/"$KUBECTX_VERSION"/kubens)
 KUBECTX_ZSH_COMPLETION=(https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/kubectx.zsh https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/kubens.zsh)
-KUBECTX_BASH_COMPLETION=(https://github.com/ahmetb/kubectx/blob/master/completion/kubectx.bash https://github.com/ahmetb/kubectx/blob/master/completion/kubens.bash)
+KUBECTX_BASH_COMPLETION=(https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/kubectx.bash https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/kubens.bash)
+KUBECTX_FISH_COMPLETION=(https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/kubectx.fish https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/kubens.fish)
 ZSH_COMPLETION_DIR=/usr/share/zsh/vendor-completions
+BASH_COMPLETION_DIR="$(pkg-config --variable=completionsdir bash-completion)"
+FISH_COMPLETION_DIR="$HOME/.config/fish/completions"
 
 fail() {
     echo "$@"
@@ -21,7 +24,34 @@ if [ ! -d "$ZSH_COMPLETION_DIR" ]; then
     sudo mkdir -p "$ZSH_COMPLETION_DIR" || fail Cannot create "$ZSH_COMPLETION_DIR"
 fi
 
-for completion in "${KUBECTX_ZSH_COMPLETION[@]}"; do
-    filename="$(basename "$completion" | xargs)"
-    curl -sL --fail "$url" | sudo tee "$ZSH_COMPLETION_DIR"/_"$filename" >/dev/null || fail Download failed
+if [ ! -d "$BASH_COMPLETION_DIR" ]; then
+    sudo mkdir -p "$BASH_COMPLETION_DIR" || fail Cannot create "$BASH_COMPLETION_DIR"
+fi
+
+if [ ! -d "$FISH_COMPLETION_DIR" ]; then
+    mkdir -p "$FISH_COMPLETION_DIR" || fail Cannot create "$FISH_COMPLETION_DIR"
+fi
+
+for url in "${KUBECTX_ZSH_COMPLETION[@]}"; do
+    filename="$ZSH_COMPLETION_DIR"/_"$(basename "$url" | xargs)"
+    if [ -f "$filename" ]; then
+        sudo rm "$filename" || fail Cannot remove "$filename"
+    fi
+    curl -sL --fail "$url" | sudo tee "$filename" >/dev/null || fail Download failed for "$url"
+done
+
+for url in "${KUBECTX_BASH_COMPLETION[@]}"; do
+    filename="$BASH_COMPLETION_DIR"/"$(basename "$url" | xargs | awk -F. '{print $1}')"
+    if [ -f "$filename" ]; then
+        sudo rm "$filename" || fail Cannot remove "$filename"
+    fi
+    curl -sL --fail "$url" | sudo tee "$filename" >/dev/null || fail Download failed for "$url"
+done
+
+for url in "${KUBECTX_FISH_COMPLETION[@]}"; do
+    filename="$FISH_COMPLETION_DIR"/"$(basename "$url" | xargs)"
+    if [ -f "$filename" ]; then
+        rm "$filename" || fail Cannot remove "$filename"
+    fi
+    curl -sL --fail "$url" | tee "$filename" >/dev/null || fail Download failed for "$url"
 done

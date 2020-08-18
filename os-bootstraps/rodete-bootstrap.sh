@@ -59,6 +59,19 @@ passwordless_sudo() {
   fi
 }
 
+install_kubectx() {
+  if ! command -v kubectx >/dev/null 2>&1 || ! command -v kubens >/dev/null 2>&1; then
+        echo Installing Kubectx
+    if [ -f ./os-bootstraps/kubectx.sh ]; then
+      ./os-bootstraps/kubectx.sh
+    elif [ -f "./kubectx.sh" ]; then
+      ./kubectx.sh
+    else
+      echo Could not find kubectx.sh
+    fi
+  fi
+}
+
 install_vs_code() {
   if ! dpkg-query -W -f='${Status}' code 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
     sudo glinux-add-repo -b typescript stable >/dev/null || fail Failed to add Typescript repo
@@ -170,6 +183,7 @@ main() {
     install_vs_code
     install_sdk_man
     fix_ferdi_chat
+    install_kubectx
   )
   get_apt_packages
 
