@@ -27,6 +27,9 @@ for i in $configdirs; do
 	verb=Updating
 	destination_dir="$HOME"/.config/"$(basename "$i")"
 	if [ -d "$i" ]; then
+		if [ ! -d "$destination_dir" ]; then
+			mkdir "$destination_dir" || echo Warning failed to create dir "$destination_dir"
+		fi
 		for j in "$i"/*; do
 			destination_file="$destination_dir"/"$(basename "$j")"
 			if [ -f "$destination_file" ] && [ ! -L "$destination_file" ]; then
