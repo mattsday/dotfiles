@@ -12,8 +12,8 @@ for i in $dotfiles; do
 	verb=Updating
 	dotfile="$(basename "$i")"
 	if [ -f "$HOME/.$dotfile" ] && [ ! -L "$HOME/.$dotfile" ]; then
-		echo Backing up local ."$dotfile" to "${PWD}/backup/local-$dotfile"
-		mv -f "$HOME/.$dotfile" "${PWD}/backup/local-$dotfile"
+		echo Backing up local ."$dotfile" to "$PWD/backup/local-$dotfile"
+		mv -f "$HOME/.$dotfile" "$PWD/backup/local-$dotfile"
 		verb="Creating"
 	elif [ ! -f "$HOME/.$dotfile" ]; then
 		verb="Creating"
@@ -33,8 +33,8 @@ for i in $configdirs; do
 		for j in "$i"/*; do
 			destination_file="$destination_dir"/"$(basename "$j")"
 			if [ -f "$destination_file" ] && [ ! -L "$destination_file" ]; then
-				echo Backing up local "$destination_file" to "${PWD}/backup/local-$(basename "$j")"
-				mv -f "$destination_file" "${PWD}/backup/local-$(basename "$j")"
+				echo Backing up local "$destination_file" to "$PWD/backup/local-$(basename "$j")"
+				mv -f "$destination_file" "$PWD/backup/local-$(basename "$j")"
 				verb="Creating"
 			elif [ ! -f "$destination_file" ]; then
 				verb="Creating"
@@ -51,8 +51,8 @@ if [ ! -d "$HOME/.config/nvim" ]; then
 	mkdir -p "$HOME/.config/nvim"
 	verb=Creating
 elif [ -f "$HOME/.config/nvim/init.vim" ] && [ ! -L "$HOME/.config/nvim/init.vim" ]; then
-	echo "Backing local nvim config to ${PWD}/backup/local-init.vim"
-	mv -f "$HOME/.config/nvim/init.vim" "${PWD}/backup/local-init.vim"
+	echo "Backing local nvim config to $PWD/backup/local-init.vim"
+	mv -f "$HOME/.config/nvim/init.vim" "$PWD/backup/local-init.vim"
 	verb=Creating
 elif [ ! -f "$HOME/.config/nvim/init.vim" ]; then
 	verb=Creating
@@ -67,8 +67,8 @@ if [ -f "$FF_PROFILE_INI" ] && [ -d "$FF_PROFILE_PATH" ]; then
 		verb=Creating
 	fi
 	if [ -f "$USER_CHROME" ] && [ ! -L "$USER_CHROME" ]; then
-		echo Backing up local "$USER_CHROME" to "${PWD}/backup/userChrome.css"
-		mv "$USER_CHROME" "${PWD}/backup/local-userChrome.css"
+		echo Backing up local "$USER_CHROME" to "$PWD/backup/userChrome.css"
+		mv "$USER_CHROME" "$PWD/backup/local-userChrome.css"
 		verb=Creating
 	fi
 	if [ ! -f "$USER_CHROME" ]; then
@@ -83,8 +83,8 @@ verb=Updating
 if [ "$VS_DIR" ]; then
 	VS_SETTINGS="$VS_DIR/settings.json"
 	if [ -f "$VS_SETTINGS" ] && [ ! -L "$VS_SETTINGS" ]; then
-		echo Backing up local "$VS_SETTINGS" to "${PWD}"/backup/local-settings.json
-		mv "$VS_SETTINGS" "${PWD}/backup/local-settings.json"
+		echo Backing up local "$VS_SETTINGS" to "$PWD"/backup/local-settings.json
+		mv "$VS_SETTINGS" "$PWD/backup/local-settings.json"
 		verb=Creating
 	elif [ ! -f "$VS_SETTINGS" ]; then
 		verb=Creating
