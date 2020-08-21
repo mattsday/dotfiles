@@ -31,7 +31,7 @@ _apt() {
 }
 
 get_apt_packages() {
-    APT_PACKAGES+=(openjdk-8-jdk openjdk-11-jdk)
+    APT_PACKAGES+=(openjdk-8-jdk openjdk-11-jdk python-is-python3)
 }
 
 get_snap_packages() {
