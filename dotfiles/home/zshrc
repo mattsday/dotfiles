@@ -191,7 +191,7 @@ _update_prompt() {
 				;;
 		esac
 		# Only print hostname if accessed via ssh
-   		[[ -n "$SSH_TTY" ]] && OUT+='%2m:'
+   		[[ -n "$SSH_TTY" ]] && OUT+='%m:'
 		# Print working directory
 		OUT+="%~%# "
 	fi
