@@ -28,7 +28,7 @@ for i in $configdirs; do
 	destination_dir="$HOME"/.config/"$(basename "$i")"
 	if [ -d "$i" ]; then
 		if [ ! -d "$destination_dir" ]; then
-			mkdir "$destination_dir" || echo Warning failed to create dir "$destination_dir"
+			mkdir -p "$destination_dir" || echo Warning failed to create dir "$destination_dir"
 		fi
 		for j in "$i"/*; do
 			destination_file="$destination_dir"/"$(basename "$j")"

@@ -35,7 +35,7 @@ if [ -f "/etc/os-release" ]; then
 			echo Detected Red Hat flavoured
 			./bootstraps./centos-bootstrap.sh
 		fi
-	elif [ "$RELEASE" = suse ] || [ "$RELEASE" = opensuse ]; then
+	elif [ "$RELEASE" = suse ] || [ "$RELEASE" = opensuse ] || [ "$RELEASE" = "opensuse-tumbleweed"]; then
 		if [ -f ./os-bootstraps/suse-bootstrap.sh ]; then
 			echo Detected SuSE flavoured
 			./os-bootstraps/suse-bootstrap.sh
