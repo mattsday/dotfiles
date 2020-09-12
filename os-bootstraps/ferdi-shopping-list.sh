@@ -36,6 +36,7 @@ main() {
         git clone "${GIT_LOCATION}" "${PLUGIN_DIR}" || error "Could not clone git project"
     else
         cd "${BASE_DIR}/${PLUGIN_DIR}" || error "Could not change directory to ${BASE_DIR}/${PLUGIN_DIR}"
+        git config pull.rebase false
         git pull || error "Could not run a git pull"
     fi
 

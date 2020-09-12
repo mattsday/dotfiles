@@ -91,7 +91,7 @@ update() {
 		pkg update && pkg upgrade
 	# SuSE
 	elif [ -x /usr/bin/zypper ]; then
-		zypper update
+		zypper dup
 	fi
 	# If there are any callbacks process them
 	if [ -n "${_UPDATE_CALLBACKS}" ]; then

@@ -99,4 +99,4 @@ alias @/usr/sbin/service service='sudo service'
 export @/usr/bin/ksshaskpass GIT_ASKPASS=/usr/bin/ksshaskpass
 
 # Update flatpak and sdkman if available
-update @/usr/bin/flatpak flatpak -y update
+update @/usr/bin/flatpak sudo flatpak -y update

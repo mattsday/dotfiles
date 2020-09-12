@@ -48,7 +48,7 @@ function update
         pkg update && pkg upgrade
         # SuSE
     else if test -x /usr/bin/zypper
-        zypper update
+        zypper dup
     end
     # If there are any callbacks process them
     if test -n "$_UPDATE_CALLBACKS"

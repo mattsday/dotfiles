@@ -159,7 +159,7 @@ ssh_configuration() {
   if [ ! -f "$SSH_FILE" ]; then
     mkdir -p "$HOME"/.config/autostart-scripts/ || fail Cannot create ssh dir
     info Setting up ssh with ksshaskpass
-    cat <<EOF | tee "$SSH_FILE" >/dev/null
+    cat <<'EOF' | tee "$SSH_FILE" >/dev/null
 #!/bin/bash
 sleep 5
 SSH_ASKPASS=/usr/bin/ksshaskpass ssh-add "$HOME/.ssh/id_rsa" </dev/null
@@ -171,7 +171,7 @@ EOF
   if [ ! -f "$SSH_FILE" ]; then
     mkdir -p "$HOME"/.config/plasma-workspace/env || fail Cannot create ssh dir
     info Setting up ssh agent autostart
-    cat <<EOF | tee "$SSH_FILE" >/dev/null
+    cat <<'EOF' | tee "$SSH_FILE" >/dev/null
 #!/bin/sh
 [ -n "$SSH_AGENT_PID" ] || eval "$(ssh-agent -s)"
 export SSH_ASKPASS=/usr/bin/ksshaskpass

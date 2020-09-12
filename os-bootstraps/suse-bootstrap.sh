@@ -1,4 +1,5 @@
 #!/bin/bash
+#shellcheck disable=SC1091
 
 # Only run on SuSE and derivatives
 if [[ -f /etc/os-release ]]; then
@@ -20,14 +21,12 @@ else
 	exit
 fi
 
-package_mgr="zypper"
-
 # Check if sudo is installed
 if [[ ! -x /usr/bin/sudo ]]; then
 	if command -v id >/dev/null 2>&1; then
 		if [ "$(id -u)" = 0 ]; then
 			echo Installing sudo
-			"$package_mgr" --non-interactive install sudo >/dev/null
+			zypper --non-interactive install sudo >/dev/null
 		else
 			echo "User is not root and sudo isn't installed. Install sudo first"
 			exit
@@ -35,30 +34,57 @@ if [[ ! -x /usr/bin/sudo ]]; then
 	fi
 fi
 
-echo Updating system
-sudo "$package_mgr" update -y >/dev/null
+# Check for mixins
+export _suse_bootstrap_mattsday=1
+# Are we running a desktop?
+if rpm -q plasma5-desktop >/dev/null 2>&1 || rpm -q plasma6-desktop >/dev/null 2>&1; then
+	if [ -f ./os-bootstraps/suse-desktop-bootstrap.sh ]; then
+		echo Detected Desktop
+		. ./os-bootstraps/suse-desktop-bootstrap.sh
+	fi
+fi
 
-# Get list of installed apps
-installed="$(zypper packages -i | tail -n +5 | awk -F\| '{print $3}' | xargs)"
+echo Refreshing package list
+sudo zypper -n refresh >/dev/null
 
-list="
-zsh
-vim-data
-vim
-findutils
-coreutils
-git
-tcsh
-wget
-xz
-zip
-tmux
-hostname
-"
-for utility in $list; do
-	exists="$(echo "$installed" | tr " " "\\n" | grep -wx "$utility")"
-	if [[ -z "$exists" ]]; then
-		echo Installing "$utility"
-		sudo "$package_mgr" --non-interactive install "$utility" >/dev/null
+RPM_PACKAGES+=(
+	zsh
+	rsync
+	curl
+	htop
+	jq
+	vim-data
+	vim
+	findutils
+	coreutils
+	git
+	tcsh
+	wget
+	xz
+	zip
+	tmux
+	hostname
+	ShellCheck
+)
+
+INSTALL_PACKAGES=()
+for package in "${RPM_PACKAGES[@]}"; do
+	if ! rpm -q "$package" >/dev/null 2>&1; then
+		INSTALL_PACKAGES+=("$package")
 	fi
 done
+if [ -n "${INSTALL_PACKAGES[*]}" ]; then
+	info Installing packages "${INSTALL_PACKAGES[@]}"
+	sudo zypper -n install "${INSTALL_PACKAGES[@]}" >/dev/null || fail "Failed installing packages"
+fi
+
+if [ -n "$CALLBACKS" ]; then
+	echo Running platform specific callbacks
+	for callback in "${CALLBACKS[@]}"; do
+		"$callback"
+	done
+fi
+
+if [[ -x "$HOME/.update_aliases" ]]; then
+	"$HOME/.update_aliases" force
+fi

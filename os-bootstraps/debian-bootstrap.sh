@@ -24,10 +24,10 @@ if [ "$RELEASE" = neon ]; then
 		. ./os-bootstraps/ubuntu-desktop-bootstrap.sh
 	fi
 elif [ "$RELEASE" = ubuntu ]; then
-    if dpkg-query -W -f='${Status}' kwin-common 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
-        echo Detected Kubuntu
-        . ./os-bootstraps/ubuntu-desktop-bootstrap.sh
-    fi
+	if dpkg-query -W -f='${Status}' kwin-common 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
+		echo Detected Kubuntu
+		. ./os-bootstraps/ubuntu-desktop-bootstrap.sh
+	fi
 fi
 
 # Only run on Debian and derivatives
@@ -122,13 +122,13 @@ if command -v snap >/dev/null 2>&1; then
 	done
 fi
 
-if [[ -x "$HOME/.update_aliases" ]]; then
-	"$HOME/.update_aliases" force
-fi
-
 if [ -n "$CALLBACKS" ]; then
 	echo Running platform specific callbacks
 	for callback in "${CALLBACKS[@]}"; do
 		"$callback"
 	done
+fi
+
+if [[ -x "$HOME/.update_aliases" ]]; then
+	"$HOME/.update_aliases" force
 fi
