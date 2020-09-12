@@ -109,6 +109,15 @@ ferdi() {
     fi
 }
 
+codecs() {
+    if ! rpm -q vlc-codecs >/dev/null 2>&1; then
+        info Installing Codecs
+        sudo zypper -n ar --priority 90 http://ftp.gwdg.de/pub/linux/packman/suse/openSUSE_Tumbleweed/ packman >/dev/null
+        sudo zypper -n --gpg-auto-import-keys refresh >/dev/null
+        sudo zypper -n install --allow-vendor-change ffmpeg gstreamer-plugins-bad gstreamer-plugins-libav gstreamer-plugins-ugly vlc-codecs >/dev/null
+    fi
+}
+
 vs_code() {
     if ! rpm -q code >/dev/null 2>&1; then
         info Installing VS Code
@@ -148,6 +157,7 @@ main() {
     CALLBACKS+=(
         passwordless_sudo
         install_chrome
+        codecs
         vs_code
         configure_fonts
         ssh_configuration
