@@ -16,7 +16,7 @@ info() {
 }
 
 get_rpm_packages() {
-    RPM_PACKAGES+=(chromium pulseaudio-module-bluetooth solaar youtube-dl ckb-next)
+    RPM_PACKAGES+=(pulseaudio-module-bluetooth solaar youtube-dl ckb-next)
 }
 
 install_rpm_packages() {
@@ -34,7 +34,7 @@ install_rpm_packages() {
 }
 
 get_flatpak_packages() {
-    FLATPAK_PACKAGES+=(com.getferdi.Ferdi com.spotify.Client)
+    FLATPAK_PACKAGES+=(com.spotify.Client)
 }
 
 install_flatpak_packages() {
@@ -52,6 +52,20 @@ install_flatpak_packages() {
     fi
 }
 
+install_chrome() {
+    if ! rpm -q google-chrome-stable >/dev/null 2>&1; then
+        info Installing Google Chrome
+        sudo zypper ar http://dl.google.com/linux/chrome/rpm/stable/x86_64 Google-Chrome >/dev/null
+        sudo rpm --import https://dl.google.com/linux/linux_signing_key.pub >/dev/null
+        BACKUP_RPM_PACKAGES=("${RPM_PACKAGES[@]}")
+        # Install build packages immediately
+        RPM_PACKAGES=(google-chrome-stable)
+        install_rpm_packages
+        RPM_PACKAGES=("${BACKUP_RPM_PACKAGES[@]}")
+    fi
+
+}
+
 configure_fonts() {
     if [ -f jetbrains-mono-font.sh ]; then
         ./jetbrains-mono-font.sh
@@ -67,6 +81,27 @@ passwordless_sudo() {
 }
 
 ferdi() {
+    FERDI_VERSION=5.5.0
+    if ! rpm -q ferdi >/dev/null 2>&1; then
+        info Installing Ferdi
+        UPDATE_FERDI=true
+    else
+        CURRENT_FERDI_VERSION="$(rpm -q ferdi | sed 's/ferdi-//;s/\.x86_64//' | awk -F- '{print $1}' | xargs)"
+        if [ "$CURRENT_FERDI_VERSION" != "$FERDI_VERSION" ]; then
+            info "Updating Ferdi to $FERDI_VERSION (from $CURRENT_FERDI_VERSION)"
+            UPDATE_FERDI=true
+        fi
+    fi
+    if [ -n "$UPDATE_FERDI" ]; then
+        # TODO - needs a lot of TLC
+        FERDI_FILE=/tmp/ferdi-"$FERDI_VERSION".rpm
+        FERDI_URL=https://github.com/getferdi/ferdi/releases/download/v"$FERDI_VERSION"/ferdi-"$FERDI_VERSION".x86_64.rpm
+        if ! wget -O "$FERDI_FILE" "$FERDI_URL"; then
+            FERDI_URL=https://github.com/getferdi/ferdi/releases/download/"$FERDI_VERSION"/ferdi-"$FERDI_VERSION".x86_64.rpm
+            wget -O "$FERDI_FILE" "$FERDI_URL" || fail Could not download Ferdi
+        fi
+        sudo rpm -i --nodeps "$FERDI_FILE" || fail Could not install Ferdi
+    fi
     if [ -f "$PWD/ferdi-shopping-list.sh" ]; then
         "$PWD/ferdi-shopping-list.sh"
     elif [ -f "$PWD/os-bootstraps/ferdi-shopping-list.sh" ]; then
@@ -112,10 +147,10 @@ EOF
 main() {
     CALLBACKS+=(
         passwordless_sudo
+        install_chrome
         vs_code
         configure_fonts
         ssh_configuration
-        install_flatpak_packages
         ferdi
     )
     get_rpm_packages

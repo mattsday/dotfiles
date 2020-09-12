@@ -78,13 +78,28 @@ if [ -n "${INSTALL_PACKAGES[*]}" ]; then
 	sudo zypper -n install "${INSTALL_PACKAGES[@]}" >/dev/null || fail "Failed installing packages"
 fi
 
+if command -v flatpak >/dev/null 2>&1; then
+    # Add Flatpak repo
+    flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo >/dev/null
+    INSTALL_PACKAGES=()
+    for package in "${FLATPAK_PACKAGES[@]}"; do
+        if ! flatpak info "$package" >/dev/null 2>&1; then
+            INSTALL_PACKAGES+=("$package")
+        fi
+    done
+    if [ -n "${INSTALL_PACKAGES[*]}" ]; then
+        info Installing packages "${INSTALL_PACKAGES[@]}"
+        sudo flatpak -y install "${INSTALL_PACKAGES[@]}" >/dev/null || fail "Failed installing packages"
+    fi
+fi
+
+if [[ -x "$HOME/.update_aliases" ]]; then
+	"$HOME/.update_aliases" force
+fi
+
 if [ -n "$CALLBACKS" ]; then
 	echo Running platform specific callbacks
 	for callback in "${CALLBACKS[@]}"; do
 		"$callback"
 	done
-fi
-
-if [[ -x "$HOME/.update_aliases" ]]; then
-	"$HOME/.update_aliases" force
 fi
