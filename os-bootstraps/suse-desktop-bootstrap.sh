@@ -124,7 +124,11 @@ vs_code() {
         sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc >/dev/null
         sudo zypper -n ar https://packages.microsoft.com/yumrepos/vscode vscode
         sudo zypper -n refresh
+        # Install immediately
+        BACKUP_RPM_PACKAGES=("${RPM_PACKAGES[@]}")
         RPM_PACKAGES+=(code)
+        install_rpm_packages
+        RPM_PACKAGES=("${BACKUP_RPM_PACKAGES[@]}")
     fi
 }
 
