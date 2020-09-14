@@ -39,7 +39,7 @@ get_flatpak_packages() {
 
 install_flatpak_packages() {
     # Add Flatpak repo
-    flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo >/dev/null
+    sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo >/dev/null
     INSTALL_PACKAGES=()
     for package in "${FLATPAK_PACKAGES[@]}"; do
         if ! flatpak info "$package" >/dev/null 2>&1; then

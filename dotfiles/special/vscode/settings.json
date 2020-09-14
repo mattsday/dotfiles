@@ -60,5 +60,11 @@
     "editor.fontFamily": "'JetBrains Mono', 'Droid Sans Mono', 'monospace', monospace, 'Droid Sans Fallback'",
     "editor.fontLigatures": true,
     "workbench.colorTheme": "Visual Studio 2019 Dark",
-    "java.semanticHighlighting.enabled": true
+    "java.semanticHighlighting.enabled": true,
+    "cloudcode.gke": {
+        "projectIds": [
+            "crisp-retail-demo"
+        ]
+    },
+    "svg.preview.mode": "svg"
 }
