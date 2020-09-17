@@ -16,7 +16,7 @@ info() {
 }
 
 get_rpm_packages() {
-    RPM_PACKAGES+=(pulseaudio-module-bluetooth solaar youtube-dl ckb-next)
+    RPM_PACKAGES+=(pulseaudio-module-bluetooth solaar youtube-dl ckb-next kio-fuse gimp)
 }
 
 install_rpm_packages() {
