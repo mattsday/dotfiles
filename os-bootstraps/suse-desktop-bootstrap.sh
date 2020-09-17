@@ -39,7 +39,7 @@ get_flatpak_packages() {
 
 install_flatpak_packages() {
     # Add Flatpak repo
-    flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo >/dev/null
+    sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo >/dev/null
     INSTALL_PACKAGES=()
     for package in "${FLATPAK_PACKAGES[@]}"; do
         if ! flatpak info "$package" >/dev/null 2>&1; then
@@ -124,7 +124,11 @@ vs_code() {
         sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc >/dev/null
         sudo zypper -n ar https://packages.microsoft.com/yumrepos/vscode vscode
         sudo zypper -n refresh
+        # Install immediately
+        BACKUP_RPM_PACKAGES=("${RPM_PACKAGES[@]}")
         RPM_PACKAGES+=(code)
+        install_rpm_packages
+        RPM_PACKAGES=("${BACKUP_RPM_PACKAGES[@]}")
     fi
 }
 
