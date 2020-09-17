@@ -17,6 +17,7 @@ info() {
 
 get_rpm_packages() {
     RPM_PACKAGES+=(pulseaudio-module-bluetooth solaar youtube-dl ckb-next kio-fuse gimp)
+    RPM_PACKAGES+=(java-11-openjdk java-11-openjdk-devel java-11-openjdk-headless gradle maven)
 }
 
 install_rpm_packages() {
