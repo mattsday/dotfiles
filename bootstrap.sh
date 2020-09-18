@@ -5,6 +5,13 @@ if [ -f ./init.sh ]; then
 	./init.sh
 fi
 
+if command -v git >/dev/null 2>&1; then
+	if [ "$(git config --global --get 'pull.rebase')" = false ]; then
+		echo Setting git config to merge
+		git config --global 'pull.rebase' true
+	fi
+fi
+
 # Check if we're running OS X
 SYSTEM="$(uname)"
 if [ "$SYSTEM" = Darwin ]; then
