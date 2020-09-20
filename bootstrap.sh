@@ -6,7 +6,7 @@ if [ -f ./init.sh ]; then
 fi
 
 if command -v git >/dev/null 2>&1; then
-	if [ "$(git config --global --get 'pull.rebase')" = false ]; then
+	if [ "$(git config --global --get 'pull.rebase')" != true ]; then
 		echo Setting git config to merge
 		git config --global 'pull.rebase' true
 	fi
