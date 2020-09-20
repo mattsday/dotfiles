@@ -5,13 +5,6 @@ if [ -f ./init.sh ]; then
 	./init.sh
 fi
 
-if command -v git >/dev/null 2>&1; then
-	if [ "$(git config --global --get 'pull.rebase')" != true ]; then
-		echo Setting git config to merge
-		git config --global 'pull.rebase' true
-	fi
-fi
-
 # Check if we're running OS X
 SYSTEM="$(uname)"
 if [ "$SYSTEM" = Darwin ]; then
@@ -52,6 +45,13 @@ if [ -f "/etc/os-release" ]; then
 			echo Detected Arch flavoured
 			./os-bootstraps/arch-bootstrap.sh
 		fi
+	fi
+fi
+
+if command -v git >/dev/null 2>&1; then
+	if [ "$(git config --global --get 'pull.rebase')" != true ]; then
+		echo Setting git config to merge
+		git config --global 'pull.rebase' true
 	fi
 fi
 
