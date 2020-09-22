@@ -48,6 +48,13 @@ if [ -f "/etc/os-release" ]; then
 	fi
 fi
 
+if command -v git >/dev/null 2>&1; then
+	if [ "$(git config --global --get 'pull.rebase')" != true ]; then
+		echo Setting git config to merge
+		git config --global 'pull.rebase' true
+	fi
+fi
+
 if [ -x "$HOME/.update_aliases" ]; then
 	"$HOME/.update_aliases" force
 fi

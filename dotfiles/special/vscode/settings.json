@@ -47,7 +47,7 @@
     // @see Silicon Valley
     "editor.insertSpaces": true,
     "editor.tabSize": 4,
-    "window.zoomLevel": 1,
+    "window.zoomLevel": 3,
     "vim.disableAnnoyingNeovimMessage": true,
     "extensions.ignoreRecommendations": false,
     "java.errors.incompleteClasspath.severity": "ignore",
@@ -66,5 +66,7 @@
             "crisp-retail-demo"
         ]
     },
-    "svg.preview.mode": "svg"
+    "svg.preview.mode": "svg",
+    "go.formatTool": "goimports",
+    "git.autofetch": true
 }
