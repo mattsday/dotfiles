@@ -47,8 +47,8 @@ if [[ ! -x /usr/bin/sudo ]]; then
 	if command -v id >/dev/null 2>&1; then
 		if [ "$(id -u)" = 0 ]; then
 			echo Installing sudo
-			_apt update >/dev/null
-			_apt install -y sudo >/dev/null
+			DEBIAN_FRONTEND="noninteractive" apt-get update >/dev/null
+			DEBIAN_FRONTEND="noninteractive" apt-get install -y sudo >/dev/null
 		else
 			echo "User is not root and sudo isn't installed. Install sudo first"
 			exit
