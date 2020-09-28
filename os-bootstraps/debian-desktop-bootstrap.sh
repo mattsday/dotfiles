@@ -91,6 +91,7 @@ install_gnucash() {
   sed -i 's|Exec=/usr/bin/flatpak|Exec=env GTK_THEME="Adwaita-dark" /usr/bin/flatpak|g; s|Icon=.*|Icon=/var/lib/flatpak/exports/share/icons/hicolor/scalable/apps/org.gnucash.GnuCash.svg|g' "$LOCAL_FILE"
 }
 
+# Deprecated
 configure_logitech_mouse() {
   if lsusb | grep 'Logitech, Inc. Unifying Receiver' >/dev/null 2>&1; then
     if [ -f "$HOME/.logitech-installed-mattsday" ]; then
@@ -244,7 +245,7 @@ emoji() {
 
 main() {
   CALLBACKS+=(
-    configure_logitech_mouse
+    #configure_logitech_mouse
     emoji
     ferdi
     fix_chromium_desktop_entry
