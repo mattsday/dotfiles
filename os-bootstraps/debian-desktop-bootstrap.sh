@@ -228,10 +228,10 @@ ferdi() {
     fi
     sudo dpkg -i /tmp/ferdi-"$FERDI_VERSION".deb || fail Could not install Ferdi
   fi
-  if [ -f "$PWD/ferdi-shopping-list.sh" ]; then
-    "$PWD/ferdi-shopping-list.sh"
-  elif [ -f "$PWD/os-bootstraps/ferdi-shopping-list.sh" ]; then
-    "$PWD/os-bootstraps/ferdi-shopping-list.sh"
+  if [ -f "$PWD/ferdi-anylist.sh" ]; then
+    "$PWD/ferdi-anylist.sh"
+  elif [ -f "$PWD/os-bootstraps/ferdi-anylist.sh" ]; then
+    "$PWD/os-bootstraps/ferdi-anylist.sh"
   fi
 }
 
