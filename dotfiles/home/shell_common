@@ -180,6 +180,13 @@ if command -v stty >/dev/null 2>&1; then
 	stty -ixon
 fi
 
+# Fixup Visual Studio Code CLI command if running on native Wayland
+# TODO: Remove when Electron supports Wayland/Ozone
+# shellcheck disable=SC2139
+if VS_CODE="$(command -v code 2>/dev/null)" && [ "$GDK_BACKEND" = wayland ]; then
+	alias code="GDK_BACKEND=x11 $VS_CODE"
+fi
+
 # Execute any local bourne scripts:
 if [ -f "$HOME/.shell_common_local" ]; then
 	. "$HOME/.shell_common_local"
