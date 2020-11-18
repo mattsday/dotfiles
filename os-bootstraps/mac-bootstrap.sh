@@ -48,9 +48,9 @@ features="
 	tmux
 	unrar
 	wget
+	ffmpeg
 	youtube-dl
 	watch
-    ffmpeg
 "
 for feature in $features; do
 	exists="$(echo "$installed" | grep -w "$feature")"
@@ -61,19 +61,19 @@ for feature in $features; do
 done
 
 # Install casks
-installed="$(brew cask list)"
-features="
-	qlmarkdown
-	quicklook-json
-	qlcolorcode
-	qlstephen
-	qlimagesize
-	qlvideo
-"
-for feature in $features; do
-	exists="$(echo "$installed" | grep -w "$feature")"
-	if [[ -z "$exists" ]]; then
-		echo Installing "$feature"
-		brew cask install "$feature" >/dev/null
-	fi
-done
+#installed="$(brew cask list)"
+#features="
+#	qlmarkdown
+#	quicklook-json
+#	qlcolorcode
+#	qlstephen
+#	qlimagesize
+#	qlvideo
+#"
+#for feature in $features; do
+#	exists="$(echo "$installed" | grep -w "$feature")"
+#	if [[ -z "$exists" ]]; then
+#		echo Installing "$feature"
+#		brew cask install "$feature" >/dev/null
+#	fi
+#done
