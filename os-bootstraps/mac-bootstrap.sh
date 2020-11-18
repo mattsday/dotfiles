@@ -31,7 +31,7 @@ brew cleanup >/dev/null
 echo Setting up brew taps
 #brew tap homebrew/cask-cask >/dev/null
 
-installed="$(brew list)"
+installed="$(brew list --formula)"
 features="
 	gawk
 	grep
@@ -61,7 +61,7 @@ for feature in $features; do
 done
 
 # Install casks
-#installed="$(brew cask list)"
+#installed="$(brew list --cask)"
 #features="
 #	qlmarkdown
 #	quicklook-json
