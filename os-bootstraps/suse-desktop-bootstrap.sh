@@ -76,12 +76,6 @@ configure_fonts() {
     fi
 }
 
-passwordless_sudo() {
-    if sudo [ ! -f /etc/sudoers.d/nopasswd-"$USER" ]; then
-        echo "$USER"' ALL=(ALL:ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/nopasswd-"$USER"
-    fi
-}
-
 ferdi() {
     FERDI_VERSION=5.5.0
     if ! rpm -q ferdi >/dev/null 2>&1; then
@@ -161,7 +155,6 @@ EOF
 
 main() {
     CALLBACKS+=(
-        passwordless_sudo
         install_chrome
         codecs
         vs_code
