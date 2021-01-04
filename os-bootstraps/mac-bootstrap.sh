@@ -46,7 +46,6 @@ features="
 	jq
 	findutils
 	tmux
-	unrar
 	wget
 	ffmpeg
 	youtube-dl
