@@ -77,10 +77,10 @@ configure_fonts() {
 }
 
 ferdi() {
-    FERDI_VERSION=5.5.0
+    FERDI_VERSION=5.6.0-beta.5
     if ! rpm -q ferdi >/dev/null 2>&1; then
         info Installing Ferdi
-        UPDATE_FERDI=true
+        INSTALL_FERDI=true
     else
         CURRENT_FERDI_VERSION="$(rpm -q ferdi | sed 's/ferdi-//;s/\.x86_64//' | awk -F- '{print $1}' | xargs)"
         if [ "$CURRENT_FERDI_VERSION" != "$FERDI_VERSION" ]; then
@@ -88,7 +88,7 @@ ferdi() {
             UPDATE_FERDI=true
         fi
     fi
-    if [ -n "$UPDATE_FERDI" ]; then
+    if [ -n "$UPDATE_FERDI" ] || [ -n "$INSTALL_FERDI" ]; then
         # TODO - needs a lot of TLC
         FERDI_FILE=/tmp/ferdi-"$FERDI_VERSION".rpm
         FERDI_URL=https://github.com/getferdi/ferdi/releases/download/v"$FERDI_VERSION"/ferdi-"$FERDI_VERSION".x86_64.rpm
@@ -96,7 +96,11 @@ ferdi() {
             FERDI_URL=https://github.com/getferdi/ferdi/releases/download/"$FERDI_VERSION"/ferdi-"$FERDI_VERSION".x86_64.rpm
             wget -O "$FERDI_FILE" "$FERDI_URL" || fail Could not download Ferdi
         fi
-        sudo rpm -i --nodeps "$FERDI_FILE" || fail Could not install Ferdi
+        if [ -n "$INSTALL_FERDI" ]; then
+            sudo rpm -i --nodeps "$FERDI_FILE" || fail Could not install Ferdi
+        elif [ -n "$UPDATE_FERDI" ]; then
+            sudo rpm -U --nodeps "$FERDI_FILE" || fail Could not upgrade Ferdi
+        fi
     fi
     if [ -f "$PWD/ferdi-anylist.sh" ]; then
         "$PWD/ferdi-anylist.sh"
