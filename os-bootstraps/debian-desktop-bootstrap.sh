@@ -208,13 +208,14 @@ configure_fonts() {
 }
 
 ferdi() {
-  FERDI_VERSION=5.5.0
+  FERDI_VERSION=5.6.0-beta.5
+  FERDI_COMPARE_VERSION="$FERDI_VERSION"-2741
   if ! dpkg-query -W -f='${Status}' ferdi 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
     info Installing Ferdi
     UPDATE_FERDI=true
   else
-    CURRENT_FERDI_VERSION="$(apt-cache policy ferdi | grep Installed: | awk -F ':' '{print $2}' | awk -F- '{print $1}' | xargs)"
-    if [ "$CURRENT_FERDI_VERSION" != "$FERDI_VERSION" ]; then
+    CURRENT_FERDI_VERSION="$(apt-cache policy ferdi | grep Installed: | awk -F ':' '{print $2}' | xargs)"
+    if [ "$CURRENT_FERDI_VERSION" != "$FERDI_COMPARE_VERSION" ]; then
       info "Updating Ferdi to $FERDI_VERSION (from $CURRENT_FERDI_VERSION)"
       UPDATE_FERDI=true
     fi
