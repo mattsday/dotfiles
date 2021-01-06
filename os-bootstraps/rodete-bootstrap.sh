@@ -138,6 +138,7 @@ fix_ferdi_chat() {
   if [ -f "$CONFIG_FILE" ]; then
     info Fixing up Hangouts Chat Config
     sed -i 's|https://chat.google.com|https://dynamite-preprod.sandbox.google.com|g' "$CONFIG_FILE"
+    sed -i 's|Mozilla/5.0 (X11; Linux x86_64; rv:72.0) Gecko/20100101 Firefox/72.0|Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36|' "$CONFIG_FILE"
   fi
 }
 
