@@ -1,6 +1,8 @@
 #!/bin/bash
 
-BASE_DIR="${HOME}/.config/Ferdi/recipes/dev"
+if [[ -z "$FERDI_DEV_BASE_DIR" ]]; then
+    FERDI_DEV_BASE_DIR="${HOME}/.config/Ferdi/recipes/dev"
+fi
 GIT_LOCATION="https://github.com/mattsday/ferdi-anylist"
 PLUGIN_DIR="anylist"
 
@@ -26,16 +28,16 @@ check_cmd() {
 main() {
     check_cmd git
 
-    if [[ ! -d "${BASE_DIR}" ]]; then
-        mkdir -p "${BASE_DIR}" || error "Could not create directory ${BASE_DIR}"
+    if [[ ! -d "${FERDI_DEV_BASE_DIR}" ]]; then
+        mkdir -p "${FERDI_DEV_BASE_DIR}" || error "Could not create directory ${FERDI_DEV_BASE_DIR}"
     fi
 
-    cd "${BASE_DIR}" || error "Could not change directory to ${BASE_DIR}"
+    cd "${FERDI_DEV_BASE_DIR}" || error "Could not change directory to ${FERDI_DEV_BASE_DIR}"
 
-    if [[ ! -d "${BASE_DIR}/${PLUGIN_DIR}" ]]; then
+    if [[ ! -d "${FERDI_DEV_BASE_DIR}/${PLUGIN_DIR}" ]]; then
         git clone "${GIT_LOCATION}" "${PLUGIN_DIR}" || error "Could not clone git project"
     else
-        cd "${BASE_DIR}/${PLUGIN_DIR}" || error "Could not change directory to ${BASE_DIR}/${PLUGIN_DIR}"
+        cd "${FERDI_DEV_BASE_DIR}/${PLUGIN_DIR}" || error "Could not change directory to ${FERDI_DEV_BASE_DIR}/${PLUGIN_DIR}"
         git config pull.rebase false
         git pull || error "Could not run a git pull"
     fi
