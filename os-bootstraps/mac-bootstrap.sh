@@ -76,6 +76,18 @@ if [ -d /Applications/Ferdi.app ]; then
 	fi
 fi
 
+# install jetbrains mono
+if [ -f jetbrains-mono-font.sh ]; then
+	./jetbrains-mono-font.sh
+elif [ -f ./os-bootstraps/jetbrains-mono-font.sh ]; then
+	./os-bootstraps/jetbrains-mono-font.sh
+fi
+
+# passwordless sudo
+if [ ! -f /etc/sudoers.d/nopasswd-"$USER" ]; then
+	echo "$USER"' ALL=(ALL:ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/nopasswd-"$USER"
+fi
+
 # Install casks
 #installed="$(brew list --cask)"
 #features="

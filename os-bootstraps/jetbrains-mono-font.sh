@@ -5,6 +5,12 @@ FONT_DIR="/tmp/jetbrains-mono"
 TTF_DIR="$FONT_DIR"/JetBrainsMono-1.0.3/ttf
 LOCAL_FONT="$HOME"/.local/share/fonts/
 
+MAC=0
+if [ "$(uname)" = Darwin ]; then
+    MAC=1
+    LOCAL_FONT="$HOME/Library/Fonts"
+fi
+
 fail() {
     echo >&2 '[Failure]' "$@"
     exit 1
@@ -33,7 +39,9 @@ main() {
 
     check_cmd curl
     check_cmd unzip
-    check_cmd fc-cache
+    if [ "$MAC" = 0 ]; then
+        check_cmd fc-cache
+    fi
 
     # Download it
     curl -Lo "$FONT_ARCHIVE" "$FONT_LOCATION" || fail Could not download from "$FONT_LOCATION" to "$FONT_ARCHIVE"
@@ -52,10 +60,11 @@ main() {
     fi
 
     cp "$TTF_DIR"/*.ttf "$LOCAL_FONT" || fail Could not copy fonts to "$LOCAL_FONT"
-    fc-cache -f -v >/dev/null
+    if [ "$MAC" = 0 ]; then
+        fc-cache -f -v >/dev/null
+    fi
     info Fonts updated
 
 }
-
 
 main "$@"
