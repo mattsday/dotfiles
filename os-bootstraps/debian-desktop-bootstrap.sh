@@ -41,7 +41,7 @@ install_apt_packages() {
 }
 
 get_snap_packages() {
-  SNAP_PACKAGES+=(chromium)
+  SNAP_PACKAGES+=(chromium signal-desktop)
 }
 
 install_snap_packages() {
@@ -199,6 +199,25 @@ fix_chromium_desktop_entry() {
   sed -i 's/Exec=env/Exec=env GTK_THEME="Breeze-Dark"/g; s|Icon=.*|Icon=/snap/chromium/current/chromium.png|g' "$LOCAL_FILE"
 }
 
+fix_signal_desktop_entry() {
+  SNAP_FILE=/var/lib/snapd/desktop/applications/signal-desktop_signal-desktop.desktop
+  LOCAL_FILE="$HOME"/.local/share/applications/signal-desktop_signal-desktop.desktop
+  if [ ! -d "$HOME"/.local/share/applications ]; then
+    mkdir -p "$HOME"/.local/share/applications
+  fi
+  # if we exist just return
+  if [ -f "$LOCAL_FILE" ]; then
+    return
+  fi
+  if [ ! -f "$SNAP_FILE" ]; then
+    warn "Signal desktop entry not found in $SNAP_FILE"
+    return
+  fi
+  cp "$SNAP_FILE" "$LOCAL_FILE"
+  sed -i 's/Exec=env/Exec=env GTK_THEME="Breeze-Dark"/g' "$LOCAL_FILE"
+}
+
+
 configure_fonts() {
   if [ -f jetbrains-mono-font.sh ]; then
     ./jetbrains-mono-font.sh
@@ -250,6 +269,7 @@ main() {
     emoji
     ferdi
     fix_chromium_desktop_entry
+    fix_signal_desktop_entry
     configure_fonts
     ssh_configuration
     #install_gnucash
