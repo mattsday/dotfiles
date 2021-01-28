@@ -72,7 +72,7 @@ if [ -d /Applications/Ferdi.app ]; then
 	if [ -f "$CONFIG_FILE" ] && command -v gsed >/dev/null 2>&1; then
 		echo Fixing up Hangouts Chat Config
 		gsed -i 's|https://chat.google.com|https://dynamite-preprod.sandbox.google.com|g' "$CONFIG_FILE"
-		gsed -i 's|Mozilla/5.0 (X11; Linux x86_64; rv:72.0) Gecko/20100101 Firefox/72.0|Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36|' "$CONFIG_FILE"
+		gsed -i 's|Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:72.0) Gecko/20100101 Firefox/72.0|Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36|' "$CONFIG_FILE"
 	fi
 fi
 
