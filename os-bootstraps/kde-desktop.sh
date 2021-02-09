@@ -14,9 +14,23 @@ UNWATED=(
 )
 
 info Configuring file indexer
-
+UPDATE=false
 for folder in "${UNWATED[@]}"; do
     if [ -d "$folder" ]; then
-        balooctl config add excludeFolders "$folder" >/dev/null
+        if balooctl config add excludeFolders "$folder" >/dev/null; then
+            info Added "$folder"
+            UPDATE=true
+        fi
     fi
 done
+
+if [ "$UPDATE" = true ]; then
+    info Rebuilding index
+    balooctl disable >/dev/null 2>&1
+    balooctl purge >/dev/null 2>&1
+    sleep 2
+    balooctl disable >/dev/null 2>&1
+    sleep 1
+    balooctl enable >/dev/null 2>&1
+    balooctl check >/dev/null 2>&1
+fi
