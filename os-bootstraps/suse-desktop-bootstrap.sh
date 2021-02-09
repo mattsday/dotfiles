@@ -29,18 +29,14 @@ install_rpm_packages() {
             INSTALL_PACKAGES+=("$package")
         fi
     done
-    if [ -n "${INSTALL_PACKAGES[*]}" ]; then
-        info Installing packages "${INSTALL_PACKAGES[@]}"
-        sudo zypper -n install "${INSTALL_PACKAGES[@]}" >/dev/null || fail "Failed installing packages"
-    fi
+    if [ -n "${INSTALL_PACKAGES[*]}" ]; thenbaloo_config() {
+  if [ -f "$PWD/kde-desktop.sh" ]; then
+    "$PWD/kde-desktop.sh"
+  elif [ -f "$PWD/os-bootstraps/kde-desktop.sh" ]; then
+    "$PWD/os-bootstraps/kde-desktop.sh"
+  fi
 }
 
-get_flatpak_packages() {
-    FLATPAK_PACKAGES+=(com.spotify.Client)
-}
-
-install_flatpak_packages() {
-    # Add Flatpak repo
     sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo >/dev/null
     INSTALL_PACKAGES=()
     for package in "${FLATPAK_PACKAGES[@]}"; do
@@ -157,6 +153,14 @@ EOF
     fi
 }
 
+baloo_config() {
+  if [ -f "$PWD/kde-desktop.sh" ]; then
+    "$PWD/kde-desktop.sh"
+  elif [ -f "$PWD/os-bootstraps/kde-desktop.sh" ]; then
+    "$PWD/os-bootstraps/kde-desktop.sh"
+  fi
+}
+
 main() {
     CALLBACKS+=(
         install_chrome
@@ -165,6 +169,7 @@ main() {
         configure_fonts
         ssh_configuration
         ferdi
+        baloo_config
     )
     get_rpm_packages
     get_flatpak_packages
