@@ -89,11 +89,11 @@ alias @/usr/bin/dnf,sudo dnf='sudo dnf'@yum='dnf'
 # SuSE
 alias @/usr/bin/zypper,sudo zypper='sudo zypper'
 
-# Generic services
-alias @/usr/sbin/service service='sudo service'
-
 # Use ksshaskpass for ssh passwords if present
 export @/usr/bin/ksshaskpass GIT_ASKPASS=/usr/bin/ksshaskpass
 
 # Update flatpak and sdkman if available
-update @/usr/bin/flatpak sudo flatpak -y update
+update @/usr/bin/flatpak sudo /usr/bin/flatpak -y update
+
+# Run fwupdmgr if available
+update @/usr/bin/fwupdmgr sudo /usr/bin/fwupdmgr update

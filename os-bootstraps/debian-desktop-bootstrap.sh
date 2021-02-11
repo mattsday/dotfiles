@@ -22,7 +22,7 @@ _apt() {
 
 get_apt_packages() {
   APT_PACKAGES+=(snapd plasma-widgets-addons plasma-wallpapers-addons plasma-nm)
-  APT_PACKAGES+=(ffmpegthumbs ffmpegthumbnailer blueman kamoso)
+  APT_PACKAGES+=(ffmpegthumbs ffmpegthumbnailer blueman kamoso kdegraphics-thumbnailers)
   APT_PACKAGES+=(kde-spectacle vlc kdegames ksshaskpass flatpak unrar wbritish)
 }
 
@@ -218,7 +218,6 @@ fix_signal_desktop_entry() {
   sed -i 's/Exec=env/Exec=env GTK_THEME="Breeze-Dark"/g' "$LOCAL_FILE"
 }
 
-
 configure_fonts() {
   if [ -f jetbrains-mono-font.sh ]; then
     ./jetbrains-mono-font.sh
@@ -256,6 +255,14 @@ ferdi() {
   fi
 }
 
+baloo_config() {
+  if [ -f "$PWD/kde-desktop.sh" ]; then
+    "$PWD/kde-desktop.sh"
+  elif [ -f "$PWD/os-bootstraps/kde-desktop.sh" ]; then
+    "$PWD/os-bootstraps/kde-desktop.sh"
+  fi
+}
+
 emoji() {
   if [ -f "$PWD/linux-emoji.sh" ]; then
     "$PWD/linux-emoji.sh"
@@ -275,6 +282,7 @@ main() {
     ssh_configuration
     #install_gnucash
     bluetooth_codecs
+    baloo_config
   )
   get_apt_packages
   get_snap_packages
