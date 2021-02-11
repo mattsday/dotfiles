@@ -64,9 +64,6 @@ export BLOCKSIZE=k
 alias @vim vi=!vim
 export @vim VISUAL='!vim'@EDITOR='!vim'@USE_EDITOR='!vim'
 
-# Snap always needs to run as root
-alias @sudo,/usr/bin/snap snap='sudo snap'
-
 # Use less as a pager
 export @less PAGER=less
 

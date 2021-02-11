@@ -56,6 +56,7 @@ install_snap_packages() {
   fi
 }
 
+# Deprecated
 install_gnucash() {
   if ! command -v flatpak >/dev/null 2>&1; then
     return
