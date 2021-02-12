@@ -1,8 +1,6 @@
 #!/bin/sh
 # List of dependent files
 
-#cd dotfiles/home || exit 1
-
 for i in dotfiles/home/*; do
 	dotfiles="$i $dotfiles"
 done
