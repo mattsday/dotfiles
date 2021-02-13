@@ -29,14 +29,18 @@ install_rpm_packages() {
             INSTALL_PACKAGES+=("$package")
         fi
     done
-    if [ -n "${INSTALL_PACKAGES[*]}" ]; thenbaloo_config() {
-  if [ -f "$PWD/kde-desktop.sh" ]; then
-    "$PWD/kde-desktop.sh"
-  elif [ -f "$PWD/os-bootstraps/kde-desktop.sh" ]; then
-    "$PWD/os-bootstraps/kde-desktop.sh"
-  fi
+    if [ -n "${INSTALL_PACKAGES[*]}" ]; then
+        info Installing packages "${INSTALL_PACKAGES[@]}"
+        sudo zypper -n install "${INSTALL_PACKAGES[@]}" >/dev/null || fail "Failed installing packages"
+    fi
 }
 
+get_flatpak_packages() {
+    FLATPAK_PACKAGES+=(com.spotify.Client)
+}
+
+install_flatpak_packages() {
+    # Add Flatpak repo
     sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo >/dev/null
     INSTALL_PACKAGES=()
     for package in "${FLATPAK_PACKAGES[@]}"; do
@@ -61,7 +65,6 @@ install_chrome() {
         install_rpm_packages
         RPM_PACKAGES=("${BACKUP_RPM_PACKAGES[@]}")
     fi
-
 }
 
 configure_fonts() {
@@ -72,14 +75,23 @@ configure_fonts() {
     fi
 }
 
+baloo_config() {
+    if [ -f "$PWD/kde-desktop.sh" ]; then
+        "$PWD/kde-desktop.sh"
+    elif [ -f "$PWD/os-bootstraps/kde-desktop.sh" ]; then
+        "$PWD/os-bootstraps/kde-desktop.sh"
+    fi
+}
+
 ferdi() {
     FERDI_VERSION=5.6.0-beta.5
+    RPM_VERSION="$(echo "$FERDI_VERSION" | sed 's/-/_/g')"
     if ! rpm -q ferdi >/dev/null 2>&1; then
         info Installing Ferdi
         INSTALL_FERDI=true
     else
         CURRENT_FERDI_VERSION="$(rpm -q ferdi | sed 's/ferdi-//;s/\.x86_64//' | awk -F- '{print $1}' | xargs)"
-        if [ "$CURRENT_FERDI_VERSION" != "$FERDI_VERSION" ]; then
+        if [ "$CURRENT_FERDI_VERSION" != "$RPM_VERSION" ]; then
             info "Updating Ferdi to $FERDI_VERSION (from $CURRENT_FERDI_VERSION)"
             UPDATE_FERDI=true
         fi
@@ -154,11 +166,11 @@ EOF
 }
 
 baloo_config() {
-  if [ -f "$PWD/kde-desktop.sh" ]; then
-    "$PWD/kde-desktop.sh"
-  elif [ -f "$PWD/os-bootstraps/kde-desktop.sh" ]; then
-    "$PWD/os-bootstraps/kde-desktop.sh"
-  fi
+    if [ -f "$PWD/kde-desktop.sh" ]; then
+        "$PWD/kde-desktop.sh"
+    elif [ -f "$PWD/os-bootstraps/kde-desktop.sh" ]; then
+        "$PWD/os-bootstraps/kde-desktop.sh"
+    fi
 }
 
 main() {
