@@ -16,6 +16,10 @@ configure_baloo() {
         "$HOME/Android"
         "$HOME/Documents/GnuCash"
         "$HOME/Games/battlenet/"
+        "$HOME/Projects/Archive"
+        "$HOME/Projects/Personal/Banking"
+        "$HOME/Projects/Personal/mwafi5"
+        "$HOME/Projects/Cisco Legacy"
     )
 
     UNWANTED_FILTERS=(
