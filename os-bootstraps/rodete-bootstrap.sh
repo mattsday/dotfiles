@@ -179,7 +179,7 @@ EOF
 main() {
   CALLBACKS+=(
     passwordless_sudo
-    bluetooth_setup
+    #bluetooth_setup
     docker_setup
     install_vs_code
     install_sdk_man

@@ -24,6 +24,17 @@ configure_baloo() {
 
     UNWANTED_FILTERS=(
         '*.dex'
+        '*.xml'
+        '*.ts'
+        '*.len'
+        '*.flat'
+        '*.json'
+        '*.tab'
+        '*.tsx'
+        '*.tab_i'
+        '*.gpg'
+        '*.sig'
+        'build'
     )
 
     info Configuring file indexer
