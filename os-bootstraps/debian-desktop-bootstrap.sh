@@ -215,7 +215,7 @@ fix_signal_desktop_entry() {
     return
   fi
   cp "$SNAP_FILE" "$LOCAL_FILE"
-  sed -i 's/Exec=env/Exec=env GTK_THEME="Breeze-Dark"/g' "$LOCAL_FILE"
+  sed -i 's/Exec=env/Exec=env GTK_THEME="Breeze-Dark"/g; s|Icon=.*|Icon=/snap/signal-desktop/current/usr/share/icons/hicolor/512x512/apps/signal-desktop.png|g' "$LOCAL_FILE"
 }
 
 configure_fonts() {
