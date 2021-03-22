@@ -1,0 +1,5 @@
+[Service]                                                                                                                   
+ExecStart=/usr/local/bin/speaker-keepalive.sh
+
+[Install]
+WantedBy=default.target
