@@ -25,4 +25,4 @@ sudo chmod +r /usr/local/share/speakers/22000.wav || error Could not set file pe
 cp speaker-keepalive.service "$HOME"/.local/share/systemd/user || Could not copy systemd unit file
 
 systemctl --user daemon-reload
-systemctl start --user speaker-keepalive.service || error Could not start systemd service
+systemctl enable --now --user speaker-keepalive.service || error Could not start systemd service
