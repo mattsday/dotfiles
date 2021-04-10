@@ -23,7 +23,7 @@ _apt() {
 get_apt_packages() {
   APT_PACKAGES+=(snapd plasma-widgets-addons plasma-wallpapers-addons plasma-nm)
   APT_PACKAGES+=(ffmpegthumbs ffmpegthumbnailer blueman kamoso kdegraphics-thumbnailers)
-  APT_PACKAGES+=(kde-spectacle vlc kdegames ksshaskpass flatpak unrar wbritish)
+  APT_PACKAGES+=(kde-spectacle vlc kdegames ksshaskpass flatpak unrar wbritish libappindicator3-1)
 }
 
 install_apt_packages() {
@@ -281,7 +281,7 @@ main() {
     configure_fonts
     ssh_configuration
     #install_gnucash
-    bluetooth_codecs
+    #bluetooth_codecs
     baloo_config
   )
   get_apt_packages
