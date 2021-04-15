@@ -64,6 +64,11 @@ export HISTSIZE HISTFILE SAVEHIST HISTCONTROL
 # Check the environment and add aliases across various platforms
 
 # Load basic aliases from common set (zsh & bash compatible)
+if [ -f "$HOME/.env_common" ]; then
+	. "$HOME/.env_common"
+fi
+
+# Load basic aliases from common set (zsh & bash compatible)
 if [ -f "$HOME/.shell_common" ]; then
 	. "$HOME/.shell_common"
 fi

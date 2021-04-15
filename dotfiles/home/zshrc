@@ -16,11 +16,6 @@
 # Enable word splitting with IFS
 set -y
 
-# If there's a local /etc/profile then evaluate that
-if [ -f /etc/profile ]; then
-    emulate sh -c '. /etc/profile'
-fi
-
 # Load any local config first (aliases should go in _local file)
 if [[ -f "$HOME/.zshrc_config" ]]; then
 	. "$HOME/.zshrc_config"
@@ -104,11 +99,11 @@ setopt HIST_REDUCE_BLANKS
 setopt HIST_VERIFY
 
 # =======================
-# Environment and Aliases
+# Aliases
 # =======================
-# Check the environment and add aliases across various platforms
+# Add aliases across various platforms
 
-# Load basic aliases from common set (zsh & bash compatible)
+# Load basic aliases from common set (bourne shell compatible)
 if [[ -f "$HOME/.shell_common" ]]; then
 	. "$HOME/.shell_common"
 fi

@@ -3,9 +3,18 @@
 # Not sure where I got all this from, it showed up along the way!
 # Latest copy always here: https://github.com/mattsday/dotfiles/
 
-# Do nothing other than launch bashrc (which checks if we're running interactively)
-# ...for some reason ootb OS X doesn't do this!
+# Set up environment variables
 
-if [[ -e $HOME/.bashrc ]]; then
-	. $HOME/.bashrc
+# Load any local config first
+if [[ -f "$HOME/.bash_profile_config" ]]; then
+    . "$HOME/.bash_profile_config"         
+fi
+
+# ======================
+# Plug-ins and Resources
+# ======================
+# Check for (and source) additional plugins and resources, such as local config
+# files
+if [[ -f "$HOME/.bash_profile_local" ]]; then
+    . "$HOME/.bash_profile_local"
 fi

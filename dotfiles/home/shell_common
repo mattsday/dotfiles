@@ -4,29 +4,16 @@
 # can load this (e.g. zshrc, kshrc, bashrc) for consistency across
 # environments
 #
+# This loads aliases and functions, env_common loads environment
+# variables
+#
 # Latest copy always here: https://github.com/mattsday/dotfiles/
 #
 # shellcheck disable=SC1090
 
-# Reset upgrade callbacks
-export _UPDATE_CALLBACKS=""
-
 # Execute any local bourne script config - local config should go in _local below:
 if [ -f "$HOME/.shell_common_config" ]; then
 	. "$HOME/.shell_common_config"
-fi
-
-# Set some local utilities as default (this must be top of this file after local config)
-if [ -d /usr/local/bin ]; then
-	PATH=/usr/local/bin:$PATH
-	export PATH
-fi
-if [ -d /usr/local/sbin ]; then
-	PATH=/usr/local/sbin:$PATH
-	export PATH
-fi
-if [ -d /snap/bin ]; then
-	PATH=$PATH:/snap/bin
 fi
 
 # =================
@@ -37,9 +24,9 @@ if [ -f "$HOME/.update_aliases" ]; then
 	sh "$HOME/.update_aliases"
 fi
 
-# Load aliases from a separate file and parse them in to bourne-compatible notation
-if [ -f "$HOME/.aliases" ]; then
-	. "$HOME/.aliases"
+# Load pre-configured aliases
+if [ -f "$HOME/.sh_aliases" ]; then
+	. "$HOME/.sh_aliases"
 fi
 
 # Check if sdkman is installed
@@ -136,16 +123,6 @@ extr() {
 		fi
 	done
 }
-
-# =====================
-# Environment variables
-# =====================
-# These affect most systems and are (usually) harmless if run without...
-
-# Check if proxy settings have been created
-if [ -f "$HOME/.sh_proxy_settings" ]; then
-	. "$HOME/.sh_proxy_settings"
-fi
 
 # =====================
 # Colour support

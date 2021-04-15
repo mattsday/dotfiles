@@ -32,9 +32,13 @@ else
 	VERBOSE=1
 fi
 
-SH_ALIAS_FILE="$HOME/.aliases"
+SH_ALIAS_FILE="$HOME/.sh_aliases"
 CSH_ALIAS_FILE="$HOME/.csh_aliases"
 FISH_ALIAS_FILE="$HOME/.fish_aliases"
+
+SH_ENV_FILE="$HOME/.sh_env-vars"
+CSH_ENV_FILE="$HOME/.csh_env-vars"
+FISH_ENV_FILE="$HOME/.fish_env-vars"
 
 write_alias() {
 	alias_name="$1"
@@ -48,10 +52,10 @@ write_alias() {
 write_export() {
 	export_name="$1"
 	export_data="$2"
-	echo "$export_name"=\'"$export_data"\' >>"$SH_ALIAS_FILE"
-	echo export "$export_name" >>"$SH_ALIAS_FILE"
-	echo setenv "$export_name" \'"$export_data"\' >>"$CSH_ALIAS_FILE"
-	echo set -u "$export_name" \'"$export_data"\' >>"$FISH_ALIAS_FILE"
+	echo "$export_name"=\'"$export_data"\' >>"$SH_ENV_FILE"
+	echo export "$export_name" >>"$SH_ENV_FILE"
+	echo setenv "$export_name" \'"$export_data"\' >>"$CSH_ENV_FILE"
+	echo set -u "$export_name" \'"$export_data"\' >>"$FISH_ENV_FILE"
 	debug export "$export_name='$export_data'"
 }
 
@@ -68,6 +72,10 @@ fi
 rm "$SH_ALIAS_FILE" >/dev/null 2>&1
 rm "$CSH_ALIAS_FILE" >/dev/null 2>&1
 rm "$FISH_ALIAS_FILE" >/dev/null 2>&1
+rm "$SH_ENV_FILE" >/dev/null 2>&1
+rm "$CSH_ENV_FILE" >/dev/null 2>&1
+rm "$FISH_ENV_FILE" >/dev/null 2>&1
+
 
 updated="$(date)"
 
@@ -92,6 +100,36 @@ cat <<EOT >"$CSH_ALIAS_FILE"
 EOT
 
 cat <<EOT >"$FISH_ALIAS_FILE"
+# Fish shell alias file
+#
+# This file is auto generated and replaced every 7 days.
+# Edit '$HOME/.alias_list' to change them and then run
+# \`$HOME/.update_aliases force\` to update this file.
+# Last updated: $updated
+
+EOT
+
+cat <<EOT >"$SH_ENV_FILE"
+# Bourne shell alias file
+#
+# This file is auto generated and replaced every 7 days.
+# Edit '$HOME/.alias_list' to change them and then run
+# \`$HOME/.update_aliases force\` to update this file.
+# Last updated: $updated
+
+EOT
+
+cat <<EOT >"$CSH_ENV_FILE"
+# csh and tcsh alias file
+#
+# This file is auto generated and replaced every 7 days.
+# Edit '$HOME/.alias_list' to change them and then run
+# \`$HOME/.update_aliases force\` to update this file.
+# Last updated: $updated
+
+EOT
+
+cat <<EOT >"$FISH_ENV_FILE"
 # Fish shell alias file
 #
 # This file is auto generated and replaced every 7 days.

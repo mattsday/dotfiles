@@ -2,6 +2,10 @@
 if test -e ~/.update_aliases
     ~/.update_aliases
 end
+if test -e ~/.fish_env-vars
+    source ~/.fish_env-vars
+end
+
 if test -e ~/.fish_aliases
     source ~/.fish_aliases
 end

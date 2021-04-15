@@ -18,6 +18,11 @@ if [[ -f "$HOME/.bashrc_config" ]]; then
 	. "$HOME/.bashrc_config"
 fi
 
+# Load basic aliases from common set (zsh & bash compatible)
+if [[ -f "$HOME/.env_common" ]]; then
+    . "$HOME/.env_common"
+fi
+
 # =============
 # Shell Options
 # =============

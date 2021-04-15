@@ -17,6 +17,10 @@ if ( -e "$HOME/.update_aliases" ) then
 	sh "$HOME/.update_aliases"
 endif
 
+if ( -e "$HOME/.csh_env-vars" ) then
+	source "$HOME/.csh_env-vars"
+endif
+
 if ( -e "$HOME/.csh_aliases" ) then
 	source "$HOME/.csh_aliases"
 endif
