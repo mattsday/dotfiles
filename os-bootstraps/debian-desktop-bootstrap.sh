@@ -233,6 +233,7 @@ EOF
   fi
 }
 
+# Deprecated
 fix_chromium_desktop_entry() {
   SNAP_FILE=/var/lib/snapd/desktop/applications/chromium_chromium.desktop
   LOCAL_FILE="$HOME"/.local/share/applications/chromium_chromium.desktop
@@ -251,6 +252,7 @@ fix_chromium_desktop_entry() {
   sed -i 's/Exec=env/Exec=env GTK_THEME="Breeze-Dark"/g; s|Icon=.*|Icon=/snap/chromium/current/chromium.png|g' "$LOCAL_FILE"
 }
 
+# Deprecated
 fix_signal_desktop_entry() {
   SNAP_FILE=/var/lib/snapd/desktop/applications/signal-desktop_signal-desktop.desktop
   LOCAL_FILE="$HOME"/.local/share/applications/signal-desktop_signal-desktop.desktop
@@ -328,7 +330,8 @@ main() {
     emoji
     ferdi
     #fix_chromium_desktop_entry
-    fix_signal_desktop_entry
+    install_flatpak_packages
+    #fix_signal_desktop_entry
     fix_signal_flatpak_desktop_entry
     configure_fonts
     ssh_configuration
@@ -340,6 +343,7 @@ main() {
   #get_snap_packages
   get_flatpak_packages
 
+  install_flatpak_packages
   # If we're not being sourced
   # shellcheck disable=SC2154
   if [ -z "$_debian_bootstrap_mattsday" ]; then
@@ -348,7 +352,6 @@ main() {
     done
     install_apt_packages
     install_snap_packages
-    install_flatpak_packages
   fi
 }
 
