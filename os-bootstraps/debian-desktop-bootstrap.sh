@@ -21,7 +21,7 @@ _apt() {
 }
 
 get_apt_packages() {
-  APT_PACKAGES+=(snapd plasma-widgets-addons plasma-wallpapers-addons plasma-nm xdg-desktop-portal-kde)
+  APT_PACKAGES+=(plasma-widgets-addons plasma-wallpapers-addons plasma-nm xdg-desktop-portal-kde)
   APT_PACKAGES+=(ffmpegthumbs ffmpegthumbnailer blueman kamoso kdegraphics-thumbnailers)
   APT_PACKAGES+=(kde-spectacle vlc kdegames ksshaskpass flatpak unrar wbritish libappindicator3-1)
 }
