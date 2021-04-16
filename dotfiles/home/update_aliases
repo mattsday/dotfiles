@@ -110,7 +110,7 @@ cat <<EOT >"$FISH_ALIAS_FILE"
 EOT
 
 cat <<EOT >"$SH_ENV_FILE"
-# Bourne shell alias file
+# Bourne shell env file
 #
 # This file is auto generated and replaced every 7 days.
 # Edit '$HOME/.alias_list' to change them and then run
@@ -120,7 +120,7 @@ cat <<EOT >"$SH_ENV_FILE"
 EOT
 
 cat <<EOT >"$CSH_ENV_FILE"
-# csh and tcsh alias file
+# csh and tcsh env file
 #
 # This file is auto generated and replaced every 7 days.
 # Edit '$HOME/.alias_list' to change them and then run
@@ -130,7 +130,7 @@ cat <<EOT >"$CSH_ENV_FILE"
 EOT
 
 cat <<EOT >"$FISH_ENV_FILE"
-# Fish shell alias file
+# Fish shell env file
 #
 # This file is auto generated and replaced every 7 days.
 # Edit '$HOME/.alias_list' to change them and then run

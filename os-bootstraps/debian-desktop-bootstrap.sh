@@ -21,7 +21,7 @@ _apt() {
 }
 
 get_apt_packages() {
-  APT_PACKAGES+=(snapd plasma-widgets-addons plasma-wallpapers-addons plasma-nm)
+  APT_PACKAGES+=(snapd plasma-widgets-addons plasma-wallpapers-addons plasma-nm xdg-desktop-portal-kde)
   APT_PACKAGES+=(ffmpegthumbs ffmpegthumbnailer blueman kamoso kdegraphics-thumbnailers)
   APT_PACKAGES+=(kde-spectacle vlc kdegames ksshaskpass flatpak unrar wbritish libappindicator3-1)
 }
@@ -41,7 +41,8 @@ install_apt_packages() {
 }
 
 get_snap_packages() {
-  SNAP_PACKAGES+=(chromium signal-desktop)
+  # deprecated
+  SNAP_PACKAGES+=(signal-desktop)
 }
 
 install_snap_packages() {
@@ -54,6 +55,56 @@ install_snap_packages() {
       fi
     done
   fi
+}
+
+get_flatpak_packages() {
+  FLATPAK_PACKAGES+=(org.signal.Signal org.gtk.Gtk3theme.Breeze-Dark)
+}
+
+install_flatpak_packages() {
+  if ! command -v flatpak >/dev/null 2>&1; then
+    fail Flatpak not installed
+  fi
+  # Add flathub
+  sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo >/dev/null
+  for package in "${FLATPAK_PACKAGES[@]}"; do
+    if ! flatpak info "$package" >/dev/null 2>&1; then
+      info Installing Flatpak packages "${package}"
+      if ! sudo flatpak -y install "$package" >/dev/null; then
+        echo Flatpak installation failed for "$package"
+        return
+      fi
+    fi
+  done
+}
+
+fix_signal_flatpak_desktop_entry() {
+  # if Snap is installed, remove the signal desktop snap and the desktop entry
+  if command -v snap >/dev/null 2>&1; then
+    if snap info signal-desktop | grep installed: >/dev/null 2>&1; then
+      sudo snap remove signal-desktop >/dev/null
+    fi
+  fi
+  # Remove local file
+  if [ -f "$HOME"/.local/share/applications/signal-desktop_signal-desktop.desktop ]; then
+    rm "$HOME"/.local/share/applications/signal-desktop_signal-desktop.desktop
+  fi
+
+  FLATPAK_FILE=/var/lib/flatpak/exports/share/applications/org.signal.Signal.desktop
+  LOCAL_FILE="$HOME"/.local/share/applications/org.signal.Signal.desktop
+  if [ ! -d "$HOME"/.local/share/applications ]; then
+    mkdir -p "$HOME"/.local/share/applications
+  fi
+  # if we exist just return
+  if [ -f "$LOCAL_FILE" ]; then
+    return
+  fi
+  if [ ! -f "$FLATPAK_FILE" ]; then
+    echo Warning "$FLATPAK_FILE" does not exist
+    return
+  fi
+  cp "$FLATPAK_FILE" "$LOCAL_FILE"
+  sed -i 's|Exec=/usr/bin/flatpak|Exec=GTK_THEME="Breeze-Dark" /usr/bin/flatpak|g;' "$LOCAL_FILE"
 }
 
 # Deprecated
@@ -276,8 +327,9 @@ main() {
     #configure_logitech_mouse
     emoji
     ferdi
-    fix_chromium_desktop_entry
+    #fix_chromium_desktop_entry
     fix_signal_desktop_entry
+    fix_signal_flatpak_desktop_entry
     configure_fonts
     ssh_configuration
     #install_gnucash
@@ -285,7 +337,8 @@ main() {
     baloo_config
   )
   get_apt_packages
-  get_snap_packages
+  #get_snap_packages
+  get_flatpak_packages
 
   # If we're not being sourced
   # shellcheck disable=SC2154
@@ -295,6 +348,7 @@ main() {
     done
     install_apt_packages
     install_snap_packages
+    install_flatpak_packages
   fi
 }
 

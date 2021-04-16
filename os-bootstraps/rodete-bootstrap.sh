@@ -32,7 +32,7 @@ _apt() {
 }
 
 get_apt_packages() {
-  APT_PACKAGES+=(spotify-client google-cloud-sdk google-cloud-sdk-anthos-auth)
+  APT_PACKAGES+=(spotify-client google-cloud-sdk google-cloud-sdk-anthos-auth flatpak)
   APT_PACKAGES+=(google-cloud-sdk-kpt google-cloud-sdk-skaffold kubectl openjdk-8-jdk openjdk-11-jdk)
   APT_PACKAGES+=(print-manager avahi-discover avahi-utils okular sddm-theme-debian-breeze)
 }
@@ -61,7 +61,7 @@ passwordless_sudo() {
 
 install_kubectx() {
   if ! command -v kubectx >/dev/null 2>&1 || ! command -v kubens >/dev/null 2>&1; then
-        echo Installing Kubectx
+    echo Installing Kubectx
     if [ -f ./os-bootstraps/kubectx.sh ]; then
       ./os-bootstraps/kubectx.sh
     elif [ -f "./kubectx.sh" ]; then
@@ -70,6 +70,45 @@ install_kubectx() {
       echo Could not find kubectx.sh
     fi
   fi
+}
+
+install_chromium_flatpak() {
+  # if Snap is installed, remove the Chromium snap and the desktop entry
+  if command -v snap >/dev/null 2>&1; then
+    if snap info chromium | grep installed: >/dev/null 2>&1; then
+      sudo snap remove chromium >/dev/null
+    fi
+  fi
+  # Remove local file
+  if [ -f "$HOME"/.local/share/applications/chromium_chromium.desktop ]; then
+    rm "$HOME"/.local/share/applications/chromium_chromium.desktop
+  fi
+
+  echo "Installing Chromium (flatpak)"
+  sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo >/dev/null
+  FLATPAK_PACKAGES+=(org.chromium.Chromium org.gtk.Gtk3theme.Breeze-Dark)
+  for package in "${FLATPAK_PACKAGES[@]}"; do
+    if ! flatpak info "$package" >/dev/null 2>&1 && ! sudo flatpak -y install "$package" >/dev/null; then
+      echo Flatpak installation failed for "$package"
+      return
+    fi
+  done
+
+  FLATPAK_FILE=/var/lib/flatpak/exports/share/applications/org.chromium.Chromium.desktop
+  LOCAL_FILE="$HOME"/.local/share/applications/org.chromium.Chromium.desktop
+  if [ ! -d "$HOME"/.local/share/applications ]; then
+    mkdir -p "$HOME"/.local/share/applications
+  fi
+  # if we exist just return
+  if [ -f "$LOCAL_FILE" ]; then
+    return
+  fi
+  if [ ! -f "$FLATPAK_FILE" ]; then
+    echo Warning "$FLATPAK_FILE" does not exist
+    return
+  fi
+  cp "$FLATPAK_FILE" "$LOCAL_FILE"
+  sed -i 's|Exec=/usr/bin/flatpak|Exec=GTK_THEME="Breeze-Dark" /usr/bin/flatpak|g;' "$LOCAL_FILE"
 }
 
 install_vs_code() {
@@ -185,6 +224,7 @@ main() {
     install_sdk_man
     fix_ferdi_chat
     install_kubectx
+    install_chromium_flatpak
   )
   get_apt_packages
 
