@@ -31,7 +31,7 @@ _apt() {
 }
 
 get_apt_packages() {
-    APT_PACKAGES+=(openjdk-8-jdk openjdk-11-jdk python-is-python3)
+    APT_PACKAGES+=(openjdk-8-jdk openjdk-11-jdk python-is-python3 zenity)
 }
 
 get_snap_packages() {
@@ -59,7 +59,8 @@ passwordless_sudo() {
 }
 install_spotify() {
     if ! dpkg-query -W -f='${Status}' spotify-client 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
-        curl -sS https://download.spotify.com/debian/pubkey.gpg | sudo apt-key add - >/dev/null
+        #curl -sS https://download.spotify.com/debian/pubkey.gpg | sudo apt-key add - >/dev/null
+        curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | sudo apt-key add -
         echo "deb http://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list >/dev/null
         _apt update && _apt install -y spotify-client >/dev/null 2>&1
     fi
