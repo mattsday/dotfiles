@@ -32,7 +32,7 @@ _apt() {
 }
 
 get_apt_packages() {
-  APT_PACKAGES+=(spotify-client google-cloud-sdk google-cloud-sdk-anthos-auth flatpak)
+  APT_PACKAGES+=(google-cloud-sdk google-cloud-sdk-anthos-auth flatpak)
   APT_PACKAGES+=(google-cloud-sdk-kpt google-cloud-sdk-skaffold kubectl openjdk-8-jdk openjdk-11-jdk)
   APT_PACKAGES+=(print-manager avahi-discover avahi-utils okular sddm-theme-debian-breeze)
 }
@@ -69,6 +69,22 @@ install_kubectx() {
     else
       echo Could not find kubectx.sh
     fi
+  fi
+}
+
+install_spotify_flatpak() {
+  # Install spotify flatpak
+  echo "Installing Spotify (flatpak)"
+  sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo >/dev/null
+  package=com.spotify.Client
+  if ! flatpak info "$package" >/dev/null 2>&1 && ! sudo flatpak -y install "$package" >/dev/null; then
+    echo Flatpak installation failed for "$package"
+    return
+  fi
+  # Remove spotify-client debian package
+  if dpkg-query -W -f='${Status}' spotify-client 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
+    echo Removing spotify-client from apt
+    sudo apt-get -y remove spotify-client >/dev/null 2>&1
   fi
 }
 
@@ -225,6 +241,7 @@ main() {
     fix_ferdi_chat
     install_kubectx
     install_chromium_flatpak
+    install_spotify_flatpak
   )
   get_apt_packages
 
