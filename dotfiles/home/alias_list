@@ -3,27 +3,34 @@
 # =================
 # This file sets all the alias definitions in a shell-agnostic fashion
 # The command `update_aliases` takes this file and creates output for
-# sh, csh, fish and any other shell I care to add in future.
+# sh, =csh, fish and any other shell I care to add in future.
 #
 # Format:
 # alias @requirement,/path/to/requirement alias1=value @ alias2=!which-this-value
 # Very exotic but it works :-). To update run `update_aliases force`
+# 
+# Can also test a command
+# talias command to test @ alias1=value
+# e.g. talias @ip --color=auto -V@ ip='ip --color=auto'
 
 # Allow sudo expansion
 alias @sudo sudo='sudo '
 
 # Common shortcuts
-alias @/usr/bin/dircolors ls='ls --si --color'
+talias @ls --color=auto --si@ ls='ls --si --color=auto'
 # Use human readable ls output
 alias ll='ls -lahF'
 # ...but prefer SI units if using GNU ls
-alias @/usr/bin/dircolors ll='ls --si -laF'
+talias @ls --si -laF@ ll='ls --si -laF'
 alias l='ls -aCF'
 alias l.='ls -d .*'
 alias j='jobs -l'
 
+# Colour linux ip command
+talias @ip --color=auto -V@ ip='ip --color=auto'
+
 # Use GNU tools if available
-alias @gls ls='!gls --si --color'
+alias @gls ls='!gls --si --color=auto'
 alias @gls ll='ls -laF'
 alias @gfind find='gfind'
 alias @gsed sed='gsed'
@@ -31,7 +38,18 @@ alias @gtar tar='gtar'
 alias @gawk awk='gawk'
 alias @gdu du='gdu --si'
 alias @gdf df='gdf --si -x tmpfs -x devtmpfs'
+
+# Quick rsync command for system copies
 alias @rsync rsy='rsync --progress --partial --append-verify -a'
+
+# GNU Grep colouring
+talias @grep --version 2>/dev/null case $grep_ver in *GNU*@ grep='grep --color=auto'
+talias @grep --version 2>/dev/null case $grep_ver in *GNU*@ egrep='grep -E --color=auto'
+talias @grep --version 2>/dev/null case $grep_ver in *GNU*@ fgrep='grep -E --color=auto'
+
+talias @du /bin/ls --si@ du='du --si'
+talias @df --si --si@ df='du --si -x tmpfs -x devtmpfs -x squashfs'
+
 
 # Shit happens...
 alias 'cd..=cd ..'
@@ -55,6 +73,7 @@ export TIME_STYLE="long-iso"
 export CLICOLOR="yes"
 export LSCOLORS="gxhxfxcxcxdxcxcxcxgxgx"
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+export GREP_COLORS="ms=01;32:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36"
 
 # Use k (1024) as the default blocksize (not 512)
 export BLOCK_SIZE=k

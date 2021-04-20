@@ -76,7 +76,6 @@ rm "$SH_ENV_FILE" >/dev/null 2>&1
 rm "$CSH_ENV_FILE" >/dev/null 2>&1
 rm "$FISH_ENV_FILE" >/dev/null 2>&1
 
-
 updated="$(date)"
 
 cat <<EOT >"$SH_ALIAS_FILE"
@@ -142,9 +141,10 @@ EOT
 add_alias() {
 	IFS='@'
 	for alias in $1; do
-		alias_name="$(echo "$alias" | awk -F= '{print $1}' | xargs)"
-		alias_data="$(echo "$alias" | awk -F= '{print $2}')"
+		alias_name="$(echo "$alias" | cut -f 1 -d = | xargs)"
+		alias_data="$(echo "$alias" | cut -f 2- -d = | xargs)"
 		first_command="$(echo "$alias_data" | awk '{ print $1 }' | sed 's/^!//')"
+		#echo Line = "$alias" ----- alias_name = "$alias_name" ---- alias_data = "$alias_data" ----- first_commmand = "$first_command"
 
 		# If it's a sudo alias don't do it as root
 		if [ "$IS_ROOT" = 1 ] && [ "$first_command" = "sudo" ]; then
@@ -173,8 +173,8 @@ add_export() {
 	IFS='@'
 	for export in $1; do
 		variables="$((variables + 1))"
-		export_name="$(echo "$export" | awk -F= '{print $1}' | xargs)"
-		export_data="$(echo "$export" | awk -F= '{print $2}' | xargs)"
+		export_name="$(echo "$export" | cut -f 1 -d = | xargs)"
+		export_data="$(echo "$export" | cut -f 2- -d = | xargs)"
 		# Check if the command needs to be expanded
 		if echo "$export_data" | grep -E '^!.*' >/dev/null 2>&1; then
 			ocmd="$(echo "$export_data" | awk '{ print $1 }' | sed 's/^!//')"
@@ -192,7 +192,20 @@ while IFS='' read -r line || [ -n "$line" ]; do
 	case $line in
 	# Ignore comments
 	'#'*) ;;
-
+		# Check for tests
+	'talias @'*)
+		IFS=''
+		# Get the list of command_list to test
+		test="$(echo "$line" | awk -F@ '{print $2}' | sed 's/^@//' | xargs)"
+		execute=1
+		if ! eval "$test" >/dev/null 2>&1; then
+			execute=0
+		fi
+		if [ $execute = 1 ]; then
+			add_alias "$(echo "$line" | cut -f 3- -d @ | xargs)"
+			#echo add_alias "$(echo "$line" | awk '{ print $0 }' | sed 's/^talias//' | sed 's|@'"$test"@'||' | xargs)"
+		fi
+		;;
 		# Check for executables
 	'alias @'* | 'export @'* | 'update @'*)
 		# Get the list of command_list to test
@@ -243,43 +256,6 @@ while IFS='' read -r line || [ -n "$line" ]; do
 	*) ;;
 	esac
 done <"$HOME/.alias_list"
-
-# Check if GNU grep is installed
-# shellcheck disable=SC2209
-grep_cmd=grep
-if command -v ggrep >/dev/null 2>&1; then
-	grep_cmd=ggrep
-fi
-
-# Colour grep output if GNU grep
-grep_ver="$($grep_cmd --version 2>/dev/null)"
-case $grep_ver in *GNU*)
-	write_alias grep "$grep_cmd --color=auto"
-	write_alias egrep "grep -E --color=auto"
-	write_alias fgrep "grep -F --color=auto"
-	write_export GREP_COLORS "ms=01;32:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36"
-
-	variables="$((variables + 1))"
-	aliases="$((aliases + 3))"
-	;;
-esac
-unset grep_ver
-
-# If using GNU du, df etc use si units and by default hide tmp/dev volumes
-if du /bin/ls --si >/dev/null 2>&1; then
-	write_alias du "du --si"
-	aliases="$((aliases + 1))"
-fi
-if df --si >/dev/null 2>&1; then
-	write_alias df "df --si -x tmpfs -x devtmpfs -x squashfs"
-	aliases="$((aliases + 1))"
-fi
-
-# Add json paste command
-if command -v pbpaste >/dev/null 2>&1; then
-	write_alias json "pbpaste | jq '"'.'"' | pbcopy; pbpaste"
-	aliases="$((aliases + 1))"
-fi
 
 if [ -n "$UPDATE_CALLBACKS" ]; then
 	write_export _UPDATE_CALLBACKS "$UPDATE_CALLBACKS"

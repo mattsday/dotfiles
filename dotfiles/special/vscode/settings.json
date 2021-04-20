@@ -69,6 +69,5 @@
     "go.formatTool": "goimports",
     "git.autofetch": true,
     "update.mode": "manual",
-    "update.showReleaseNotes": false,
-    "window.zoomLevel": 1
+    "update.showReleaseNotes": false
 }
