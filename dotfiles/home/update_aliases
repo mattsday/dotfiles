@@ -17,7 +17,7 @@ week=604800
 date="$(date +%s 2>/dev/null | xargs)"
 if [ "$date" = "%s" ]; then
 	# Horrible Solaris workaround
-	date="$(truss /usr/bin/date 2>&1 | grep ^time | awk -F= '{print $2}' | xargs)"
+	date="$(truss /usr/bin/date 2>&1 | grep ^time | cut -d = -f 2 | xargs)"
 fi
 VERBOSE=0
 # If no argument is passed then check the last-updated time
@@ -143,8 +143,7 @@ add_alias() {
 	for alias in $1; do
 		alias_name="$(echo "$alias" | cut -f 1 -d = | xargs)"
 		alias_data="$(echo "$alias" | cut -f 2- -d = | xargs)"
-		first_command="$(echo "$alias_data" | awk '{ print $1 }' | sed 's/^!//')"
-		#echo Line = "$alias" ----- alias_name = "$alias_name" ---- alias_data = "$alias_data" ----- first_commmand = "$first_command"
+		first_command="$(echo "$alias_data" | cut -f 1 -d ' ' | sed 's/^!//')"
 
 		# If it's a sudo alias don't do it as root
 		if [ "$IS_ROOT" = 1 ] && [ "$first_command" = "sudo" ]; then
@@ -177,7 +176,7 @@ add_export() {
 		export_data="$(echo "$export" | cut -f 2- -d = | xargs)"
 		# Check if the command needs to be expanded
 		if echo "$export_data" | grep -E '^!.*' >/dev/null 2>&1; then
-			ocmd="$(echo "$export_data" | awk '{ print $1 }' | sed 's/^!//')"
+			ocmd="$(echo "$export_data" | cut -f 1 -d ' ' | sed 's/^!//')"
 			if wcmd="$(command -v "$ocmd" 2>/dev/null)"; then
 				export_data="$(echo "$wcmd" "$export_data" | sed 's|!'"$ocmd"'||' | xargs)"
 			fi
@@ -196,20 +195,20 @@ while IFS='' read -r line || [ -n "$line" ]; do
 	'talias @'*)
 		IFS=''
 		# Get the list of command_list to test
-		test="$(echo "$line" | awk -F@ '{print $2}' | sed 's/^@//' | xargs)"
+		test="$(echo "$line" | cut -d @ -f 2 | sed 's/^@//' | xargs)"
 		execute=1
 		if ! eval "$test" >/dev/null 2>&1; then
 			execute=0
 		fi
 		if [ $execute = 1 ]; then
 			add_alias "$(echo "$line" | cut -f 3- -d @ | xargs)"
-			#echo add_alias "$(echo "$line" | awk '{ print $0 }' | sed 's/^talias//' | sed 's|@'"$test"@'||' | xargs)"
 		fi
 		;;
 		# Check for executables
 	'alias @'* | 'export @'* | 'update @'*)
 		# Get the list of command_list to test
-		command_list="$(echo "$line" | awk '{print $2}' | sed 's/^@//')"
+		command_list="$(echo "$line" | cut -f 2 -d ' ' | sed 's/^@//')"
+
 		IFS=,
 		execute=1
 		for command in $command_list; do
@@ -232,13 +231,13 @@ while IFS='' read -r line || [ -n "$line" ]; do
 		done
 		IFS=''
 		if [ $execute = 1 ]; then
-			type="$(echo "$line" | awk '{ print $1 }' | xargs)"
+			type="$(echo "$line" | cut -f 1 -d ' ' | xargs)"
 			if [ "$type" = alias ]; then
-				add_alias "$(echo "$line" | awk '{ print $0 }' | sed 's/^alias//' | sed 's|@'"$command_list"'||' | xargs)"
+				add_alias "$(echo "$line" | sed 's/^alias//' | sed 's|@'"$command_list"'||' | xargs)"
 			elif [ "$type" = export ]; then
-				add_export "$(echo "$line" | awk '{ print $0 }' | sed 's/^export//' | sed 's|@'"$command_list"'||' | xargs)"
+				add_export "$(echo "$line" | sed 's/^export//' | sed 's|@'"$command_list"'||' | xargs)"
 			elif [ "$type" = update ]; then
-				add_update "$(echo "$line" | awk '{ print $0 }' | sed 's/^update//' | sed 's|@'"$command_list"'||' | xargs)"
+				add_update "$(echo "$line" | sed 's/^update//' | sed 's|@'"$command_list"'||' | xargs)"
 			fi
 		fi
 		;;
