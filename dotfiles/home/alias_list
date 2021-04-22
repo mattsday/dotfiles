@@ -45,7 +45,7 @@ alias @rsync rsy='rsync --progress --partial --append-verify -a'
 # GNU Grep colouring
 talias @grep --version 2>/dev/null case $grep_ver in *GNU*@ grep='grep --color=auto'
 talias @grep --version 2>/dev/null case $grep_ver in *GNU*@ egrep='grep -E --color=auto'
-talias @grep --version 2>/dev/null case $grep_ver in *GNU*@ fgrep='grep -E --color=auto'
+talias @grep --version 2>/dev/null case $grep_ver in *GNU*@ fgrep='grep -F --color=auto'
 
 talias @du /bin/ls --si@ du='du --si'
 talias @df --si --si@ df='du --si -x tmpfs -x devtmpfs -x squashfs'
