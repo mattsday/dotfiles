@@ -279,6 +279,30 @@ configure_fonts() {
   fi
 }
 
+rambox() {
+  RAMBOX_VERSION=1.5.1
+  if ! dpkg-query -W -f='${Status}' ramboxpro 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
+    info Installing Rambox Pro
+    UPDATE_RAMBOX=true
+  else
+    CURRENT_RAMBOX_VERSION="$(apt-cache policy ramboxpro | grep Installed: | awk -F ':' '{print $2}' | xargs)"
+    if [ "$CURRENT_RAMBOX_VERSION" != "$RAMBOX_VERSION" ]; then
+      info "Updating Rambox Pro to $RAMBOX_VERSION (from $CURRENT_RAMBOX_VERSION)"
+      UPDATE_RAMBOX=true
+    fi
+  fi
+  if [ -n "$UPDATE_RAMBOX" ]; then
+    # TODO - needs a lot of TLC
+    RAMBOX_FILE=/tmp/RamboxPro-"$RAMBOX_VERSION"-linux-x64.deb
+    RAMBOX_URL=https://github.com/ramboxapp/download/releases/download/v"$RAMBOX_VERSION"/RamboxPro-"$RAMBOX_VERSION"-linux-x64.deb
+    if ! wget -O "$RAMBOX_FILE" "$RAMBOX_URL"; then
+      fail Could not download Rambox Pro
+    fi
+    sudo dpkg -i "$RAMBOX_FILE" || fail Could not install Ferdi
+  fi
+}
+
+# Deprecated, use rambox now
 ferdi() {
   FERDI_VERSION=5.6.0-beta.5
   FERDI_COMPARE_VERSION="$FERDI_VERSION"-2741
@@ -328,7 +352,8 @@ main() {
   CALLBACKS+=(
     #configure_logitech_mouse
     emoji
-    ferdi
+    #ferdi
+    rambox
     #fix_chromium_desktop_entry
     install_flatpak_packages
     #fix_signal_desktop_entry
