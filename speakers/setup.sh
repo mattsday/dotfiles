@@ -11,9 +11,17 @@ check_file() {
     fi
 }
 
+check_command() {
+    if ! command -v "$1" >/dev/null 2>&1; then
+        error "Cannot find command $1 - is it installed?"
+    fi
+}
+
 check_file speaker-keepalive.sh
 check_file speaker-keepalive.service
 check_file 22000.wav
+
+check_command paplay
 
 mkdir -p "$HOME"/.local/share/systemd/user || error Could not create "$HOME"/.local/share/systemd/user
 sudo mkdir -p /usr/local/share/speakers || error Could not create /usr/local/share/speakers

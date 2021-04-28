@@ -8,11 +8,11 @@ if [ ! -f "$SOUND_FILE" ]; then
     echo >&2 "Error - cannot find sound file - set the \`SOUND_FILE\` variable"
     exit 1
 fi
-if ! APLAY="$(command -v aplay)" 2>/dev/null; then
-    echo >&2 "Error - please ensure aplay is installed"
+if ! paplay="$(command -v paplay)" 2>/dev/null; then
+    echo >&2 "Error - please ensure paplay is installed"
     exit 2
 fi
 while true; do
-   "$APLAY" -q "$SOUND_FILE"
+   "$paplay" -q "$SOUND_FILE"
    sleep 19
 done
