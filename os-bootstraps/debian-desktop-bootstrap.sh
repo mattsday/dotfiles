@@ -98,10 +98,10 @@ pipewire() {
   fi
   # Rename devices
   if [ ! -f /etc/pipewire/media-session.d/alsa-monitor.conf ] || ! grep Jabra /etc/pipewire/media-session.d/alsa-monitor.conf >/dev/null; then
-    CONF_FILE=../dotfiles/special/alsa-monitor.conf
+    CONF_FILE=dotfiles/special/alsa-monitor.conf
     if [ ! -f "$CONF_FILE" ]; then
       ORIG_CONF_FILE="$CONF_FILE"
-      CONF_FILE=../../dotfiles/special/alsa-monitor.conf
+      CONF_FILE=../dotfiles/special/alsa-monitor.conf
       if [ ! -f "$CONF_FILE" ]; then
         fail Cannot find Alsa Monitor config file in "$CONF_FILE" or "$ORIG_CONF_FILE"
       fi
