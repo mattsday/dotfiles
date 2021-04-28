@@ -12,7 +12,10 @@ if ! paplay="$(command -v paplay)" 2>/dev/null; then
     echo >&2 "Error - please ensure paplay is installed"
     exit 2
 fi
+if [ -z "$DEVICE" ]; then
+    DEVICE=alsa_card.usb-C-Media_Electronics_Inc._USB_Audio_Device-00
+fi
 while true; do
-   "$paplay" -q "$SOUND_FILE"
-   sleep 19
+    "$paplay" -d "$DEVICE" -q "$SOUND_FILE"
+    sleep 19
 done
