@@ -57,6 +57,61 @@ install_snap_packages() {
   fi
 }
 
+# Install pipewire support on Linux
+pipewire() {
+  info Setting up Pipewire
+  # Back up current packages
+  BACKUP_APT_PACKAGES=("${APT_PACKAGES[@]}")
+  # Install build packages immediately
+  APT_PACKAGES=(libldacbt-abr2 libldacbt-enc2 pipewire-bin pipewire-audio-client-libraries libpipewire-0.3-0 dbus-user-session)
+  install_apt_packages
+  APT_PACKAGES=("${BACKUP_APT_PACKAGES[@]}")
+
+  if [ -f /usr/share/doc/pipewire/examples/systemd/user/pipewire-pulse.service ]; then
+    info Starting pipewire user service
+    # Enable pulseaudio via pipwire
+    if [ ! -f /etc/pipewire/media-session.d/with-pulseaudio ]; then
+      sudo touch /etc/pipewire/media-session.d/with-pulseaudio
+    fi
+    if [ ! -f /etc/pipewire/media-session.d/with-alsa ]; then
+      sudo touch /etc/pipewire/media-session.d/with-alsa
+    fi
+    if [ -f /usr/share/doc/pipewire/examples/systemd/user/pipewire-pulse.service ]; then
+      sudo cp /usr/share/doc/pipewire/examples/systemd/user/pipewire-pulse.service /etc/systemd/user/ || warn Failed to copy pipewire-pulse service
+    fi
+    if [ -f /usr/share/doc/pipewire/examples/systemd/user/pipewire-pulse.socket ]; then
+      sudo cp /usr/share/doc/pipewire/examples/systemd/user/pipewire-pulse.socket /etc/systemd/user/ || warn Failed to copy pipewire-pulse socket
+    fi
+    if [ -f /usr/share/doc/pipewire/examples/alsa.conf.d/99-pipewire-default.conf ]; then
+      sudo cp /usr/share/doc/pipewire/examples/alsa.conf.d/99-pipewire-default.conf /etc/alsa/conf.d/ || warn Failed to copy alsa config
+    fi
+    if ! systemctl -q is-active --user pipewire || ! systemctl -q is-active --user pipewire-pulse; then
+      systemctl --user daemon-reload
+      systemctl --user --now disable pulseaudio.service pulseaudio.socket
+      systemctl --user mask pulseaudio
+      systemctl --user --now enable pipewire pipewire-pulse
+    fi
+    # Protect against future pipewire-media-session.service changes
+    if [ "$(systemctl list-unit-files pipewire-media-session.service | wc -l)" -gt 3 ] && ! systemctl -q is-active --user pipewire-media-session.service; then
+      systemctl --user --now enable pipewire-media-session.service
+    fi
+  fi
+  # Rename devices
+  if [ ! -f /etc/pipewire/media-session.d/alsa-monitor.conf ] || ! grep Jabra /etc/pipewire/media-session.d/alsa-monitor.conf >/dev/null; then
+    CONF_FILE=../dotfiles/special/alsa-monitor.conf
+    if [ ! -f "$CONF_FILE" ]; then
+      ORIG_CONF_FILE="$CONF_FILE"
+      CONF_FILE=../../dotfiles/special/alsa-monitor.conf
+      if [ ! -f "$CONF_FILE" ]; then
+        fail Cannot find Alsa Monitor config file in "$CONF_FILE" or "$ORIG_CONF_FILE"
+      fi
+    fi
+    sudo cp "$CONF_FILE" /etc/pipewire/media-session.d/alsa-monitor.conf
+    sudo chmod 644 /etc/pipewire/media-session.d/alsa-monitor.conf
+    sudo chown root:root /etc/pipewire/media-session.d/alsa-monitor.conf
+  fi
+}
+
 get_flatpak_packages() {
   FLATPAK_PACKAGES+=(org.signal.Signal org.gtk.Gtk3theme.Breeze-Dark)
 }
@@ -363,6 +418,7 @@ main() {
     #install_gnucash
     #bluetooth_codecs
     baloo_config
+    pipewire
   )
   get_apt_packages
   #get_snap_packages
