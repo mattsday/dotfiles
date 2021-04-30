@@ -2,7 +2,7 @@
 
 # Only run on CentOS/RHEL and derivatives
 if [[ -f /etc/os-release ]]; then
-	RELEASE="$(grep '^ID=' /etc/os-release | awk -F= '{print $2}' | sed 's/"//g')"
+	RELEASE="$(grep '^ID=' /etc/os-release | cut -d = -f 2 | sed 's/"//g')"
 	case "$RELEASE" in
 	centos*)
 		echo Detected CentOS
@@ -55,7 +55,7 @@ echo Updating system
 sudo $package_mgr -y update >/dev/null
 
 # Get list of installed apps
-installed=$(yum list installed | awk '{print $1}' | awk -F. '{print $1}')
+installed=$(yum list installed | cut -d ' ' -f 1 | cut -d '.' -f 1)
 
 list="
 zsh

@@ -34,7 +34,7 @@ echo Updating system
 sudo pkg update -q
 sudo pkg upgrade -qy
 
-installed="$(pkg info -a | awk '{print $1}' | awk -F- '{print $1}')"
+installed="$(pkg info -a | cut -f 1 -d ' ' | cut -f 1 -d '-')"
 
 list="
 zsh

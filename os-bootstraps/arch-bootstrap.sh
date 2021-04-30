@@ -6,7 +6,7 @@ _pacman() {
 
 # Only run on Arch and derivatives
 if [[ -f /etc/os-release ]]; then
-	RELEASE="$(grep '^ID=' /etc/os-release | awk -F= '{print $2}' | sed 's/"//g')"
+	RELEASE="$(grep '^ID=' /etc/os-release | cut -d = -f 2 | sed 's/"//g')"
 	case "$RELEASE" in
 	arch*)
 		echo Detected Arch Linux
@@ -41,8 +41,8 @@ echo Updating System
 _pacman -Syuq --noconfirm >/dev/null
 
 # Get list of installed apps
-installed="$(pacman -Qe | awk '{print $1}' 2>/dev/null) "
-installed+="$(pacman -Qg | awk '{print $1}' 2>/dev/null) "
+installed="$(pacman -Qe | cut -d ' ' -f 1 2>/dev/null) "
+installed+="$(pacman -Qg | cut -d ' ' -f 1 2>/dev/null) "
 
 list=(
 	base-devel

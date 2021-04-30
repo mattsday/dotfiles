@@ -10,14 +10,14 @@ SNAP_PACKAGES=()
 
 # Check for mixins
 export _debian_bootstrap_mattsday=1
-RELEASE="$(grep '^VERSION_CODENAME=' /etc/os-release | awk -F= '{print $2}' | sed 's/"//g')"
+RELEASE="$(grep '^VERSION_CODENAME=' /etc/os-release | cut -d = -f 2 | sed 's/"//g')"
 if [ "$RELEASE" = rodete ]; then
 	if [ -f ./os-bootstraps/rodete-bootstrap.sh ]; then
 		echo Detected Rodete
 		. ./os-bootstraps/rodete-bootstrap.sh
 	fi
 fi
-RELEASE="$(grep '^ID=' /etc/os-release | awk -F= '{print $2}' | sed 's/"//g')"
+RELEASE="$(grep '^ID=' /etc/os-release | cut -d = -f 2 | sed 's/"//g')"
 if [ "$RELEASE" = neon ]; then
 	if [ -f ./os-bootstraps/ubuntu-desktop-bootstrap.sh ]; then
 		echo Detected KDE Neon Desktop
@@ -61,7 +61,7 @@ tmux="tmux"
 
 # Are we using trusty? It's > 2020 so I hope not!
 if [ -f "/etc/os-release" ]; then
-	OS_VER=$(grep '^VERSION_ID' /etc/os-release | awk -F= '{print $2}' | xargs)
+	OS_VER=$(grep '^VERSION_ID' /etc/os-release | cut -d = -f 2 | xargs)
 	if [ -n "$OS_VER" ] && [ "$OS_VER" = "14.04" ]; then
 		echo Adding PPA repository
 		if [ ! -x "/usr/bin/apt-add-repository" ]; then
@@ -113,7 +113,7 @@ fi
 
 if command -v snap >/dev/null 2>&1; then
 	for snap in "${SNAP_PACKAGES[@]}"; do
-		pkg_name="$(echo "$snap" | awk '{print $1}')"
+		pkg_name="$(echo "$snap" | cut -d ' ' -f 1)"
 		if ! snap info "${pkg_name}" | grep installed: >/dev/null 2>&1; then
 			echo Installing snap package "${snap}"
 			# shellcheck disable=SC2086

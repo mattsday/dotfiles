@@ -51,7 +51,7 @@ for url in $KUBECTX_ZSH_COMPLETION; do
 done
 
 for url in $KUBECTX_BASH_COMPLETION; do
-    filename="$BASH_COMPLETION_DIR"/"$(basename "$url" | xargs | awk -F. '{print $1}')"
+    filename="$BASH_COMPLETION_DIR"/"$(basename "$url" | xargs | cut -d '.' -f 1)"
     if [ -f "$filename" ]; then
         sudo rm "$filename" || fail Cannot remove "$filename"
     fi

@@ -3,7 +3,7 @@
 
 # Only run on SuSE and derivatives
 if [[ -f /etc/os-release ]]; then
-	RELEASE="$(grep '^ID=' /etc/os-release | awk -F= '{print $2}' | sed 's/"//g')"
+	RELEASE="$(grep '^ID=' /etc/os-release | cut -d '=' -f 2 | sed 's/"//g')"
 	case "$RELEASE" in
 	suse*)
 		echo Detected SuSE

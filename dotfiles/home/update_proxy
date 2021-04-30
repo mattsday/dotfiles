@@ -38,7 +38,6 @@ unset no_proxy
 IFS=,
 for prefix in $ignore_prefixes; do
 	# Calculate addresses; only support /8, /16 and /24
-	#size="$(echo "$prefix" | awk -F/ '{ print $2 }' | xargs)"
 	prefix="$(echo "$prefix" | awk -F. '{ print $1"."$2"."$3"." }' | xargs)"
 	no_proxy="$no_proxy,$(ip_sequence "$prefix")"
 done

@@ -90,7 +90,7 @@ ferdi() {
         info Installing Ferdi
         INSTALL_FERDI=true
     else
-        CURRENT_FERDI_VERSION="$(rpm -q ferdi | sed 's/ferdi-//;s/\.x86_64//' | awk -F- '{print $1}' | xargs)"
+        CURRENT_FERDI_VERSION="$(rpm -q ferdi | sed 's/ferdi-//;s/\.x86_64//' | cut -d - -f 1 | xargs)"
         if [ "$CURRENT_FERDI_VERSION" != "$RPM_VERSION" ]; then
             info "Updating Ferdi to $FERDI_VERSION (from $CURRENT_FERDI_VERSION)"
             UPDATE_FERDI=true

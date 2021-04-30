@@ -99,7 +99,7 @@ set HOSTNAME=localhost
 if ( $?HOST ) then
     set HOSTNAME=$HOST
 else if ( `which hostname` != "") then
-    set HOSTNAME = `hostname|awk -F. '{print $1}'`
+    set HOSTNAME = `hostname | cut -d '.' -f 1`
 endif
 set prompt = "$USER@$HOSTNAME> "
 

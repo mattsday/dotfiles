@@ -48,7 +48,7 @@ get_snap_packages() {
 install_snap_packages() {
   if command -v snap >/dev/null 2>&1; then
     for snap in "${SNAP_PACKAGES[@]}"; do
-      pkg_name="$(echo "$snap" | awk '{print $1}')"
+      pkg_name="$(echo "$snap" | cut -d ' ' -f 1)"
       if ! snap info "${pkg_name}" | grep installed: >/dev/null 2>&1; then
         # shellcheck disable=SC2086
         sudo snap install ${snap} >/dev/null || warn "Failed to install ${snap}"
@@ -253,7 +253,7 @@ EOF
 
 bluetooth_codecs() {
   # Only do this on Ubuntu
-  RELEASE="$(grep '^ID=' /etc/os-release | awk -F= '{print $2}' | sed 's/"//g')"
+  RELEASE="$(grep '^ID=' /etc/os-release | cut -d = -f 2 | sed 's/"//g')"
   if [ "$RELEASE" = neon ] || [ "$RELEASE" = ubuntu ]; then
     sudo add-apt-repository -y ppa:berglh/pulseaudio-a2dp >/dev/null
     APT_PACKAGES+=(pulseaudio-modules-bt libldac)
@@ -340,7 +340,7 @@ rambox() {
     info Installing Rambox Pro
     UPDATE_RAMBOX=true
   else
-    CURRENT_RAMBOX_VERSION="$(apt-cache policy ramboxpro | grep Installed: | awk -F ':' '{print $2}' | xargs)"
+    CURRENT_RAMBOX_VERSION="$(apt-cache policy ramboxpro | grep Installed: | cut -d ':' -f 2 | xargs)"
     if [ "$CURRENT_RAMBOX_VERSION" != "$RAMBOX_VERSION" ]; then
       info "Updating Rambox Pro to $RAMBOX_VERSION (from $CURRENT_RAMBOX_VERSION)"
       UPDATE_RAMBOX=true
@@ -365,7 +365,7 @@ ferdi() {
     info Installing Ferdi
     UPDATE_FERDI=true
   else
-    CURRENT_FERDI_VERSION="$(apt-cache policy ferdi | grep Installed: | awk -F ':' '{print $2}' | xargs)"
+    CURRENT_FERDI_VERSION="$(apt-cache policy ferdi | grep Installed: | cut -d ':' -f 2 | xargs)"
     if [ "$CURRENT_FERDI_VERSION" != "$FERDI_COMPARE_VERSION" ]; then
       info "Updating Ferdi to $FERDI_VERSION (from $CURRENT_FERDI_VERSION)"
       UPDATE_FERDI=true
