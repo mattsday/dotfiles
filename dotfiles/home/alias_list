@@ -48,7 +48,7 @@ talias @grep --version 2>/dev/null case $grep_ver in *GNU*@ egrep='grep -E --col
 talias @grep --version 2>/dev/null case $grep_ver in *GNU*@ fgrep='grep -F --color=auto'
 
 talias @du /bin/ls --si@ du='du --si'
-talias @df --si --si@ df='df --si -x tmpfs -x devtmpfs -x squashfs'
+talias @df --si -x tmpfs -x devtmpfs -x squashfs@ df='df --si -x tmpfs -x devtmpfs -x squashfs'
 
 
 # Shit happens...
