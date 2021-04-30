@@ -3,10 +3,10 @@
 DEBIAN_DESKTOP_BOOTSTRAP=debian-desktop-bootstrap.sh
 
 # Load generic desktop bootstraps
-if [ -f ./os-bootstraps/"$DEBIAN_DESKTOP_BOOTSTRAP" ]; then
+if [[ -f ./os-bootstraps/"$DEBIAN_DESKTOP_BOOTSTRAP" ]]; then
     echo Detected generic Debian-derived desktop
     . ./os-bootstraps/"$DEBIAN_DESKTOP_BOOTSTRAP"
-elif [ -f "$DEBIAN_DESKTOP_BOOTSTRAP" ]; then
+elif [[ -f "$DEBIAN_DESKTOP_BOOTSTRAP" ]]; then
     . ./"$DEBIAN_DESKTOP_BOOTSTRAP"
 else
     echo Could not find debian-desktop.sh
@@ -46,14 +46,14 @@ install_apt_packages() {
             INSTALL_PACKAGES+=("$package")
         fi
     done
-    if [ -n "${INSTALL_PACKAGES[*]}" ]; then
+    if [[ -n "${INSTALL_PACKAGES[*]}" ]]; then
         info Installing packages "${INSTALL_PACKAGES[@]}"
         _apt -y install "${INSTALL_PACKAGES[@]}" >/dev/null || fail "Failed installing packages"
     fi
 }
 
 passwordless_sudo() {
-    if [ ! -f /etc/sudoers.d/nopasswd-"$USER" ]; then
+    if [[ ! -f /etc/sudoers.d/nopasswd-"$USER" ]]; then
         echo "$USER"' ALL=(ALL:ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/nopasswd-"$USER"
     fi
 }
@@ -77,7 +77,7 @@ main() {
 
     # If we're not being sourced
     #shellcheck disable=SC2154
-    if [ -z "$_debian_bootstrap_mattsday" ]; then
+    if [[ -z "$_debian_bootstrap_mattsday" ]]; then
         install_apt_packages
         for callback in "${CALLBACKS[@]}"; do
             "$callback"

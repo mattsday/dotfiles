@@ -11,19 +11,19 @@ SNAP_PACKAGES=()
 # Check for mixins
 export _debian_bootstrap_mattsday=1
 RELEASE="$(grep '^VERSION_CODENAME=' /etc/os-release | cut -d = -f 2 | sed 's/"//g')"
-if [ "$RELEASE" = rodete ]; then
-	if [ -f ./os-bootstraps/rodete-bootstrap.sh ]; then
+if [[ "$RELEASE" = rodete ]]; then
+	if [[ -f ./os-bootstraps/rodete-bootstrap.sh ]]; then
 		echo Detected Rodete
 		. ./os-bootstraps/rodete-bootstrap.sh
 	fi
 fi
 RELEASE="$(grep '^ID=' /etc/os-release | cut -d = -f 2 | sed 's/"//g')"
-if [ "$RELEASE" = neon ]; then
-	if [ -f ./os-bootstraps/ubuntu-desktop-bootstrap.sh ]; then
+if [[ "$RELEASE" = neon ]]; then
+	if [[ -f ./os-bootstraps/ubuntu-desktop-bootstrap.sh ]]; then
 		echo Detected KDE Neon Desktop
 		. ./os-bootstraps/ubuntu-desktop-bootstrap.sh
 	fi
-elif [ "$RELEASE" = ubuntu ]; then
+elif [[ "$RELEASE" = ubuntu ]]; then
 	if dpkg-query -W -f='${Status}' kwin-common 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
 		echo Detected Kubuntu
 		. ./os-bootstraps/ubuntu-desktop-bootstrap.sh
@@ -45,7 +45,7 @@ fi
 # Check if sudo is installed
 if [[ ! -x /usr/bin/sudo ]]; then
 	if command -v id >/dev/null 2>&1; then
-		if [ "$(id -u)" = 0 ]; then
+		if [[ "$(id -u)" = 0 ]]; then
 			echo Installing sudo
 			DEBIAN_FRONTEND="noninteractive" apt-get update >/dev/null
 			DEBIAN_FRONTEND="noninteractive" apt-get install -y sudo >/dev/null
@@ -60,11 +60,11 @@ fi
 tmux="tmux"
 
 # Are we using trusty? It's > 2020 so I hope not!
-if [ -f "/etc/os-release" ]; then
+if [[ $RELEASE = ubuntu ]] && [[ -f "/etc/os-release" ]]; then
 	OS_VER=$(grep '^VERSION_ID' /etc/os-release | cut -d = -f 2 | xargs)
-	if [ -n "$OS_VER" ] && [ "$OS_VER" = "14.04" ]; then
+	if [[ -n "$OS_VER" ]] && [[ "$OS_VER" = "14.04" ]]; then
 		echo Adding PPA repository
-		if [ ! -x "/usr/bin/apt-add-repository" ]; then
+		if [[ ! -x "/usr/bin/apt-add-repository" ]]; then
 			_apt -y install software-properties-common >/dev/null
 		fi
 		sudo add-apt-repository -y ppa:pi-rho/dev >/dev/null
@@ -106,7 +106,7 @@ for package in "${APT_PACKAGES[@]}"; do
 		INSTALL_PACKAGES+=("$package")
 	fi
 done
-if [ -n "${INSTALL_PACKAGES[*]}" ]; then
+if [[ -n "${INSTALL_PACKAGES[*]}" ]]; then
 	echo Installing packages "${INSTALL_PACKAGES[@]}"
 	_apt -y install "${INSTALL_PACKAGES[@]}" >/dev/null
 fi
@@ -122,13 +122,14 @@ if command -v snap >/dev/null 2>&1; then
 	done
 fi
 
-if [ -n "$CALLBACKS" ]; then
+if [[ -n "$CALLBACKS" ]]; then
 	echo Running platform specific callbacks
 	for callback in "${CALLBACKS[@]}"; do
 		"$callback"
 	done
 fi
 
-if [[ -x "$HOME/.update_aliases" ]]; then
+#shellcheck disable=SC2154
+if [[ -z "$_bootstrap_mattsday" ]] && [[ -x "$HOME/.update_aliases" ]]; then
 	"$HOME/.update_aliases" force
 fi

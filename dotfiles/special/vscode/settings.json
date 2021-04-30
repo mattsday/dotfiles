@@ -47,10 +47,7 @@
     // @see Silicon Valley
     "editor.insertSpaces": true,
     "editor.tabSize": 4,
-<<<<<<< Updated upstream
-=======
     "window.zoomLevel": 2,
->>>>>>> Stashed changes
     "vim.disableAnnoyingNeovimMessage": true,
     "extensions.ignoreRecommendations": false,
     "java.errors.incompleteClasspath.severity": "ignore",

@@ -5,6 +5,9 @@ if [ -f ./init.sh ]; then
 	./init.sh
 fi
 
+_bootstrap_mattsday=1
+export _bootstrap_mattsday
+
 if [ -f "/etc/os-release" ]; then
 	RELEASE="$(grep '^ID=' /etc/os-release | cut -f 2 -d = | sed 's/"//g')"
 	RELEASE_LIKE="$(grep '^ID_LIKE=' /etc/os-release | cut -f 2 -d = | sed 's/"//g')"
