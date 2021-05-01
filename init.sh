@@ -78,19 +78,18 @@ if [ -f "$FF_PROFILE_INI" ] && [ -d "$FF_PROFILE_PATH" ]; then
 	ln -fs "$LOCAL_CHROME" "$USER_CHROME"
 fi
 
-# Visual studio code
-verb=Updating
-if [ "$VS_DIR" ]; then
-	VS_SETTINGS="$VS_DIR/settings.json"
-	if [ -f "$VS_SETTINGS" ] && [ ! -L "$VS_SETTINGS" ]; then
-		echo Backing up local "$VS_SETTINGS" to "$PWD"/backup/local-settings.json
-		mv "$VS_SETTINGS" "$PWD/backup/local-settings.json"
-		verb=Creating
-	elif [ ! -f "$VS_SETTINGS" ]; then
-		verb=Creating
+VS_SETTINGS="$VS_DIR/settings.json"
+
+# Remove VS code settings symlink if it exists and use built-in config sync
+if [ -L "$VS_SETTINGS" ]; then
+	echo Unlinking "$VS_SETTINGS"
+	ORIG_VS_SETTINGS="$(readlink "$VS_SETTINGS")"
+	if [ -L "$ORIG_VS_SETTINGS" ]; then
+		echo Warning: Cannot move VS code settings as "$ORIG_VS_SETTINGS" is a symlink
+	else
+		rm "$VS_SETTINGS" || echo Warning - cannot remove VS Code settings
+		cp "$ORIG_VS_SETTINGS" "$VS_SETTINGS" || echo Warning cannot copy "$ORIG_VS_SETTINGS" to "$VS_SETTINGS"
 	fi
-	echo "$verb" "$VS_SETTINGS"
-	ln -fs "$PWD/dotfiles/special/vscode/settings.json" "$VS_SETTINGS"
 fi
 
 sh "$HOME"/.update_aliases force

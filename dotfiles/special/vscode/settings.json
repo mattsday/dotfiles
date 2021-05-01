@@ -47,7 +47,7 @@
     // @see Silicon Valley
     "editor.insertSpaces": true,
     "editor.tabSize": 4,
-    "window.zoomLevel": 2,
+    "window.zoomLevel": 1,
     "vim.disableAnnoyingNeovimMessage": true,
     "extensions.ignoreRecommendations": false,
     "java.errors.incompleteClasspath.severity": "ignore",
@@ -71,5 +71,8 @@
     "git.autofetch": true,
     "update.mode": "manual",
     "update.showReleaseNotes": false,
-    "window.zoomLevel": 1
+    "window.zoomLevel": 1,
+    "cloudcode.enableTelemetry": false,
+    "cloudcode.minikubeStatusBar": false,
+    "cloudcode.enableMinikubeGcpAuthPlugin": false
 }
