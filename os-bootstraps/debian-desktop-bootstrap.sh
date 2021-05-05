@@ -408,7 +408,7 @@ main() {
     #configure_logitech_mouse
     emoji
     #ferdi
-    rambox
+    #rambox
     #fix_chromium_desktop_entry
     install_flatpak_packages
     #fix_signal_desktop_entry
