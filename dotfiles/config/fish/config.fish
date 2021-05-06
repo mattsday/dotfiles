@@ -21,45 +21,8 @@ end
 
 # Update
 function update
-    # Debian-based
-    if test -x /usr/bin/apt && test -x /usr/bin/dpkg
-        apt update && apt full-upgrade
-        # OS X
-    else if test -x /usr/local/bin/brew
-        brew update
-        brew upgrade
-        brew cleanup
-        brew doctor
-        # Arch-based
-    else if test -x /usr/bin/pacman
-        # Arch linux use yay if it's there
-        if test -x /usr/bin/yay
-            yay -Syu
-        else
-            pacman -Syu
-        end
-        # Fedora-based
-    else if test -x /usr/bin/dnf
-        dnf update
-        # Red Hat-based
-    else if test -x /usr/bin/yum
-        yum update
-        # OpenBSD
-    else if test -x /usr/sbin/pkg_add
-        pkg_add -uvi
-        # FreeBSD
-    else if test -x /usr/sbin/pkg
-        pkg update && pkg upgrade
-        # SuSE
-    else if test -x /usr/bin/zypper
-        zypper dup
-    end
-    # If there are any callbacks process them
-    if test -n "$_UPDATE_CALLBACKS"
-        set updates (string split : $_UPDATE_CALLBACKS)
-        for i in $updates
-            eval "$i"
-        end
+    if test -x ~/.update
+        ~/.update
     end
 end
 

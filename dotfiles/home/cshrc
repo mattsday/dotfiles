@@ -44,6 +44,11 @@ endif
 # Check the presence of various utilities and alias them to give them
 # preference ahead of lesser system defaults
 
+# Update the running system
+if ( -x "$HOME/.update" ) then
+	alias update "$HOME/.update"
+endif
+
 # find function to quickly look for things in pwd
 alias f "find . -iname \*\!:1\*"
 

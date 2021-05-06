@@ -47,47 +47,9 @@ gf() {
 
 # Single command to keep a system up to date
 update() {
-	# Debian-based
-	if [ -x /usr/bin/apt ] && [ -x /usr/bin/dpkg ]; then
-		apt update && apt full-upgrade
-	# OS X
-	elif [ -x /usr/local/bin/brew ]; then
-		brew update
-		brew upgrade
-		brew cleanup
-		brew doctor
-	# Arch-based
-	elif [ -x /usr/bin/pacman ]; then
-		# Arch linux use yay if it's there
-		if [ -x /usr/bin/yay ]; then
-			yay -Syu
-		else
-			pacman -Syu
-		fi
-	# Fedora-based
-	elif [ -x /usr/bin/dnf ]; then
-		dnf update
-	# Red Hat-based
-	elif [ -x /usr/bin/yum ]; then
-		yum update
-	# OpenBSD
-	elif [ -x /usr/sbin/pkg_add ]; then
-		pkg_add -uvi
-	# FreeBSD
-	elif [ -x /usr/sbin/pkg ]; then
-		pkg update && pkg upgrade
-	# SuSE
-	elif [ -x /usr/bin/zypper ]; then
-		zypper refresh && zypper dup
-	fi
-	# If there are any callbacks process them
-	if [ -n "${_UPDATE_CALLBACKS}" ]; then
-		IFS=":"
-		for i in ${_UPDATE_CALLBACKS}; do
-			unset IFS
-			eval "$i"
-		done
-	fi
+    if [ -x "$HOME"/.update ]; then
+            "$HOME"/.update
+    fi
 }
 
 # Disable shell history for session

@@ -1,0 +1,52 @@
+#!/bin/sh
+# Update the running system, whatever we're running
+
+_sudo() {
+	if command -v sudo >/dev/null 2>&1; then
+		sudo "$@"
+	else
+		"$@"
+	fi
+}
+
+# Debian-based
+if [ -x /usr/bin/apt ] && [ -x /usr/bin/dpkg ]; then
+	_sudo apt update && _sudo apt full-upgrade
+# OS X
+elif [ -x /usr/local/bin/brew ]; then
+	brew update
+	brew upgrade
+	brew cleanup
+	brew doctor
+# Arch-based
+elif [ -x /usr/bin/pacman ]; then
+	# Arch linux use yay if it's there
+	if [ -x /usr/bin/yay ]; then
+		_sudo yay -Syu
+	else
+		_sudo pacman -Syu
+	fi
+# Fedora-based
+elif [ -x /usr/bin/dnf ]; then
+	_sudo dnf update
+# Red Hat-based
+elif [ -x /usr/bin/yum ]; then
+	_sudo yum update
+# OpenBSD
+elif [ -x /usr/sbin/pkg_add ]; then
+	_sudo pkg_add -uvi
+# FreeBSD
+elif [ -x /usr/sbin/pkg ]; then
+	_sudo pkg update && pkg upgrade
+# SuSE
+elif [ -x /usr/bin/zypper ]; then
+	_sudo zypper refresh && zypper dup
+fi
+# If there are any callbacks process them
+if [ -n "${_UPDATE_CALLBACKS}" ]; then
+	IFS=":"
+	for i in ${_UPDATE_CALLBACKS}; do
+		unset IFS
+		eval "$i"
+	done
+fi
