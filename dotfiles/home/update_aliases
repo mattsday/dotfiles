@@ -149,7 +149,7 @@ add_alias() {
 		if [ "$IS_ROOT" = 1 ] && [ "$first_command" = "sudo" ]; then
 			continue
 		fi
-		aliases="$((aliases + 1))"
+		aliases_count="$((aliases_count + 1))"
 		# Check if the command needs to be expanded
 		if echo "$alias_data" | grep -E '^!.*' >/dev/null 2>&1; then
 			if wcmd="$(command -v "$first_command" 2>/dev/null)"; then
@@ -171,7 +171,7 @@ add_update() {
 add_export() {
 	IFS='@'
 	for export in $1; do
-		variables="$((variables + 1))"
+		variables_count="$((variables_count + 1))"
 		export_name="$(echo "$export" | cut -f 1 -d = | xargs)"
 		export_data="$(echo "$export" | cut -f 2- -d = | xargs)"
 		# Check if the command needs to be expanded
@@ -185,8 +185,8 @@ add_export() {
 		write_export "$export_name" "$export_data"
 	done
 }
-aliases=0
-variables=0
+aliases_count=0
+variables_count=0
 while IFS='' read -r line || [ -n "$line" ]; do
 	case $line in
 	# Ignore comments
@@ -261,8 +261,11 @@ if [ -n "$UPDATE_CALLBACKS" ]; then
 fi
 
 # Write out last update time:
+if [ -f "$HOME/.alias_update_time" ]; then
+	rm "$HOME/.alias_update_time"
+fi
 echo "$date" >"$HOME/.alias_update_time"
 
-msg Created "$aliases" aliases and "$variables" environment variables
+msg Created "$aliases_count" aliases and "$variables_count" environment variables
 
 # vim: syntax=sh
