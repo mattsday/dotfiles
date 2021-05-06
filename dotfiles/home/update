@@ -22,7 +22,7 @@ elif [ -x /usr/local/bin/brew ]; then
 elif [ -x /usr/bin/pacman ]; then
 	# Arch linux use yay if it's there
 	if [ -x /usr/bin/yay ]; then
-		_sudo yay -Syu
+		yay -Syu
 	else
 		_sudo pacman -Syu
 	fi
