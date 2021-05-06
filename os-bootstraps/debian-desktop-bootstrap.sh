@@ -63,7 +63,7 @@ pipewire() {
   # Back up current packages
   BACKUP_APT_PACKAGES=("${APT_PACKAGES[@]}")
   # Install build packages immediately
-  APT_PACKAGES=(libldacbt-abr2 libldacbt-enc2 pipewire-bin pipewire-audio-client-libraries libpipewire-0.3-0 dbus-user-session)
+  APT_PACKAGES=(libldacbt-abr2 libldacbt-enc2 pipewire-bin pipewire-audio-client-libraries libpipewire-0.3-0 dbus-user-session libspa-0.2-bluetooth )
   install_apt_packages
   APT_PACKAGES=("${BACKUP_APT_PACKAGES[@]}")
 
