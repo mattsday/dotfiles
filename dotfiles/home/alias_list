@@ -112,7 +112,7 @@ alias @/usr/bin/zypper,sudo zypper='sudo zypper'
 export @/usr/bin/ksshaskpass GIT_ASKPASS=/usr/bin/ksshaskpass
 
 # Update flatpak and sdkman if available
-update @/usr/bin/flatpak sudo /usr/bin/flatpak -y update
+update @/usr/bin/flatpak sudo /usr/bin/flatpak -y update && /usr/bin/flatpak -y update
 
 # Run fwupdmgr if available
 update @/usr/bin/fwupdmgr sudo /usr/bin/fwupdmgr refresh && sudo /usr/bin/fwupdmgr update
