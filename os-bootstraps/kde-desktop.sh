@@ -40,7 +40,7 @@ configure_baloo() {
     info Configuring file indexer
     UPDATE=false
     for folder in "${UNWATED_FOLDERS[@]}"; do
-        if [ -d "$folder" ]; then
+        if [[ -d "$folder" ]]; then
             if balooctl config add excludeFolders "$folder" >/dev/null; then
                 info Ignoring "$folder" from index
                 UPDATE=true
@@ -55,7 +55,7 @@ configure_baloo() {
         fi
     done
 
-    if [ "$UPDATE" = true ]; then
+    if [[ "$UPDATE" = true ]]; then
         info Rebuilding index
         balooctl disable >/dev/null 2>&1
         balooctl purge >/dev/null 2>&1

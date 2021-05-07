@@ -63,7 +63,7 @@ pipewire() {
   # Back up current packages
   BACKUP_APT_PACKAGES=("${APT_PACKAGES[@]}")
   # Install build packages immediately
-  APT_PACKAGES=(libldacbt-abr2 libldacbt-enc2 pipewire-bin pipewire-audio-client-libraries libpipewire-0.3-0 dbus-user-session libspa-0.2-bluetooth )
+  APT_PACKAGES=(libldacbt-abr2 libldacbt-enc2 pipewire-bin pipewire-audio-client-libraries libpipewire-0.3-0 dbus-user-session libspa-0.2-bluetooth libspa-0.2-jack gstreamer1.0-pipewire)
   install_apt_packages
   APT_PACKAGES=("${BACKUP_APT_PACKAGES[@]}")
 
@@ -84,6 +84,14 @@ pipewire() {
     fi
     if [[ -f /usr/share/doc/pipewire/examples/alsa.conf.d/99-pipewire-default.conf ]]; then
       sudo cp /usr/share/doc/pipewire/examples/alsa.conf.d/99-pipewire-default.conf /etc/alsa/conf.d/ || warn Failed to copy alsa config
+    fi
+    # Use Pipewire for JACK
+    if [[ ! -f /etc/pipewire/media-session.d/with-jack ]]; then
+      sudo touch /etc/pipewire/media-session.d/with-jack
+    fi
+    if [[ -f /usr/share/doc/pipewire/examples/ld.so.conf.d/pipewire-jack-x86_64-linux-gnu.conf ]]; then
+      sudo cp /usr/share/doc/pipewire/examples/ld.so.conf.d/pipewire-jack-x86_64-linux-gnu.conf /etc/ld.so.conf.d/
+      sudo ldconfig
     fi
     if ! systemctl -q is-active --user pipewire || ! systemctl -q is-active --user pipewire-pulse; then
       systemctl --user daemon-reload

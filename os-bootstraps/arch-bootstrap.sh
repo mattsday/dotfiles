@@ -27,7 +27,7 @@ fi
 # Check if sudo is installed
 if [[ ! -x /usr/bin/sudo ]]; then
 	if command -v id >/dev/null 2>&1; then
-		if [ "$(id -u)" = 0 ]; then
+		if [[ "$(id -u)" = 0 ]]; then
 			echo Installing sudo
 			pacman -Sy --noconfirm sudo >/dev/null
 		else
@@ -87,7 +87,7 @@ if ! command -v yay >/dev/null 2>&1; then
 fi
 
 # Only run yay if not root
-if [ "$(id -u)" != 0 ]; then
+if [[ "$(id -u)" != 0 ]]; then
 	if command -v yay >/dev/null 2>&1; then
 		echo Updating yay
 		yay -Syuq --noconfirm >/dev/null 2>&1
