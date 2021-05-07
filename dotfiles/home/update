@@ -9,6 +9,10 @@ _sudo() {
 	fi
 }
 
+if [ -f "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
+	. "$HOME/.sdkman/bin/sdkman-init.sh"
+fi
+
 # Debian-based
 if [ -x /usr/bin/apt ] && [ -x /usr/bin/dpkg ]; then
 	_sudo apt update && _sudo apt full-upgrade
