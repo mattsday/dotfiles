@@ -3,11 +3,11 @@
 DEBIAN_DESKTOP_BOOTSTRAP=debian-desktop-bootstrap.sh
 
 # Load generic desktop bootstraps
-if [[ -f ./os-bootstraps/"$DEBIAN_DESKTOP_BOOTSTRAP" ]]; then
+if [[ -f ./os-bootstraps/"${DEBIAN_DESKTOP_BOOTSTRAP}" ]]; then
     echo Detected generic Debian-derived desktop
-    . ./os-bootstraps/"$DEBIAN_DESKTOP_BOOTSTRAP"
-elif [[ -f "$DEBIAN_DESKTOP_BOOTSTRAP" ]]; then
-    . ./"$DEBIAN_DESKTOP_BOOTSTRAP"
+    . ./os-bootstraps/"${DEBIAN_DESKTOP_BOOTSTRAP}"
+elif [[ -f "${DEBIAN_DESKTOP_BOOTSTRAP}" ]]; then
+    . ./"${DEBIAN_DESKTOP_BOOTSTRAP}"
 else
     echo Could not find debian-desktop.sh
 fi
@@ -42,8 +42,8 @@ install_apt_packages() {
     get_apt_packages
     INSTALL_PACKAGES=()
     for package in "${APT_PACKAGES[@]}"; do
-        if ! dpkg-query -W -f='${Status}' "$package" 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
-            INSTALL_PACKAGES+=("$package")
+        if ! dpkg-query -W -f='${Status}' "${package}" 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
+            INSTALL_PACKAGES+=("${package}")
         fi
     done
     if [[ -n "${INSTALL_PACKAGES[*]}" ]]; then
@@ -53,8 +53,8 @@ install_apt_packages() {
 }
 
 passwordless_sudo() {
-    if [[ ! -f /etc/sudoers.d/nopasswd-"$USER" ]]; then
-        echo "$USER"' ALL=(ALL:ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/nopasswd-"$USER"
+    if [[ ! -f /etc/sudoers.d/nopasswd-"${USER}" ]]; then
+        echo "${USER}"' ALL=(ALL:ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/nopasswd-"${USER}"
     fi
 }
 install_spotify() {
@@ -77,10 +77,10 @@ main() {
 
     # If we're not being sourced
     #shellcheck disable=SC2154
-    if [[ -z "$_debian_bootstrap_mattsday" ]]; then
+    if [[ -z "${_debian_bootstrap_mattsday}" ]]; then
         install_apt_packages
         for callback in "${CALLBACKS[@]}"; do
-            "$callback"
+            "${callback}"
         done
     fi
 }

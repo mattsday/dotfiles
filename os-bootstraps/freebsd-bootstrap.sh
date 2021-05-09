@@ -2,13 +2,13 @@
 
 OS="$(uname)"
 
-if [ "$OS" != FreeBSD ]; then
+if [ "${OS}" != FreeBSD ]; then
 	echo Not FreeBSD, stopping
 	exit
 fi
 
 echo Disabling clever prompt for /bin/sh
-touch "$HOME/.simple_shell"
+touch "${HOME}/.simple_shell"
 
 # Can I find pkg?
 if [ ! -x "/usr/sbin/pkg" ]; then
@@ -55,10 +55,10 @@ tmux
 jq
 htop
 "
-for utility in $list; do
-	exists="$(echo "$installed" | tr " " "\\n" | grep -wx "$utility")"
-	if [ -z "$exists" ]; then
-		echo Installing "$utility"
-		sudo pkg install -yq "$utility"
+for utility in ${list}; do
+	exists="$(echo "${installed}" | tr " " "\\n" | grep -wx "${utility}")"
+	if [ -z "${exists}" ]; then
+		echo Installing "${utility}"
+		sudo pkg install -yq "${utility}"
 	fi
 done

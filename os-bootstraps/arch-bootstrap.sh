@@ -7,7 +7,7 @@ _pacman() {
 # Only run on Arch and derivatives
 if [[ -f /etc/os-release ]]; then
 	RELEASE="$(grep '^ID=' /etc/os-release | cut -d = -f 2 | sed 's/"//g')"
-	case "$RELEASE" in
+	case "${RELEASE}" in
 	arch*)
 		echo Detected Arch Linux
 		;;
@@ -68,8 +68,8 @@ list=(
 to_install=()
 
 for utility in "${list[@]}"; do
-	if ! pacman -Qs "$utility" >/dev/null 2>&1; then
-		to_install+=("$utility")
+	if ! pacman -Qs "${utility}" >/dev/null 2>&1; then
+		to_install+=("${utility}")
 	fi
 done
 if ((${#to_install[@]})); then

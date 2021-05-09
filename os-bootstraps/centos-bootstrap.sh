@@ -3,7 +3,7 @@
 # Only run on CentOS/RHEL and derivatives
 if [[ -f /etc/os-release ]]; then
 	RELEASE="$(grep '^ID=' /etc/os-release | cut -d = -f 2 | sed 's/"//g')"
-	case "$RELEASE" in
+	case "${RELEASE}" in
 	centos*)
 		echo Detected CentOS
 		;;
@@ -43,7 +43,7 @@ if [[ ! -x /usr/bin/sudo ]]; then
 	if command -v id >/dev/null 2>&1; then
 		if [ "$(id -u)" = 0 ]; then
 			echo Installing sudo
-			$package_mgr install -y sudo >/dev/null
+			${package_mgr} install -y sudo >/dev/null
 		else
 			echo "User is not root and sudo isn't installed. Install sudo first"
 			exit
@@ -52,7 +52,7 @@ if [[ ! -x /usr/bin/sudo ]]; then
 fi
 
 echo Updating system
-sudo $package_mgr -y update >/dev/null
+sudo "${package_mgr}" -y update >/dev/null
 
 # Get list of installed apps
 installed=$(yum list installed | cut -d ' ' -f 1 | cut -d '.' -f 1)
@@ -70,10 +70,10 @@ centos
 findutils
 hostname
 "
-for utility in $list; do
-	exists="$(echo "$installed" | tr " " "\\n" | grep -wx "$utility")"
-	if [[ -z "$exists" ]]; then
-		echo Installing "$utility"
-		sudo "$package_mgr" -y install "$utility" >/dev/null
+for utility in ${list}; do
+	exists="$(echo "${installed}" | tr " " "\\n" | grep -wx "${utility}")"
+	if [[ -z "${exists}" ]]; then
+		echo Installing "${utility}"
+		sudo "${package_mgr}" -y install "${utility}" >/dev/null
 	fi
 done

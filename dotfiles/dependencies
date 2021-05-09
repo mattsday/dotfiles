@@ -2,65 +2,65 @@
 # List of dependent files
 
 for i in dotfiles/home/*; do
-	dotfiles="$i $dotfiles"
+	dotfiles="${i} ${dotfiles}"
 done
 
 for i in dotfiles/config/*; do
-	configdirs="$i $configdirs"
+	configdirs="${i} ${configdirs}"
 done
 
 # Firefox userChrome.css file
-FF_BASE_DIR="$PWD"/dotfiles/special/firefox
+FF_BASE_DIR="${PWD}"/dotfiles/special/firefox
 FF_CHROME_FILE="userChrome.css"
-first="$(echo "$USER" | cut -c1 | tr '[:lower:]' '[:upper:]')"
-second="$(echo "$USER" | cut -c2-)"
-WINUSER="$first$second"
+first="$(echo "${USER}" | cut -c1 | tr '[:lower:]' '[:upper:]')"
+second="$(echo "${USER}" | cut -c2-)"
+WINUSER="${first}${second}"
 FF_WINDOWS=0
 
-if [ -d "$HOME/Library/Application Support/Firefox" ]; then
-	FF_PROFILE_PATH="$HOME/Library/Application Support/Firefox"
+if [ -d "${HOME}/Library/Application Support/Firefox" ]; then
+	FF_PROFILE_PATH="${HOME}/Library/Application Support/Firefox"
 	FF_CHROME_FILE="userChrome-mac.css"
-elif [ -d "$HOME/.mozilla/firefox" ]; then
-	FF_PROFILE_PATH="$HOME/.mozilla/firefox"
+elif [ -d "${HOME}/.mozilla/firefox" ]; then
+	FF_PROFILE_PATH="${HOME}/.mozilla/firefox"
 	FF_CHROME_FILE="userChrome-linux.css"
-elif [ -d "/mnt/c/Users/$USER/AppData/Roaming/Mozilla/Firefox/" ]; then
-	FF_PROFILE_PATH="/mnt/c/Users/$USER/AppData/Roaming/Mozilla/Firefox/"
+elif [ -d "/mnt/c/Users/${USER}/AppData/Roaming/Mozilla/Firefox/" ]; then
+	FF_PROFILE_PATH="/mnt/c/Users/${USER}/AppData/Roaming/Mozilla/Firefox/"
 	FF_CHROME_FILE="userChrome-windows.css"
 	FF_WINDOWS=1
-elif [ -d "/mnt/c/Users/$WINUSER/AppData/Roaming/Mozilla/Firefox/" ]; then
-	FF_PROFILE_PATH="/mnt/c/Users/$WINUSER/AppData/Roaming/Mozilla/Firefox/"
+elif [ -d "/mnt/c/Users/${WINUSER}/AppData/Roaming/Mozilla/Firefox/" ]; then
+	FF_PROFILE_PATH="/mnt/c/Users/${WINUSER}/AppData/Roaming/Mozilla/Firefox/"
 	FF_CHROME_FILE="userChrome-windows.css"
 	FF_WINDOWS=1
 fi
-FF_PROFILE_INI="$FF_PROFILE_PATH/profiles.ini"
+FF_PROFILE_INI="${FF_PROFILE_PATH}/profiles.ini"
 
-LOCAL_CHROME="$FF_BASE_DIR/$FF_CHROME_FILE"
+LOCAL_CHROME="${FF_BASE_DIR}/${FF_CHROME_FILE}"
 
-if [ -f "$FF_PROFILE_INI" ]; then
+if [ -f "${FF_PROFILE_INI}" ]; then
 	# shellcheck disable=SC2143
-	if [ "$(grep '\[Profile[^0]\]' "$FF_PROFILE_INI" 2>/dev/null)" ]; then
-		FF_PROFILE="$(tr <"$FF_PROFILE_INI" -s '\n' '|' | sed 's/\[Profile[0-9]\]/\x0/g; s/$/\x0/; s/.*\x0\([^\x0]*Default=1[^\x0]*\)\x0.*/\1/; s/.*Path=\([^|]*\)|.*/\1/')"
+	if [ -n "$(grep '\[Profile[^0]\]' "${FF_PROFILE_INI}" 2>/dev/null)" ]; then
+		FF_PROFILE="$(tr <"${FF_PROFILE_INI}" -s '\n' '|' | sed 's/\[Profile[0-9]\]/\x0/g; s/$/\x0/; s/.*\x0\([^\x0]*Default=1[^\x0]*\)\x0.*/\1/; s/.*Path=\([^|]*\)|.*/\1/')"
 	else
-		FF_PROFILE="$(grep 'Path=' "$FF_PROFILE_INI" 2>/dev/null | sed 's/^Path=//' 2>/dev/null)"
+		FF_PROFILE="$(grep 'Path=' "${FF_PROFILE_INI}" 2>/dev/null | sed 's/^Path=//' 2>/dev/null)"
 	fi
 	# Remove Windows crap from the end of the line
-	if [ "$FF_WINDOWS" = 1 ]; then
-		FF_PROFILE="$(echo "$FF_PROFILE" | sed 's/\\r//g')"
+	if [ "${FF_WINDOWS}" = 1 ]; then
+		FF_PROFILE="$(echo "${FF_PROFILE}" | sed 's/\\r//g')"
 	fi
-	FF_PROFILE_PATH="$FF_PROFILE_PATH/$FF_PROFILE"
-	USER_CHROME="$FF_PROFILE_PATH/chrome/userChrome.css"
+	FF_PROFILE_PATH="${FF_PROFILE_PATH}/${FF_PROFILE}"
+	USER_CHROME="${FF_PROFILE_PATH}/chrome/userChrome.css"
 fi
 
-if [ -d "$HOME/Library/Application Support/Code/User" ]; then
-	VS_DIR="$HOME/Library/Application Support/Code/User"
-elif [ -d "$HOME/.config/Code/User" ]; then
-	VS_DIR="$HOME/.config/Code/User"
+if [ -d "${HOME}/Library/Application Support/Code/User" ]; then
+	VS_DIR="${HOME}/Library/Application Support/Code/User"
+elif [ -d "${HOME}/.config/Code/User" ]; then
+	VS_DIR="${HOME}/.config/Code/User"
 fi
 
 extra="
-$HOME/.config/git/ignore
-$HOME/.config/nvim/init.vim
-$HOME/.config/fish/config.fish
-$HOME/.config/terminus/config.yaml
-$VS_DIR/settings.json
+${HOME}/.config/git/ignore
+${HOME}/.config/nvim/init.vim
+${HOME}/.config/fish/config.fish
+${HOME}/.config/terminus/config.yaml
+${VS_DIR}/settings.json
 "

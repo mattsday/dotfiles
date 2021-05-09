@@ -11,15 +11,15 @@ configure_baloo() {
     fi
     # List of unwanted folders
     UNWATED_FOLDERS=(
-        "$HOME/snap"
-        "$HOME/go"
-        "$HOME/Android"
-        "$HOME/Documents/GnuCash"
-        "$HOME/Games/battlenet/"
-        "$HOME/Projects/Archive"
-        "$HOME/Projects/Personal/Banking"
-        "$HOME/Projects/Personal/mwafi5"
-        "$HOME/Projects/Cisco Legacy"
+        "${HOME}/snap"
+        "${HOME}/go"
+        "${HOME}/Android"
+        "${HOME}/Documents/GnuCash"
+        "${HOME}/Games/battlenet/"
+        "${HOME}/Projects/Archive"
+        "${HOME}/Projects/Personal/Banking"
+        "${HOME}/Projects/Personal/mwafi5"
+        "${HOME}/Projects/Cisco Legacy"
     )
 
     UNWANTED_FILTERS=(
@@ -40,22 +40,22 @@ configure_baloo() {
     info Configuring file indexer
     UPDATE=false
     for folder in "${UNWATED_FOLDERS[@]}"; do
-        if [[ -d "$folder" ]]; then
-            if balooctl config add excludeFolders "$folder" >/dev/null; then
-                info Ignoring "$folder" from index
+        if [[ -d "${folder}" ]]; then
+            if balooctl config add excludeFolders "${folder}" >/dev/null; then
+                info Ignoring "${folder}" from index
                 UPDATE=true
             fi
         fi
     done
 
     for filter in "${UNWANTED_FILTERS[@]}"; do
-        if balooctl config add excludeFilters "$filter" >/dev/null; then
-            info Ignoring "$filter" from index
+        if balooctl config add excludeFilters "${filter}" >/dev/null; then
+            info Ignoring "${filter}" from index
             UPDATE=true
         fi
     done
 
-    if [[ "$UPDATE" = true ]]; then
+    if [[ "${UPDATE}" = true ]]; then
         info Rebuilding index
         balooctl disable >/dev/null 2>&1
         balooctl purge >/dev/null 2>&1

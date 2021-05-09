@@ -4,7 +4,7 @@
 # Only run on SuSE and derivatives
 if [[ -f /etc/os-release ]]; then
 	RELEASE="$(grep '^ID=' /etc/os-release | cut -d '=' -f 2 | sed 's/"//g')"
-	case "$RELEASE" in
+	case "${RELEASE}" in
 	suse*)
 		echo Detected SuSE
 		;;
@@ -32,8 +32,8 @@ if [[ ! -x /usr/bin/sudo ]]; then
 			exit
 		fi
     fi
-elif sudo [ ! -f /etc/sudoers.d/nopasswd-"$USER" ]; then
-    echo "$USER"' ALL=(ALL:ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/nopasswd-"$USER" >/dev/null
+elif sudo [ ! -f /etc/sudoers.d/nopasswd-"${USER}" ]; then
+    echo "${USER}"' ALL=(ALL:ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/nopasswd-"${USER}" >/dev/null
 fi
 
 # Check for mixins
@@ -71,8 +71,8 @@ RPM_PACKAGES+=(
 
 INSTALL_PACKAGES=()
 for package in "${RPM_PACKAGES[@]}"; do
-	if ! rpm -q "$package" >/dev/null 2>&1; then
-		INSTALL_PACKAGES+=("$package")
+	if ! rpm -q "${package}" >/dev/null 2>&1; then
+		INSTALL_PACKAGES+=("${package}")
 	fi
 done
 if [ -n "${INSTALL_PACKAGES[*]}" ]; then
@@ -85,8 +85,8 @@ if command -v flatpak >/dev/null 2>&1; then
     flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo >/dev/null
     INSTALL_PACKAGES=()
     for package in "${FLATPAK_PACKAGES[@]}"; do
-        if ! flatpak info "$package" >/dev/null 2>&1; then
-            INSTALL_PACKAGES+=("$package")
+        if ! flatpak info "${package}" >/dev/null 2>&1; then
+            INSTALL_PACKAGES+=("${package}")
         fi
     done
     if [ -n "${INSTALL_PACKAGES[*]}" ]; then
@@ -95,13 +95,13 @@ if command -v flatpak >/dev/null 2>&1; then
     fi
 fi
 
-if [[ -x "$HOME/.update_aliases" ]]; then
-	"$HOME/.update_aliases" force
+if [[ -x "${HOME/.update_aliases}" ]]; then
+	"${HOME/.update_aliases}" force
 fi
 
-if [ -n "$CALLBACKS" ]; then
+if [ -n "${CALLBACKS}" ]; then
 	echo Running platform specific callbacks
 	for callback in "${CALLBACKS[@]}"; do
-		"$callback"
+		"${callback}"
 	done
 fi

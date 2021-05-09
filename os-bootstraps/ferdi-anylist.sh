@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ -z "$FERDI_DEV_BASE_DIR" ]]; then
+if [[ -z "${FERDI_DEV_BASE_DIR}" ]]; then
     FERDI_DEV_BASE_DIR="${HOME}/.config/Ferdi/recipes/dev"
 fi
 GIT_LOCATION="https://github.com/mattsday/ferdi-anylist"
