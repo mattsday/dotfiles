@@ -71,14 +71,14 @@ configure_ferdi() {
 
 	if [ -d /Applications/Ferdi.app ]; then
 		info Adding Ferdi features
-		FERDI_HOME="${HOME/Library/Application Support/Ferdi/recipes}"
+		FERDI_HOME="${HOME}/Library/Application Support/Ferdi/recipes"
 		export FERDI_DEV_BASE_DIR="${FERDI_HOME}"/dev
 		if [ -x ferdi-anylist.sh ]; then
 			./ferdi-anylist.sh
 		elif [ -x os-bootstraps/ferdi-anylist.sh ]; then
 			./os-bootstraps/ferdi-anylist.sh
 		fi
-		CONFIG_FILE="${FERDI_HOME/hangoutschat/index.js}"
+		CONFIG_FILE="${FERDI_HOME}/hangoutschat/index.js"
 		if [ -f "${CONFIG_FILE}" ] && command -v gsed >/dev/null 2>&1; then
 			info Fixing up Hangouts Chat Config
 			gsed -i 's|https://chat.google.com|https://dynamite-preprod.sandbox.google.com|g' "${CONFIG_FILE}"

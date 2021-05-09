@@ -95,8 +95,8 @@ if command -v flatpak >/dev/null 2>&1; then
     fi
 fi
 
-if [[ -x "${HOME/.update_aliases}" ]]; then
-	"${HOME/.update_aliases}" force
+if [[ -x "${HOME}/.update_aliases" ]]; then
+	"${HOME}/.update_aliases" force
 fi
 
 if [ -n "${CALLBACKS}" ]; then

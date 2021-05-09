@@ -130,6 +130,6 @@ if [[ -n "${CALLBACKS}" ]]; then
 fi
 
 #shellcheck disable=SC2154
-if [[ -z "${_bootstrap_mattsday}" ]] && [[ -x "${HOME/.update_aliases}" ]]; then
-	"${HOME/.update_aliases}" force
+if [[ -z "${_bootstrap_mattsday}" ]] && [[ -x "${HOME}/.update_aliases" ]]; then
+	"${HOME}/.update_aliases" force
 fi

@@ -144,13 +144,13 @@ install_vs_code() {
 }
 
 install_sdk_man() {
-  if [[ ! -f "${HOME/.sdkman/bin/sdkman-init.sh}" ]]; then
+  if [[ ! -f "${HOME}/.sdkman/bin/sdkman-init.sh" ]]; then
     info Installing sdkman
     curl -s "https://get.sdkman.io?rcupdate=false" | bash >/dev/null
-    . "${HOME/.sdkman/bin/sdkman-init.sh}"
+    . "${HOME}/.sdkman/bin/sdkman-init.sh"
   fi
-  if [[ -f "${HOME/.sdkman/bin/sdkman-init.sh}" ]]; then
-    . "${HOME/.sdkman/bin/sdkman-init.sh}"
+  if [[ -f "${HOME}/.sdkman/bin/sdkman-init.sh" ]]; then
+    . "${HOME}/.sdkman/bin/sdkman-init.sh"
     if ! command -v gradle >/dev/null 2>&1; then
       info Installing gradle
       sdk install gradle >/dev/null
@@ -163,9 +163,9 @@ install_sdk_man() {
 }
 
 bluetooth_setup() {
-  if [[ ! -f "${HOME/.config/pulse/default.pa}" ]]; then
+  if [[ ! -f "${HOME}/.config/pulse/default.pa" ]]; then
     info Setting up bluetooth
-    cat >"${HOME/.config/pulse/default.pa}" <<EOF
+    cat >"${HOME}/.config/pulse/default.pa" <<EOF
 .include /etc/pulse/default.pa
 
 # Switch all audio playback to Bluetooth headphones when they are connected

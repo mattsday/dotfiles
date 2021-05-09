@@ -76,10 +76,10 @@ configure_fonts() {
 }
 
 baloo_config() {
-    if [[ -f "${PWD/kde-desktop.sh}" ]]; then
-        "${PWD/kde-desktop.sh}"
-    elif [[ -f "${PWD/os-bootstraps/kde-desktop.sh}" ]]; then
-        "${PWD/os-bootstraps/kde-desktop.sh}"
+    if [[ -f "${PWD}/kde-desktop.sh" ]]; then
+        "${PWD}/kde-desktop.sh"
+    elif [[ -f "${PWD}/os-bootstraps/kde-desktop.sh" ]]; then
+        "${PWD}/os-bootstraps/kde-desktop.sh"
     fi
 }
 
@@ -111,10 +111,10 @@ ferdi() {
             sudo rpm -U --nodeps "${FERDI_FILE}" || fail Could not upgrade Ferdi
         fi
     fi
-    if [[ -f "${PWD/ferdi-anylist.sh}" ]]; then
-        "${PWD/ferdi-anylist.sh}"
-    elif [[ -f "${PWD/os-bootstraps/ferdi-anylist.sh}" ]]; then
-        "${PWD/os-bootstraps/ferdi-anylist.sh}"
+    if [[ -f "${PWD}/ferdi-anylist.sh" ]]; then
+        "${PWD}/ferdi-anylist.sh"
+    elif [[ -f "${PWD}/os-bootstraps/ferdi-anylist.sh" ]]; then
+        "${PWD}/os-bootstraps/ferdi-anylist.sh"
     fi
 }
 
@@ -143,13 +143,14 @@ vs_code() {
 
 ssh_configuration() {
     SSH_FILE="${HOME}"/.config/autostart-scripts/ssh.sh
+    # ${HOME/asdasda}
     if [[ ! -f "${SSH_FILE}" ]]; then
         mkdir -p "${HOME}"/.config/autostart-scripts/ || fail Cannot create ssh dir
         info Setting up ssh with ksshaskpass
         cat <<'EOF' | tee "${SSH_FILE}" >/dev/null
 #!/bin/bash
 sleep 5
-SSH_ASKPASS=/usr/libexec/ssh/ksshaskpass ssh-add "${HOME/.ssh/id_rsa}" </dev/null
+SSH_ASKPASS=/usr/libexec/ssh/ksshaskpass ssh-add "${HOME}/.ssh/id_rsa" </dev/null
 EOF
         chmod +x "${SSH_FILE}"
     fi
@@ -167,10 +168,10 @@ EOF
 }
 
 baloo_config() {
-    if [[ -f "${PWD/kde-desktop.sh}" ]]; then
-        "${PWD/kde-desktop.sh}"
-    elif [[ -f "${PWD/os-bootstraps/kde-desktop.sh}" ]]; then
-        "${PWD/os-bootstraps/kde-desktop.sh}"
+    if [[ -f "${PWD}/kde-desktop.sh" ]]; then
+        "${PWD}/kde-desktop.sh"
+    elif [[ -f "${PWD}/os-bootstraps/kde-desktop.sh" ]]; then
+        "${PWD}/os-bootstraps/kde-desktop.sh"
     fi
 }
 

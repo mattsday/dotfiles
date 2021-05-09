@@ -30,7 +30,7 @@ install_apt_packages() {
   get_apt_packages
   INSTALL_PACKAGES=()
   for package in "${APT_PACKAGES[@]}"; do
-    if ! dpkg-query -W -f='${Status}' "${package}" 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
+    if ! dpkg-query -W -f='$Status' "${package}" 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
       INSTALL_PACKAGES+=("${package}")
     fi
   done
@@ -177,14 +177,14 @@ install_gnucash() {
   fi
 
   info Installing GnuCash
-  if dpkg-query -W -f='${Status}' "${package}" 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
+  if dpkg-query -W -f='$Status' "${package}" 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
     _apt -y remove gnucash >/dev/null
   fi
   if [[ ! -d "${HOME}"/.local/share/applications ]]; then
     mkdir -p "${HOME}"/.local/share/applications
   fi
-  if [[ -f "${HOME/.local/share/applications/gnucash.desktop}" ]]; then
-    rm "${HOME/.local/share/applications/gnucash.desktop}"
+  if [[ -f "${HOME}/.local/share/applications/gnucash.desktop" ]]; then
+    rm "${HOME}/.local/share/applications/gnucash.desktop"
   fi
   sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo >/dev/null
   sudo flatpak install --noninteractive --or-update flathub org.gnucash.GnuCash org.gtk.Gtk3theme.Adwaita-dark \
@@ -209,8 +209,8 @@ install_gnucash() {
 # Deprecated
 configure_logitech_mouse() {
   if lsusb | grep 'Logitech, Inc. Unifying Receiver' >/dev/null 2>&1; then
-    if [[ -f "${HOME/.logitech-installed-mattsday}" ]]; then
-      info Logitech mouse already configured - delete "${HOME/.logitech-installed-mattsday}" to force
+    if [[ -f "${HOME}/.logitech-installed-mattsday" ]]; then
+      info Logitech mouse already configured - delete "${HOME}/.logitech-installed-mattsday" to force
       return
     fi
     info Setting up Logitech Mouse Configuration
@@ -255,7 +255,7 @@ devices: ({
 EOF
     sudo systemctl enable --now logid
     info Success
-    touch "${HOME/.logitech-installed-mattsday}"
+    touch "${HOME}/.logitech-installed-mattsday"
   fi
 }
 
@@ -278,7 +278,7 @@ ssh_configuration() {
     cat <<'EOF' | tee "${SSH_FILE}" >/dev/null
 #!/bin/bash
 sleep 5
-SSH_ASKPASS=/usr/bin/ksshaskpass ssh-add "${HOME/.ssh/id_rsa}" </dev/null
+SSH_ASKPASS=/usr/bin/ksshaskpass ssh-add "${HOME}/.ssh/id_rsa" </dev/null
 EOF
     chmod +x "${SSH_FILE}"
   fi
@@ -344,7 +344,7 @@ configure_fonts() {
 
 rambox() {
   RAMBOX_VERSION=1.5.1
-  if ! dpkg-query -W -f='${Status}' ramboxpro 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
+  if ! dpkg-query -W -f='$Status' ramboxpro 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
     info Installing Rambox Pro
     UPDATE_RAMBOX=true
   else
@@ -369,7 +369,7 @@ rambox() {
 ferdi() {
   FERDI_VERSION=5.6.0-beta.5
   FERDI_COMPARE_VERSION="${FERDI_VERSION}"-2741
-  if ! dpkg-query -W -f='${Status}' ferdi 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
+  if ! dpkg-query -W -f='$Status' ferdi 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
     info Installing Ferdi
     UPDATE_FERDI=true
   else
@@ -388,26 +388,26 @@ ferdi() {
     fi
     sudo dpkg -i /tmp/ferdi-"${FERDI_VERSION}".deb || fail Could not install Ferdi
   fi
-  if [[ -f "${PWD/ferdi-anylist.sh}" ]]; then
-    "${PWD/ferdi-anylist.sh}"
-  elif [[ -f "${PWD/os-bootstraps/ferdi-anylist.sh}" ]]; then
-    "${PWD/os-bootstraps/ferdi-anylist.sh}"
+  if [[ -f "${PWD}/ferdi-anylist.sh" ]]; then
+    "${PWD}/ferdi-anylist.sh"
+  elif [[ -f "${PWD}/os-bootstraps/ferdi-anylist.sh" ]]; then
+    "${PWD}/os-bootstraps/ferdi-anylist.sh"
   fi
 }
 
 baloo_config() {
-  if [[ -f "${PWD/kde-desktop.sh}" ]]; then
-    "${PWD/kde-desktop.sh}"
-  elif [[ -f "${PWD/os-bootstraps/kde-desktop.sh}" ]]; then
-    "${PWD/os-bootstraps/kde-desktop.sh}"
+  if [[ -f "${PWD}/kde-desktop.sh" ]]; then
+    "${PWD}/kde-desktop.sh"
+  elif [[ -f "${PWD}/os-bootstraps/kde-desktop.sh" ]]; then
+    "${PWD}/os-bootstraps/kde-desktop.sh"
   fi
 }
 
 emoji() {
-  if [[ -f "${PWD/linux-emoji.sh}" ]]; then
-    "${PWD/linux-emoji.sh}"
-  elif [[ -f "${PWD/os-bootstraps/linux-emoji.sh}" ]]; then
-    "${PWD/os-bootstraps/linux-emoji.sh}"
+  if [[ -f "${PWD}/linux-emoji.sh" ]]; then
+    "${PWD}/linux-emoji.sh"
+  elif [[ -f "${PWD}/os-bootstraps/linux-emoji.sh" ]]; then
+    "${PWD}/os-bootstraps/linux-emoji.sh"
   fi
 }
 
