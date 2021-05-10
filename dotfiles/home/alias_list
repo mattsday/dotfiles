@@ -42,10 +42,15 @@ alias @gdf df='gdf --si -x tmpfs -x devtmpfs'
 # Quick rsync command for system copies
 alias @rsync rsy='rsync --progress --partial --append-verify -a'
 
-# GNU Grep colouring
-talias @grep --version 2>/dev/null case $grep_ver in *GNU*@ grep='grep --color=auto'
-talias @grep --version 2>/dev/null case $grep_ver in *GNU*@ egrep='grep -E --color=auto'
-talias @grep --version 2>/dev/null case $grep_ver in *GNU*@ fgrep='grep -F --color=auto'
+# Grep colouring
+talias @echo a | grep a >/dev/null 2>&1@ grep='grep --color=auto'
+
+# Use GNU grep where possible
+talias @echo a | ggrep a >/dev/null 2>&1@ grep='ggrep --color=auto'
+
+# Grep shortcuts
+alias @grep egrep='grep -E'
+alias @grep fgrep='grep -F'
 
 talias @du /bin/ls --si@ du='du --si'
 talias @df --si -x tmpfs -x devtmpfs -x squashfs@ df='df --si -x tmpfs -x devtmpfs -x squashfs'
