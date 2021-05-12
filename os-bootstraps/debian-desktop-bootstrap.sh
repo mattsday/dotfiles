@@ -30,7 +30,7 @@ install_apt_packages() {
   get_apt_packages
   INSTALL_PACKAGES=()
   for package in "${APT_PACKAGES[@]}"; do
-    if ! dpkg-query -W -f='$Status' "${package}" 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
+    if ! dpkg-query -W -f='${Status}' "${package}" 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
       INSTALL_PACKAGES+=("${package}")
     fi
   done
@@ -178,7 +178,7 @@ install_gnucash() {
   fi
 
   info Installing GnuCash
-  if dpkg-query -W -f='$Status' "${package}" 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
+  if dpkg-query -W -f='${Status}' "${package}" 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
     _apt -y remove gnucash >/dev/null
   fi
   if [[ ! -d "${HOME}"/.local/share/applications ]]; then
@@ -345,7 +345,7 @@ configure_fonts() {
 
 rambox() {
   RAMBOX_VERSION=1.5.1
-  if ! dpkg-query -W -f='$Status' ramboxpro 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
+  if ! dpkg-query -W -f='${Status}' ramboxpro 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
     info Installing Rambox Pro
     UPDATE_RAMBOX=true
   else
@@ -370,7 +370,7 @@ rambox() {
 ferdi() {
   FERDI_VERSION=5.6.0-beta.5
   FERDI_COMPARE_VERSION="${FERDI_VERSION}"-2741
-  if ! dpkg-query -W -f='$Status' ferdi 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
+  if ! dpkg-query -W -f='${Status}' ferdi 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
     info Installing Ferdi
     UPDATE_FERDI=true
   else
