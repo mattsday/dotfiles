@@ -121,7 +121,8 @@ pipewire() {
 }
 
 get_flatpak_packages() {
-  FLATPAK_PACKAGES+=(org.signal.Signal org.gtk.Gtk3theme.Breeze-Dark)
+  #FLATPAK_PACKAGES+=(org.signal.Signal org.gtk.Gtk3theme.Breeze-Dark)
+  FLATPAK_PACKAGES+=(org.gtk.Gtk3theme.Breeze-Dark)
 }
 
 install_flatpak_packages() {
