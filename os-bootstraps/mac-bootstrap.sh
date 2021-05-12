@@ -120,7 +120,7 @@ main() {
 	fi
 
 	configure_homebrew
-	configure_ferdi
+	#configure_ferdi
 	configure_git
 	configure_fonts
 	configure_sudo
