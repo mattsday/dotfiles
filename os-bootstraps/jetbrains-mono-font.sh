@@ -33,7 +33,7 @@ check_cmd() {
 
 main() {
     if [ -f "${LOCAL_FONT}"/JetBrainsMono-Regular.ttf ]; then
-        info Fonts already installed in "${LOCAL_FONT}"
+        #Fonts already installed in "${LOCAL_FONT}"
         exit 0
     fi
 

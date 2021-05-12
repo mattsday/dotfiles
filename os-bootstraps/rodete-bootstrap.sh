@@ -52,9 +52,9 @@ install_apt_packages() {
 }
 
 passwordless_sudo() {
-  if [[ ! -f /etc/sudoers.d/nopasswd ]]; then
+  if [[ ! -f /etc/sudoers.d/nopasswd-"${USER}" ]]; then
     info Setting up passwordless sudo
-    echo "${USER}"' ALL=(ALL:ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/nopasswd
+    echo "${USER}"' ALL=(ALL:ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/nopasswd-"${USER}"
     sudo AUTOMATIC_UPDATE=yes glinux-config set custom_etc_sudoers_d true >/dev/null 2>&1
   fi
 }
@@ -73,13 +73,18 @@ install_kubectx() {
 }
 
 install_spotify_flatpak() {
+  if ! command -v flatpak >/dev/null 2>&1; then
+    return
+  fi
   # Install spotify flatpak
-  echo "Installing Spotify (flatpak)"
   sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo >/dev/null
   package=com.spotify.Client
-  if ! flatpak info "${package}" >/dev/null 2>&1 && ! sudo flatpak -y install "${package}" >/dev/null; then
-    echo Flatpak installation failed for "${package}"
-    return
+  if ! flatpak info "${package}" >/dev/null 2>&1; then
+    echo "Installing Spotify (flatpak)"
+    if ! sudo flatpak -y install "${package}" >/dev/null; then
+      echo Flatpak installation failed for "${package}"
+      return
+    fi
   fi
   # Remove spotify-client debian package
   if dpkg-query -W -f='${Status}' spotify-client 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
@@ -89,6 +94,9 @@ install_spotify_flatpak() {
 }
 
 install_chromium_flatpak() {
+  if ! command -v flatpak >/dev/null 2>&1; then
+    return
+  fi
   # if Snap is installed, remove the Chromium snap and the desktop entry
   if command -v snap >/dev/null 2>&1; then
     if snap info chromium | grep installed: >/dev/null 2>&1; then
@@ -100,13 +108,15 @@ install_chromium_flatpak() {
     rm "${HOME}"/.local/share/applications/chromium_chromium.desktop
   fi
 
-  echo "Installing Chromium (flatpak)"
   sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo >/dev/null
   FLATPAK_PACKAGES+=(org.chromium.Chromium org.gtk.Gtk3theme.Breeze-Dark)
   for package in "${FLATPAK_PACKAGES[@]}"; do
-    if ! flatpak info "${package}" >/dev/null 2>&1 && ! sudo flatpak -y install "${package}" >/dev/null; then
-      echo Flatpak installation failed for "${package}"
-      return
+    if ! flatpak info "${package}" >/dev/null 2>&1; then
+      echo "Installing Chromium (flatpak) - ${package}"
+      if ! sudo flatpak -y install "${package}" >/dev/null; then
+        echo Flatpak installation failed for "${package}"
+        return
+      fi
     fi
   done
 
@@ -162,32 +172,6 @@ install_sdk_man() {
   fi
 }
 
-bluetooth_setup() {
-  if [[ ! -f "${HOME}/.config/pulse/default.pa" ]]; then
-    info Setting up bluetooth
-    cat >"${HOME}/.config/pulse/default.pa" <<EOF
-.include /etc/pulse/default.pa
-
-# Switch all audio playback to Bluetooth headphones when they are connected
-.ifexists module-switch-on-connect.so
-  load-module module-switch-on-connect
-.endif
-
-# Enable automatic switching between A2DP and HSP/HFP
-.ifexists module-bluetooth-policy.so
-  unload-module module-bluetooth-policy
-  load-module module-bluetooth-policy auto_switch=2
-.endif
-
-# Fix bluetooth headphones bug
-.ifexists module-bluetooth-discover.so
-  unload-module module-bluetooth-discover
-  load-module module-bluetooth-discover
-.endif
-EOF
-  fi
-}
-
 fix_ferdi_chat() {
   CONFIG_FILE="${HOME}"/.config/Ferdi/recipes/hangoutschat/index.js
   if [[ -f "${CONFIG_FILE}" ]]; then
@@ -198,8 +182,8 @@ fix_ferdi_chat() {
 }
 
 docker_setup() {
-  info Setting up Docker
   if ! dpkg-query -W -f='${Status}' docker-ce 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
+    info Setting up Docker
     sudo glinux-add-repo -b docker-ce-"$(lsb_release -cs)" >/dev/null || fail Failed to add Docker repo
     _apt update >/dev/null || fail Failed to update
     _apt -y install docker-ce >/dev/null || fail Failed to install Docker
@@ -234,7 +218,6 @@ EOF
 main() {
   CALLBACKS+=(
     passwordless_sudo
-    #bluetooth_setup
     docker_setup
     install_vs_code
     install_sdk_man
