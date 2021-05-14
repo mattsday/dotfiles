@@ -18,6 +18,25 @@ info() {
 	echo "$@"
 }
 
+configure_ports() {
+	xcode-select --install 2>/dev/null
+	if [ ! -x /opt/local/bin/port ]; then
+		echo "Install MacPorts - https://www.macports.org/install.php"
+		return
+	fi
+	PORTS=(gawk grep shellcheck coreutils bash htop gsed gnutar multimarkdown jq findutils tmux wget ffmpeg youtube-dl watch)
+	for port in "${PORTS[@]}"; do
+		if [ ! "$(/opt/local/bin/port -q installed "${port}" | wc -l)" -gt 0 ]; then
+			PORTS_INSTALL+=("${port}")
+		fi
+	done
+	if [[ -n "${PORTS_INSTALL[*]}" ]]; then
+		info Installing ports "${PORTS_INSTALL[@]}"
+		sudo /opt/local/bin/port -q install "${PORTS_INSTALL[@]}"
+	fi
+}
+
+# Deprecated, don't install homebrew any more
 configure_homebrew() {
 	# Is homebrew installed?
 	if [[ ! -x /usr/local/bin/brew ]]; then
@@ -66,7 +85,7 @@ configure_homebrew() {
 		fi
 	done
 }
-
+# Deprecated, don't install Ferdi
 configure_ferdi() {
 
 	if [ -d /Applications/Ferdi.app ]; then
@@ -119,8 +138,9 @@ main() {
 		fail_exit Not OS X, stopping
 	fi
 
-	configure_homebrew
+	#configure_homebrew
 	#configure_ferdi
+	configure_ports
 	configure_git
 	configure_fonts
 	configure_sudo

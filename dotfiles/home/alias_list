@@ -110,6 +110,9 @@ alias @/usr/sbin/freebsd-update,sudo freebsd-update='sudo /usr/sbin/freebsd-upda
 # Fedora
 alias @/usr/bin/dnf,sudo dnf='sudo dnf'@yum='dnf'
 
+# Mac Ports
+alias @/opt/local/bin/port port='sudo /opt/local/bin/port'
+
 # SuSE
 alias @/usr/bin/zypper,sudo zypper='sudo zypper'
 

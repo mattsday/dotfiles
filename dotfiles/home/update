@@ -9,19 +9,13 @@ _sudo() {
 	fi
 }
 
-if [ -f "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
-	. "$HOME/.sdkman/bin/sdkman-init.sh"
+if [ -f "${HOME}/.sdkman/bin/sdkman-init.sh" ]; then
+	. "${HOME}/.sdkman/bin/sdkman-init.sh"
 fi
 
 # Debian-based
 if [ -x /usr/bin/apt ] && [ -x /usr/bin/dpkg ]; then
 	_sudo apt update && _sudo apt full-upgrade
-# OS X
-elif [ -x /usr/local/bin/brew ]; then
-	brew update
-	brew upgrade
-	brew cleanup
-	brew doctor
 # Arch-based
 elif [ -x /usr/bin/pacman ]; then
 	# Arch linux use yay if it's there
@@ -45,12 +39,21 @@ elif [ -x /usr/sbin/pkg ]; then
 # SuSE
 elif [ -x /usr/bin/zypper ]; then
 	_sudo zypper refresh && zypper dup
+# OS X
+elif [ -x /opt/local/bin/port ]; then
+	_sudo /opt/local/bin/port -q selfupdate
+	_sudo /opt/local/bin/port -q upgrade outdated
+elif [ -x /usr/local/bin/brew ]; then
+	brew update
+	brew upgrade
+	brew cleanup
+	brew doctor
 fi
 # If there are any callbacks process them
 if [ -n "${_UPDATE_CALLBACKS}" ]; then
 	IFS=":"
 	for i in ${_UPDATE_CALLBACKS}; do
 		unset IFS
-		eval "$i"
+		eval "${i}"
 	done
 fi
