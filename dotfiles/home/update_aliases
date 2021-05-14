@@ -144,7 +144,7 @@ add_alias() {
 	IFS='@'
 	for alias in $1; do
 		alias_name="$(echo "${alias}" | cut -f 1 -d = | xargs)"
-		alias_data="$(echo "${alias}" | cut -f 2- -d = | xargs)"
+		alias_data="$(echo "${alias}" | cut -f 2- -d =)"
 		first_command="$(echo "${alias_data}" | cut -f 1 -d ' ' | sed 's/^!//')"
 
 		# If it's a sudo alias don't do it as root
