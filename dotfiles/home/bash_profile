@@ -6,8 +6,8 @@
 # Set up environment variables
 
 # Load any local config first
-if [[ -f "$HOME/.bash_profile_config" ]]; then
-    . "$HOME/.bash_profile_config"         
+if [[ -f "${HOME}/.bash_profile_config" ]]; then
+    . "${HOME}/.bash_profile_config"
 fi
 
 # ======================
@@ -15,6 +15,6 @@ fi
 # ======================
 # Check for (and source) additional plugins and resources, such as local config
 # files
-if [[ -f "$HOME/.bash_profile_local" ]]; then
-    . "$HOME/.bash_profile_local"
+if [[ -f "${HOME}/.bash_profile_local" ]]; then
+    . "${HOME}/.bash_profile_local"
 fi

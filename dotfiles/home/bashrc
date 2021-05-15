@@ -11,16 +11,16 @@
 # Without these some options later may break...
 
 # If not running interactively, don't do anything
-[[ -z "$PS1" ]] && return
+[[ -z "${PS1}" ]] && return
 
 # Load any local config first (aliases should go in _local file)
-if [[ -f "$HOME/.bashrc_config" ]]; then
-	. "$HOME/.bashrc_config"
+if [[ -f "${HOME}/.bashrc_config" ]]; then
+	. "${HOME}/.bashrc_config"
 fi
 
 # Load basic aliases from common set (zsh & bash compatible)
-if [[ -f "$HOME/.env_common" ]]; then
-    . "$HOME/.env_common"
+if [[ -f "${HOME}/.env_common" ]]; then
+    . "${HOME}/.env_common"
 fi
 
 # =============
@@ -60,7 +60,7 @@ elif [[ -f "/usr/local/etc/bash_completion" ]]; then
 	completion=1
 fi
 
-if [ "$completion" = 1 ] && command -v kubectl >/dev/null 2>&1; then
+if [ "${completion}" = 1 ] && command -v kubectl >/dev/null 2>&1; then
 	. <(kubectl completion bash)
 fi
 
@@ -77,8 +77,8 @@ fi
 # Check the environment and add aliases across various platforms
 
 # Load basic aliases from common set (zsh & bash compatible)
-if [[ -f "$HOME/.shell_common" ]]; then
-	. "$HOME/.shell_common"
+if [[ -f "${HOME}/.shell_common" ]]; then
+	. "${HOME}/.shell_common"
 fi
 
 # ===========
@@ -94,14 +94,14 @@ if ((colours >= 8)); then
 	end="\\[\\033[00m\\]"
 
 	# Custom prompt (coloured in yellow and cyan): user@host:~%
-	if [[ "$USER" == matt ]] || [[ "$USER" == mattsday ]]; then
-		PS1="$yellow\\h$end:$cyan\\w$end\$ "
+	if [[ "${USER}" == matt ]] || [[ "${USER}" == mattsday ]]; then
+		PS1="${yellow}\\h${end}:${cyan}\\w${end}\$ "
 	else
-		PS1="$green\\u$end@$yellow\\h$end:$cyan\\w$end\$ "
+		PS1="${green}\\u${end}@${yellow}\\h${end}:${cyan}\\w${end}\$ "
 	fi
 	unset yellow cyan green end
 else
-	if [[ "$USER" == matt ]] || [[ "$USER" == mattsday ]]; then
+	if [[ "${USER}" == matt ]] || [[ "${USER}" == mattsday ]]; then
 		PS1='\h:\w\$ '
 	else
 		PS1='\u@\h:\w\$ '
@@ -109,15 +109,15 @@ else
 fi
 
 # If this is an xterm set the title to host:dir
-case "$TERM" in xterm* | rxvt*)
-	PROMPT_COMMAND='echo -ne "\033]0;$HOSTNAME:${PWD/$HOME/~}\007"'
+case "${TERM}" in xterm* | rxvt*)
+	PROMPT_COMMAND='echo -ne "\033]0;$HOSTNAME:${PWD/${HOME}/~}\007"'
 	;;
 *) ;;
 esac
 
 # Load local system stuff (local PATH, aliases etc)
-if [[ -f "$HOME/.bashrc_local" ]]; then
-	. "$HOME/.bashrc_local"
+if [[ -f "${HOME}/.bashrc_local" ]]; then
+	. "${HOME}/.bashrc_local"
 fi
 
 # vim: syntax=sh
