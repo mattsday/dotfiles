@@ -10,14 +10,19 @@
 # Very exotic but it works :-). To update run `update_aliases force`
 # 
 # Can also test a command
-# talias command to test @ alias1=value
+# talias @command to test@ alias=value
 # e.g. talias @ip --color=auto -V@ ip='ip --color=auto'
+#
+# Same for exports
+# texport @test command@ key=value
+# e.g. texport @[ -f /etc/test ]@ TEST=exists
 
 # Allow sudo expansion
 alias @sudo sudo='sudo '
 
 # Common shortcuts
 talias @ls --color=auto --si@ ls='ls --si --color=auto'
+
 # Use human readable ls output
 alias ll='ls -lahF'
 # ...but prefer SI units if using GNU ls
@@ -90,6 +95,9 @@ export @vim VISUAL='!vim'@EDITOR='!vim'@USE_EDITOR='!vim'
 
 # Use less as a pager
 export @less PAGER=less
+
+# Use portals for GTK if available
+texport @[ -f /usr/libexec/xdg-desktop-portal ] && [ -f /usr/share/xdg-desktop-portal/portals/kde.portal ]@ GTK_USE_PORTAL=1
 
 # Debian/Apt
 alias @/usr/bin/apt,/usr/bin/dpkg,sudo apt='sudo apt'@apt-get='sudo apt-get'

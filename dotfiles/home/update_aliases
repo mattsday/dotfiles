@@ -206,7 +206,18 @@ while IFS='' read -r line || [ -n "${line}" ]; do
 			add_alias "$(echo "${line}" | cut -f 3- -d @ | xargs)"
 		fi
 		;;
-		# Check for executables
+	'texport @'*)
+		IFS=''
+		# Get the list of command_list to test
+		test="$(echo "${line}" | cut -d @ -f 2 | sed 's/^@//' | xargs)"
+		execute=1
+		if ! eval "${test}" >/dev/null 2>&1; then
+			execute=0
+		fi
+		if [ "${execute}" = 1 ]; then
+			add_export "$(echo "${line}" | cut -f 3- -d @ | xargs)"
+		fi
+		;;
 	'alias @'* | 'export @'* | 'update @'*)
 		# Get the list of command_list to test
 		command_list="$(echo "${line}" | cut -f 2 -d ' ' | sed 's/^@//')"
