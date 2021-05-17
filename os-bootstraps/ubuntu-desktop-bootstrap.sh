@@ -14,6 +14,9 @@ fi
 if [ -z "${OS_BOOTSTRAP_ROOT}" ]; then
     if [ -f "${DOTFILES_ROOT}"/debian-bootstrap.sh ]; then
         OS_BOOTSTRAP_ROOT="${DOTFILES_ROOT}"
+        if command -v realpath >/dev/null 2>&1; then
+            DOTFILES_ROOT="$(realpath "${DOTFILES_ROOT}"/..)"
+        fi
     else
         OS_BOOTSTRAP_ROOT="${DOTFILES_ROOT}"/os-bootstraps
         if [ -f "${DOTFILES_ROOT}"/debian-bootstrap.sh ]; then

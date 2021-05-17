@@ -16,6 +16,9 @@ fi
 if [ -z "${OS_BOOTSTRAP_ROOT}" ]; then
   if [ -f "${DOTFILES_ROOT}"/debian-bootstrap.sh ]; then
     OS_BOOTSTRAP_ROOT="${DOTFILES_ROOT}"
+    if command -v realpath >/dev/null 2>&1; then
+      DOTFILES_ROOT="$(realpath "${DOTFILES_ROOT}"/..)"
+    fi
   else
     OS_BOOTSTRAP_ROOT="${DOTFILES_ROOT}"/os-bootstraps
     if [ -f "${DOTFILES_ROOT}"/debian-bootstrap.sh ]; then
@@ -291,26 +294,20 @@ ferdi() {
     fi
     sudo dpkg -i /tmp/ferdi-"${FERDI_VERSION}".deb || fail Could not install Ferdi
   fi
-  if [[ -f "${PWD}/ferdi-anylist.sh" ]]; then
-    "${PWD}/ferdi-anylist.sh"
-  elif [[ -f "${PWD}/os-bootstraps/ferdi-anylist.sh" ]]; then
-    "${PWD}/os-bootstraps/ferdi-anylist.sh"
+  if [[ -f "${OS_BOOTSTRAP_ROOT}/ferdi-anylist.sh" ]]; then
+    "${OS_BOOTSTRAP_ROOT}/ferdi-anylist.sh"
   fi
 }
 
 baloo_config() {
-  if [[ -f "${PWD}/kde-desktop.sh" ]]; then
-    "${PWD}/kde-desktop.sh"
-  elif [[ -f "${PWD}/os-bootstraps/kde-desktop.sh" ]]; then
-    "${PWD}/os-bootstraps/kde-desktop.sh"
+  if [[ -f "${OS_BOOTSTRAP_ROOT}/kde-desktop.sh" ]]; then
+    "${OS_BOOTSTRAP_ROOT}/kde-desktop.sh"
   fi
 }
 
 emoji() {
-  if [[ -f "${PWD}/linux-emoji.sh" ]]; then
-    "${PWD}/linux-emoji.sh"
-  elif [[ -f "${PWD}/os-bootstraps/linux-emoji.sh" ]]; then
-    "${PWD}/os-bootstraps/linux-emoji.sh"
+  if [[ -f "${OS_BOOTSTRAP_ROOT}/linux-emoji.sh" ]]; then
+    "${OS_BOOTSTRAP_ROOT}/linux-emoji.sh"
   fi
 }
 
