@@ -1,27 +1,29 @@
+#!/bin/sh
 # Matt Day's custom .profile file
 # This file is for legacy bourne shells. Really should be using zsh,
 # bash or even ksh! Some systems don't and this makes them a little more
 # usable... An example is BusyBox
 # Latest copy always here: https://github.com/mattsday/dotfiles/
+# shellcheck disable=SC1090
 
 # If being called from another bourne compatible shell, load those
 # specific rc files instead and stop this
-case "$0" in
+case "${0}" in
 -zsh)
-	if [ -f "$HOME/.zshrc" ]; then
-		. "$HOME/.zshrc"
+	if [ -f "${HOME}/.zshrc" ]; then
+		. "${HOME}/.zshrc"
 	fi
 	return
 	;;
 -bash)
-	if [ -f "$HOME/.bashrc" ]; then
-		. "$HOME/.bashrc"
+	if [ -f "${HOME}/.bashrc" ]; then
+		. "${HOME}/.bashrc"
 	fi
 	return
 	;;
 -ksh)
-	if [ -f "$HOME/.kshrc" ]; then
-		. "$HOME/.kshrc"
+	if [ -f "${HOME}/.kshrc" ]; then
+		. "${HOME}/.kshrc"
 	fi
 	return
 	;;
@@ -35,11 +37,11 @@ esac
 # Without these some options later may break...
 
 # If not running interactively, don't do anything
-[ -z "PS1" ] && return
+[ -z "${PS1}" ] && return
 
 # Load any local config first (aliases should go in _local file)
-if [ -f "$HOME/.profile_config" ]; then
-	. "$HOME/.profile_config"
+if [ -f "${HOME}/.profile_config" ]; then
+	. "${HOME}/.profile_config"
 fi
 
 # =============
@@ -64,13 +66,13 @@ export HISTSIZE HISTFILE SAVEHIST HISTCONTROL
 # Check the environment and add aliases across various platforms
 
 # Load basic aliases from common set (zsh & bash compatible)
-if [ -f "$HOME/.env_common" ]; then
-	. "$HOME/.env_common"
+if [ -f "${HOME}/.env_common" ]; then
+	. "${HOME}/.env_common"
 fi
 
 # Load basic aliases from common set (zsh & bash compatible)
-if [ -f "$HOME/.shell_common" ]; then
-	. "$HOME/.shell_common"
+if [ -f "${HOME}/.shell_common" ]; then
+	. "${HOME}/.shell_common"
 fi
 
 # ===========
@@ -79,74 +81,80 @@ fi
 # Specific options that affect the L&F of the shell
 #
 hostname=$(hostname)
-if [ -z $hostname ]; then
+if [ -z "${hostname}" ]; then
 	hostname=$(cat /etc/hostname)
-	if [ -z $hostname ]; then
+	if [ -z "${hostname}" ]; then
 		hostname='(none)'
 	fi
 fi
-shorthost=$(echo $hostname | sed 's/\..*//')
+shorthost="$(echo "${hostname}" | sed 's/\..*//')"
 
 # Dynamic prompt
 # Some bourne shells don't support variables in the prompt, act to the lowest common denominator:
-PS1="$USER@$shorthost$ "
+PS1="${USER}@${shorthost}$ "
 
 dynamic_prompt=0
 
-if [ -f "$HOME/.simple_shell" ]; then
-    dynamic_prompt=2
-    colours=0
+if [ -f "${HOME}/.simple_shell" ]; then
+	dynamic_prompt=2
+	colours=0
 elif command -v readlink >/dev/null 2>&1; then
-	case $(readlink /bin/sh 2>/dev/null) in
+	case "$(readlink /bin/sh 2>/dev/null)" in
 	*busybox)
 		# Enable a dynamic shell
-        dynamic_prompt=2
+		dynamic_prompt=2
 		;;
 	*bash | *dash)
 		dynamic_prompt=1
 		;;
+	*)
+		dynamic_prompt=0
+		;;
 	esac
 else
-    # Another way to detect BusyBox...
-    sh_ver=$(sh --help 2>&1 | grep -om 1 BusyBox 2>/dev/null)
-    if [ "$sh_ver" = BusyBox ]; then
-        dynamic_prompt=2
-    fi
+	# Another way to detect BusyBox...
+	sh_ver=$(sh --help 2>&1 | grep -om 1 BusyBox 2>/dev/null)
+	if [ "${sh_ver}" = BusyBox ]; then
+		dynamic_prompt=2
+	fi
 fi
 
-if [ "$dynamic_prompt" = 1 ] || [ -f "$HOME/.full_shell" ]; then
-   	if [ $colours -ge 8 ]; then
-	    yellow="\033[01;33m"
-    	green="\033[01;32m"
-   		cyan="\033[01;36m"
-	    grey="\033[01;30m"
-    	end="\033[00m"
+if [ "${dynamic_prompt}" = 1 ] || [ -f "${HOME}/.full_shell" ]; then
+	if [ "${colours}" -ge 8 ]; then
+		yellow="\033[01;33m"
+		green="\033[01;32m"
+		cyan="\033[01;36m"
+		#shellcheck disable=SC2034
+		grey="\033[01;30m"
+		end="\033[00m"
 
-   		if [ "$USER" = "matt" ]; then
-	    	PS1='$(echo "$yellow$shorthost$end:$cyan\c";if [ "${PWD#$HOME}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#$HOME}\c";fi;echo "$end$ ")'
-    	else
-   			PS1='$(echo "$green$USER$end@$yellow$shorthost$end:$cyan\c";if [ "${PWD#$HOME}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#$HOME}\c";fi;echo "$end$ ")'
-	    fi
-    else
-   		if [ "$USER" = "matt" ]; then
-	    	PS1='$(echo "$shorthost:\c";if [ "${PWD#$HOME}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#$HOME}\c";fi;echo "$ ")'
-    	else
-   			PS1='$(echo "$USER@$shorthost:\c";if [ "${PWD#$HOME}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#$HOME}\c";fi;echo "$ ")'
-	    fi
-    fi
-    export PS1
-elif [ "$dynamic_prompt" = 2 ]; then
-    if [ -z $USER ] || [ "$USER" = matt ] || [ "$USER" = mattsday ]; then
-	   	PS1='\h:\w\$ '
-   	else
-    	PS1=$USER'@\h:\w\$ '
-   	fi
-    export PS1
+		if [ "${USER}" = "matt" ]; then
+			PS1='$(echo "$yellow$shorthost$end:$cyan\c";if [ "${PWD#${HOME}}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#${HOME}}\c";fi;echo "$end$ ")'
+		else
+			PS1='$(echo "$green${USER}$end@$yellow$shorthost$end:$cyan\c";if [ "${PWD#${HOME}}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#${HOME}}\c";fi;echo "$end$ ")'
+		fi
+	else
+		if [ "${USER}" = "matt" ]; then
+			PS1='$(echo "$shorthost:\c";if [ "${PWD#${HOME}}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#${HOME}}\c";fi;echo "$ ")'
+		else
+			#shellcheck disable=SC2089
+			PS1='$(echo "${USER}@$shorthost:\c";if [ "${PWD#${HOME}}" = "$PWD" ]; then echo "$PWD\c"; else echo "~${PWD#${HOME}}\c";fi;echo "$ ")'
+		fi
+	fi
+	#shellcheck disable=SC2090
+	export PS1
+elif [ "${dynamic_prompt}" = 2 ]; then
+	if [ -z "${USER}" ] || [ "${USER}" = matt ] || [ "${USER}" = mattsday ]; then
+		PS1='\h:\w\$ '
+	else
+		PS1=${USER}'@\h:\w\$ '
+	fi
+	export PS1
 fi
 
 # Local bourne shell config (paths etc) (should be the last thing loaded)
-if [ -f "$HOME/.profile_local" ]; then
-	. "$HOME/.profile_local"
+if [ -f "${HOME}/.profile_local" ]; then
+	. "${HOME}/.profile_local"
 fi
 
 # vim: syntax=sh

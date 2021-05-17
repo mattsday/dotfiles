@@ -11,14 +11,14 @@
 # Without these some options later may break...
 
 # If not running interactively, don't do anything
-[[ -z "$PS1" ]] && return
+[[ -z "${PS1}" ]] && return
 
 # Enable word splitting with IFS
 set -y
 
 # Load any local config first (aliases should go in _local file)
-if [[ -f "$HOME/.zshrc_config" ]]; then
-	. "$HOME/.zshrc_config"
+if [[ -f "${HOME}/.zshrc_config" ]]; then
+	. "${HOME}/.zshrc_config"
 fi
 
 # Load colour names so they can be referred to as green, yellow etc
@@ -57,7 +57,7 @@ fi
 autoload -U zutil
 
 # If a terminal is bold enough to claim XTERM let's assume it can do 256 colours!
-[[ "$TERM" == "xterm" ]] && export TERM=xterm-256color
+[[ "${TERM}" == "xterm" ]] && export TERM=xterm-256color
 
 # =============
 # Shell Options
@@ -74,7 +74,7 @@ shell_options=(
 )
 
 for o in "${shell_options[@]}"; do
-    setopt "$o"
+    setopt "${o}"
 done
 
 # Ensure ctrl-a/ctrl-e for home/end respectively (emacs compatibility):
@@ -104,8 +104,8 @@ setopt HIST_VERIFY
 # Add aliases across various platforms
 
 # Load basic aliases from common set (bourne shell compatible)
-if [[ -f "$HOME/.shell_common" ]]; then
-	. "$HOME/.shell_common"
+if [[ -f "${HOME}/.shell_common" ]]; then
+	. "${HOME}/.shell_common"
 fi
 
 # ===========
@@ -152,9 +152,9 @@ zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path ~/.zsh_cache
 
 # Add GCP support
-if [ -f "/usr/share/google-cloud-sdk/completion.zsh.inc" ]; then
+if [[ -f "/usr/share/google-cloud-sdk/completion.zsh.inc" ]]; then
     . /usr/share/google-cloud-sdk/completion.zsh.inc
-elif [ -f "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc" ]; then
+elif [[ -f "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc" ]]; then
 	. /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc
 fi
 
@@ -165,7 +165,7 @@ _update_prompt() {
 	if (( colours >= 8 )); then
 		# Custom prompt (coloured in yellow and cyan):
 		# If the user is 'matt' don't print it
-		case "$USER" in
+		case "${USER}" in
 			matt|mattsday)
 				;;
 			*)
@@ -173,12 +173,12 @@ _update_prompt() {
 				;;
 		esac
 		# Only print hostname if accessed via ssh
-		[[ -n "$SSH_TTY" ]] && OUT+='%B%F{yellow}%2m%f%b:'
+		[[ -n "${SSH_TTY}" ]] && OUT+='%B%F{yellow}%2m%f%b:'
 		# Print working directory
 		OUT+="%B%F{cyan}%~%f%b%# "
 	else
 		# If the user is 'matt' don't print it
-		case "$USER" in
+		case "${USER}" in
 			matt|mattsday)
 				;;
 			*)
@@ -186,11 +186,11 @@ _update_prompt() {
 				;;
 		esac
 		# Only print hostname if accessed via ssh
-   		[[ -n "$SSH_TTY" ]] && OUT+='%m:'
+   		[[ -n "${SSH_TTY}" ]] && OUT+='%m:'
 		# Print working directory
 		OUT+="%~%# "
 	fi
-	print "$OUT"
+	print "${OUT}"
 }
 
 _update_rprompt() {
@@ -199,24 +199,27 @@ _update_rprompt() {
 	else
 		OUT+="${vcs_info_msg_0_}"
 	fi
-	print "$OUT"
+	print "${OUT}"
 }
 
+#shellcheck disable=SC2034
 PROMPT='$(_update_prompt)'
+#shellcheck disable=SC2034
 RPROMPT='$(_update_rprompt)'
 
 # Update the terminal title and version control info
-case $TERM in
+case ${TERM} in
 	xterm*)
 		precmd () {
 			# Check directory for git etc
-			if [[ $vcs_support == true ]]; then
+			if [[ ${vcs_support} == true ]]; then
 				vcs_info
 			fi
 			# Print xterm title (user@host:~)
 			print -Pn "\e]0;%m: %~\a"
 		}
 	;;
+	*) # Do nothing
 esac
 
 # ======================
@@ -224,13 +227,13 @@ esac
 # ======================
 # Check for (and source) additional plugins and resources, such as local config
 # files
-if [[ -f "$HOME/.zshrc_local" ]]; then
-	. "$HOME/.zshrc_local"
+if [[ -f "${HOME}/.zshrc_local" ]]; then
+	. "${HOME}/.zshrc_local"
 fi
 
 # Finally, load fish style syntax highlighting if available
-if [[ -f "$HOME/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]]; then
-	. "$HOME/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+if [[ -f "${HOME}/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]]; then
+	. "${HOME}/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 fi
 
 # vim: syntax=zsh
