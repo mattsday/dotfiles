@@ -1,5 +1,16 @@
 #!/bin/bash
 
+if [ -z "${DOTFILES_ROOT}" ]; then
+	if command -v dirname >/dev/null 2>&1; then
+		DOTFILES_ROOT="$(dirname "$0")"
+		if command -v realpath >/dev/null 2>&1; then
+			DOTFILES_ROOT="$(realpath "${DOTFILES_ROOT}")"
+		fi
+	else
+		DOTFILES_ROOT="${PWD}"
+	fi
+fi
+
 _pacman() {
 	sudo pacman "$@"
 }

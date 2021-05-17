@@ -2,6 +2,29 @@
 # Generic bootstrapping for any debian-derived desktop (e.g. Ubuntu, Neon, Rodete, ...)
 #shellcheck disable=SC1090
 
+if [ -z "${DOTFILES_ROOT}" ]; then
+  if command -v dirname >/dev/null 2>&1; then
+    DOTFILES_ROOT="$(dirname "$0")"
+    if command -v realpath >/dev/null 2>&1; then
+      DOTFILES_ROOT="$(realpath "${DOTFILES_ROOT}")"
+    fi
+  else
+    DOTFILES_ROOT="${PWD}"
+  fi
+fi
+
+if [ -z "${OS_BOOTSTRAP_ROOT}" ]; then
+  if [ -f "${DOTFILES_ROOT}"/debian-bootstrap.sh ]; then
+    OS_BOOTSTRAP_ROOT="${DOTFILES_ROOT}"
+  else
+    OS_BOOTSTRAP_ROOT="${DOTFILES_ROOT}"/os-bootstraps
+    if [ -f "${DOTFILES_ROOT}"/debian-bootstrap.sh ]; then
+      echo Cannot find OS bootstraps
+      exit 1
+    fi
+  fi
+fi
+
 fail() {
   echo >&2 '[Failure]' "$@"
   return 1
@@ -217,10 +240,8 @@ fix_signal_desktop_entry() {
 }
 
 configure_fonts() {
-  if [[ -f jetbrains-mono-font.sh ]]; then
-    ./jetbrains-mono-font.sh
-  elif [[ -f ./os-bootstraps/jetbrains-mono-font.sh ]]; then
-    ./os-bootstraps/jetbrains-mono-font.sh
+  if [[ -f "${OS_BOOTSTRAP_ROOT}"/jetbrains-mono-font.sh ]]; then
+    "${OS_BOOTSTRAP_ROOT}"/jetbrains-mono-font.sh
   fi
 }
 

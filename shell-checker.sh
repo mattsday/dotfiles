@@ -6,26 +6,36 @@ do_shellcheck() {
     shellcheck -o all -e SC2154,SC2034,SC1090,SC1091 "$1"
 }
 
-for i in */** dotfiles/*/**; do
+if ! command -v shellcheck >/dev/null 2>&1; then
+    echo Please install shellcheck
+    exit 1
+fi
+
+if ! do_shellcheck "$0"; then
+    echo Shellcheck caused errors parsing this file - out of date shellcheck'?'
+    exit 2
+fi
+
+for i in */** dotfiles/*/** *; do
     case "${i}" in
-        */bashrc | */bash_profile | */profile | */zshrc | */kshrc)
-            do_shellcheck "${i}"
-            continue
-            ;;
-        */*.wav)
-            continue
-            ;;
-        *) # Nothing to see here
+    */bashrc | */bash_profile | */profile | */zshrc | */kshrc)
+        do_shellcheck "${i}"
+        continue
+        ;;
+    */*.wav)
+        continue
+        ;;
+    *) ;; # Nothing to see here
     esac
-    HEADER="$(head -n 1 "${i}" 2>/dev/null)" >/dev/null 2>&1 
+    HEADER="$(head -n 1 "${i}" 2>/dev/null)" >/dev/null 2>&1
     case "${HEADER}" in
-        '#!/bin/bash')
-            do_shellcheck "${i}"
-            ;;
-        '#!/bin/sh')
-            do_shellcheck "${i}"
-            ;;
-        *) # Nothing to see here
+    '#!/bin/bash')
+        do_shellcheck "${i}"
+        ;;
+    '#!/bin/sh')
+        do_shellcheck "${i}"
+        ;;
+    *) ;; # Nothing to see here
     esac
 
 done

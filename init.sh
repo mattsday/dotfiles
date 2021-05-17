@@ -2,24 +2,36 @@
 # This should execute on pretty much any bourne shell in case the plan is to jump to zsh or tcsh asap...
 # shellcheck disable=SC1091
 
-# Load dependencies
-. ./dotfiles/dependencies
+if [ -z "${DOTFILES_ROOT}" ]; then
+	if command -v dirname >/dev/null 2>&1; then
+		DOTFILES_ROOT="$(dirname "$0")"
+		if command -v realpath >/dev/null 2>&1; then
+			DOTFILES_ROOT="$(realpath "${DOTFILES_ROOT}")"
+		fi
+	else
+		DOTFILES_ROOT="${PWD}"
+	fi
+fi
+#exit
 
-mkdir backup >/dev/null 2>&1
+# Load dependencies
+. "${DOTFILES_ROOT}"/dotfiles/dependencies
+
+mkdir "${DOTFILES_ROOT}"/backup >/dev/null 2>&1
 
 # shellcheck disable=SC2154
 for i in ${dotfiles}; do
 	verb=Updating
 	dotfile="$(basename "${i}")"
 	if [ -f "${HOME}/.${dotfile}" ] && [ ! -L "${HOME}/.${dotfile}" ]; then
-		echo Backing up local ."${dotfile}" to "${PWD}/backup/local-${dotfile}"
-		mv -f "${HOME}/.${dotfile}" "${PWD}/backup/local-${dotfile}"
+		echo Backing up local ."${dotfile}" to "${DOTFILES_ROOT}/backup/local-${dotfile}"
+		mv -f "${HOME}/.${dotfile}" "${DOTFILES_ROOT}/backup/local-${dotfile}"
 		verb="Creating"
 	elif [ ! -f "${HOME}/.${dotfile}" ]; then
 		verb="Creating"
 	fi
 	echo "${verb} ${HOME}/.${dotfile}"
-	ln -fs "${PWD}/${i}" "${HOME}/.${dotfile}"
+	ln -fs "${i}" "${HOME}/.${dotfile}"
 done
 
 # shellcheck disable=SC2154
@@ -33,14 +45,14 @@ for i in ${configdirs}; do
 		for j in "${i}"/*; do
 			destination_file="${destination_dir}"/"$(basename "${j}")"
 			if [ -f "${destination_file}" ] && [ ! -L "${destination_file}" ]; then
-				echo Backing up local "${destination_file}" to "${PWD}/backup/local-$(basename "${j}")"
-				mv -f "${destination_file}" "${PWD}/backup/local-$(basename "${j}")"
+				echo Backing up local "${destination_file}" to "${DOTFILES_ROOT}/backup/local-$(basename "${j}")"
+				mv -f "${destination_file}" "${DOTFILES_ROOT}/backup/local-$(basename "${j}")"
 				verb="Creating"
 			elif [ ! -f "${destination_file}" ]; then
 				verb="Creating"
 			fi
 			echo "${verb} ${destination_file}"
-			ln -fs "${PWD}/${j}" "${destination_file}"
+			ln -fs "${j}" "${destination_file}"
 		done
 	fi
 done
@@ -51,14 +63,14 @@ if [ ! -d "${HOME}/.config/nvim" ]; then
 	mkdir -p "${HOME}/.config/nvim"
 	verb=Creating
 elif [ -f "${HOME}/.config/nvim/init.vim" ] && [ ! -L "${HOME}/.config/nvim/init.vim" ]; then
-	echo "Backing local nvim config to ${PWD}/backup/local-init.vim"
-	mv -f "${HOME}/.config/nvim/init.vim" "${PWD}/backup/local-init.vim"
+	echo "Backing local nvim config to ${DOTFILES_ROOT}/backup/local-init.vim"
+	mv -f "${HOME}/.config/nvim/init.vim" "${DOTFILES_ROOT}/backup/local-init.vim"
 	verb=Creating
 elif [ ! -f "${HOME}/.config/nvim/init.vim" ]; then
 	verb=Creating
 fi
 echo "${verb} ${HOME}/.config/nvim/init.vim"
-ln -fs "${PWD}/dotfiles/home/vimrc" "${HOME}/.config/nvim/init.vim"
+ln -fs "${DOTFILES_ROOT}/dotfiles/home/vimrc" "${HOME}/.config/nvim/init.vim"
 
 verb=Updating
 if [ -f "${FF_PROFILE_INI}" ] && [ -d "${FF_PROFILE_PATH}" ]; then
@@ -67,8 +79,8 @@ if [ -f "${FF_PROFILE_INI}" ] && [ -d "${FF_PROFILE_PATH}" ]; then
 		verb=Creating
 	fi
 	if [ -f "${USER_CHROME}" ] && [ ! -L "${USER_CHROME}" ]; then
-		echo Backing up local "${USER_CHROME}" to "${PWD}/backup/userChrome.css"
-		mv "${USER_CHROME}" "${PWD}/backup/local-userChrome.css"
+		echo Backing up local "${USER_CHROME}" to "${DOTFILES_ROOT}/backup/userChrome.css"
+		mv "${USER_CHROME}" "${DOTFILES_ROOT}/backup/local-userChrome.css"
 		verb=Creating
 	fi
 	if [ ! -f "${USER_CHROME}" ]; then

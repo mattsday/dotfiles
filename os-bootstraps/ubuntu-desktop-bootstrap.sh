@@ -1,13 +1,34 @@
 #!/bin/bash
 #shellcheck disable=SC1090
+if [ -z "${DOTFILES_ROOT}" ]; then
+    if command -v dirname >/dev/null 2>&1; then
+        DOTFILES_ROOT="$(dirname "$0")"
+        if command -v realpath >/dev/null 2>&1; then
+            DOTFILES_ROOT="$(realpath "${DOTFILES_ROOT}")"
+        fi
+    else
+        DOTFILES_ROOT="${PWD}"
+    fi
+fi
+
+if [ -z "${OS_BOOTSTRAP_ROOT}" ]; then
+    if [ -f "${DOTFILES_ROOT}"/debian-bootstrap.sh ]; then
+        OS_BOOTSTRAP_ROOT="${DOTFILES_ROOT}"
+    else
+        OS_BOOTSTRAP_ROOT="${DOTFILES_ROOT}"/os-bootstraps
+        if [ -f "${DOTFILES_ROOT}"/debian-bootstrap.sh ]; then
+            echo Cannot find OS bootstraps
+            exit 1
+        fi
+    fi
+fi
+
 DEBIAN_DESKTOP_BOOTSTRAP=debian-desktop-bootstrap.sh
 
 # Load generic desktop bootstraps
-if [[ -f ./os-bootstraps/"${DEBIAN_DESKTOP_BOOTSTRAP}" ]]; then
+if [[ -f "${OS_BOOTSTRAP_ROOT}"/"${DEBIAN_DESKTOP_BOOTSTRAP}" ]]; then
     echo Detected generic Debian-derived desktop
-    . ./os-bootstraps/"${DEBIAN_DESKTOP_BOOTSTRAP}"
-elif [[ -f "${DEBIAN_DESKTOP_BOOTSTRAP}" ]]; then
-    . ./"${DEBIAN_DESKTOP_BOOTSTRAP}"
+    . "${OS_BOOTSTRAP_ROOT}"/"${DEBIAN_DESKTOP_BOOTSTRAP}"
 else
     echo Could not find debian-desktop.sh
 fi

@@ -1,6 +1,29 @@
 #!/bin/bash
 #shellcheck disable=SC1091
 
+if [ -z "${DOTFILES_ROOT}" ]; then
+  if command -v dirname >/dev/null 2>&1; then
+    DOTFILES_ROOT="$(dirname "$0")"
+    if command -v realpath >/dev/null 2>&1; then
+      DOTFILES_ROOT="$(realpath "${DOTFILES_ROOT}")"
+    fi
+  else
+    DOTFILES_ROOT="${PWD}"
+  fi
+fi
+
+if [ -z "${OS_BOOTSTRAP_ROOT}" ]; then
+  if [ -f "${DOTFILES_ROOT}"/debian-bootstrap.sh ]; then
+    OS_BOOTSTRAP_ROOT="${DOTFILES_ROOT}"
+  else
+    OS_BOOTSTRAP_ROOT="${DOTFILES_ROOT}"/os-bootstraps
+    if [ -f "${DOTFILES_ROOT}"/debian-bootstrap.sh ]; then
+      echo Cannot find OS bootstraps
+      exit 1
+    fi
+  fi
+fi
+
 _apt() {
 	DEBIAN_FRONTEND="noninteractive" sudo apt-get "$@"
 }
@@ -12,21 +35,21 @@ SNAP_PACKAGES=()
 export _debian_bootstrap_mattsday=1
 RELEASE="$(grep '^VERSION_CODENAME=' /etc/os-release | cut -d = -f 2 | sed 's/"//g')"
 if [[ "${RELEASE}" = rodete ]]; then
-	if [[ -f ./os-bootstraps/rodete-bootstrap.sh ]]; then
+	if [[ -f "${OS_BOOTSTRAP_ROOT}"/rodete-bootstrap.sh ]]; then
 		echo Detected Rodete
-		. ./os-bootstraps/rodete-bootstrap.sh
+		. "${OS_BOOTSTRAP_ROOT}"/rodete-bootstrap.sh
 	fi
 fi
 RELEASE="$(grep '^ID=' /etc/os-release | cut -d = -f 2 | sed 's/"//g')"
 if [[ "${RELEASE}" = neon ]]; then
-	if [[ -f ./os-bootstraps/ubuntu-desktop-bootstrap.sh ]]; then
+	if [[ -f "${OS_BOOTSTRAP_ROOT}"/ubuntu-desktop-bootstrap.sh ]]; then
 		echo Detected KDE Neon Desktop
-		. ./os-bootstraps/ubuntu-desktop-bootstrap.sh
+		. "${OS_BOOTSTRAP_ROOT}"/ubuntu-desktop-bootstrap.sh
 	fi
 elif [[ "${RELEASE}" = ubuntu ]]; then
 	if dpkg-query -W -f='${Status}' kwin-common 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
 		echo Detected Kubuntu
-		. ./os-bootstraps/ubuntu-desktop-bootstrap.sh
+		. "${OS_BOOTSTRAP_ROOT}"/ubuntu-desktop-bootstrap.sh
 	fi
 fi
 

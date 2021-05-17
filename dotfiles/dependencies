@@ -1,16 +1,37 @@
 #!/bin/sh
 # List of dependent files
 
-for i in dotfiles/home/*; do
+if [ -z "${DOTFILES_ROOT}" ]; then
+	if command -v dirname >/dev/null 2>&1; then
+		DOTFILES_ROOT="$(dirname "$0")"
+		if command -v realpath >/dev/null 2>&1; then
+			DOTFILES_ROOT="$(realpath "${DOTFILES_ROOT}")"
+		fi
+	else
+		DOTFILES_ROOT="${PWD}"
+	fi
+fi
+
+if [ ! -d "${DOTFILES_ROOT}"/dotfiles/home ]; then
+	echo Cannot find "${DOTFILES_ROOT}"/dotfiles/home
+	exit 1
+fi
+
+for i in "${DOTFILES_ROOT}"/dotfiles/home/*; do
 	dotfiles="${i} ${dotfiles}"
 done
 
-for i in dotfiles/config/*; do
+if [ ! -d "${DOTFILES_ROOT}"/dotfiles/config ]; then
+	echo Cannot find "${DOTFILES_ROOT}"/dotfiles/home
+	exit 1
+fi
+
+for i in "${DOTFILES_ROOT}"/dotfiles/config/*; do
 	configdirs="${i} ${configdirs}"
 done
 
 # Firefox userChrome.css file
-FF_BASE_DIR="${PWD}"/dotfiles/special/firefox
+FF_BASE_DIR="${DOTFILES_ROOT}"/dotfiles/special/firefox
 FF_CHROME_FILE="userChrome.css"
 first="$(echo "${USER}" | cut -c1 | tr '[:lower:]' '[:upper:]')"
 second="$(echo "${USER}" | cut -c2-)"
