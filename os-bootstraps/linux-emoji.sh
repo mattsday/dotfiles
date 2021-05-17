@@ -3,11 +3,8 @@
 # This in turn makes emojis so much better in e.g. Konsole, notifications, etc
 
 if [ -z "${DOTFILES_ROOT}" ]; then
-    if command -v dirname >/dev/null 2>&1; then
-        DOTFILES_ROOT="$(dirname "$0")"
-        if command -v realpath >/dev/null 2>&1; then
-            DOTFILES_ROOT="$(realpath "${DOTFILES_ROOT}")"
-        fi
+    if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
+        DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
     else
         DOTFILES_ROOT="${PWD}"
     fi
