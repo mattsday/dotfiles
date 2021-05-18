@@ -2,7 +2,7 @@
 # Update the running system, whatever we're running
 
 _sudo() {
-	if command -v sudo >/dev/null 2>&1; then
+	if command -v id >/dev/null 2>&1 && [ "$(id -u)" != 0 ] && command -v sudo >/dev/null 2>&1; then
 		sudo "$@"
 	else
 		"$@"
@@ -35,10 +35,10 @@ elif [ -x /usr/sbin/pkg_add ]; then
 	_sudo pkg_add -uvi
 # FreeBSD
 elif [ -x /usr/sbin/pkg ]; then
-	_sudo pkg update && pkg upgrade
+	_sudo pkg update && _sudo pkg upgrade
 # SuSE
 elif [ -x /usr/bin/zypper ]; then
-	_sudo zypper refresh && zypper dup
+	_sudo zypper refresh && _sudo zypper dup
 # OS X
 elif [ -x /opt/local/bin/port ]; then
 	_sudo /opt/local/bin/port -q selfupdate
