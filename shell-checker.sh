@@ -20,6 +20,10 @@ shopt -s globstar
 
 for i in **; do
     case "${i}" in
+    # Don't parse this script again (do so above to test shellcheck)
+    "$0")
+        continue
+        ;;
     */bashrc | */bash_profile | */profile | */zshrc | */kshrc)
         do_shellcheck "${i}"
         continue
