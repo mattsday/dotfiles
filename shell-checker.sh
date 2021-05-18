@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Shellchecks all scripts in this repo to see if they're vaguely sane
 
 do_shellcheck() {
@@ -16,7 +16,9 @@ if ! do_shellcheck "$0"; then
     exit 2
 fi
 
-for i in */** dotfiles/*/** *; do
+shopt -s globstar
+
+for i in **; do
     case "${i}" in
     */bashrc | */bash_profile | */profile | */zshrc | */kshrc)
         do_shellcheck "${i}"

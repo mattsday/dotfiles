@@ -87,7 +87,6 @@ configure_homebrew() {
 }
 # Deprecated, don't install Ferdi
 configure_ferdi() {
-
 	if [ -d /Applications/Ferdi.app ]; then
 		info Adding Ferdi features
 		FERDI_HOME="${HOME}/Library/Application Support/Ferdi/recipes"
