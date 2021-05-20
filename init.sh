@@ -86,6 +86,36 @@ if [ -f "${FF_PROFILE_INI}" ] && [ -d "${FF_PROFILE_PATH}" ]; then
 	ln -fs "${LOCAL_CHROME}" "${USER_CHROME}"
 fi
 
+# Add local pipewire configuration
+if command -v pipewire-pulse >/dev/null 2>&1; then
+
+	alsa_verb=Updating
+	bluez_verb=Updating
+	if [ ! -d "${PIPEWIRE_CONFIG_DIR}" ]; then
+		mkdir -p "${PIPEWIRE_CONFIG_DIR}"
+		alsa_verb=Creating
+		bluez_verb=Creating
+	elif [ -f "${PIPEWIRE_CONFIG_ALSA_PATH}" ] || [ -f "${PIPEWIRE_CONFIG_BLUEZ_PATH}" ]; then
+		if [ ! -L "${PIPEWIRE_CONFIG_ALSA_PATH}" ]; then
+			echo "Backing local pipewire alsa config to ${DOTFILES_ROOT}/backup/local-${PIPEWIRE_CONFIG_ALSA}"
+			mv -f "${PIPEWIRE_CONFIG_ALSA_PATH}" "${DOTFILES_ROOT}/backup/local-${PIPEWIRE_CONFIG_ALSA}"
+			alsa_verb=Creating
+		fi
+		if [ ! -L "${PIPEWIRE_CONFIG_BLUEZ_PATH}" ]; then
+			echo "Backing local pipewire bluez config to ${DOTFILES_ROOT}/backup/local-${PIPEWIRE_CONFIG_BLUEZ}"
+			mv -f "${PIPEWIRE_CONFIG_BLUEZ_PATH}" "${DOTFILES_ROOT}/backup/local-${PIPEWIRE_CONFIG_BLUEZ}"
+			bluez_verb=Creating
+		fi
+	else
+		alsa_verb=Creating
+		bluez_verb=Creating
+	fi
+	echo "${alsa_verb} ${PIPEWIRE_CONFIG_ALSA_PATH}"
+	ln -fs "${DOTFILES_ROOT}/dotfiles/special/pipewire/${PIPEWIRE_CONFIG_ALSA}" "${PIPEWIRE_CONFIG_ALSA_PATH}"
+	echo "${bluez_verb} ${PIPEWIRE_CONFIG_BLUEZ_PATH}"
+	ln -fs "${DOTFILES_ROOT}/dotfiles/special/pipewire/${PIPEWIRE_CONFIG_BLUEZ}" "${PIPEWIRE_CONFIG_BLUEZ_PATH}"
+fi
+
 VS_SETTINGS="${VS_DIR}/settings.json"
 
 # Remove VS code settings symlink if it exists and use built-in config sync

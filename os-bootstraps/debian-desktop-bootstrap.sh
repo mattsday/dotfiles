@@ -89,7 +89,6 @@ pipewire() {
   APT_PACKAGES=(libldacbt-abr2 libldacbt-enc2 pipewire-bin pipewire-audio-client-libraries libpipewire-0.3-0 dbus-user-session libspa-0.2-bluetooth libspa-0.2-jack gstreamer1.0-pipewire)
   install_apt_packages
   APT_PACKAGES=("${BACKUP_APT_PACKAGES[@]}")
-  PIPEWIRE_RESTART=0
 
   if [[ -f /usr/share/doc/pipewire/examples/systemd/user/pipewire-pulse.service ]]; then
     # Enable pulseaudio via pipwire
@@ -117,43 +116,14 @@ pipewire() {
       sudo ldconfig
     fi
     if ! systemctl -q is-active --user pipewire || ! systemctl -q is-active --user pipewire-pulse; then
-      PIPEWIRE_RESTART=1
+      info Starting pipewire user service
+      systemctl --user daemon-reload
+      systemctl --user --now disable pulseaudio.service pulseaudio.socket
+      systemctl --user mask pulseaudio
+      systemctl --user --now enable pipewire pipewire-pulse
     fi
-  fi
-  # Rename devices
-  CONF_FILE=/etc/pipewire/media-session.d/alsa-monitor.conf
-  if [[ ! -f "${CONF_FILE}" ]] || ! grep Jabra "${CONF_FILE}" >/dev/null 2>&1 || ! grep 'session = 2000' "${CONF_FILE}" >/dev/null 2>&1; then
-    LOCAL_CONF_FILE="${DOTFILES_ROOT}"/dotfiles/special/pipewire/alsa-monitor.conf
-    info Updating "${CONF_FILE}"
-    if [[ ! -f "${LOCAL_CONF_FILE}" ]]; then
-      fail Cannot find Alsa Monitor config file in "${LOCAL_CONF_FILE}"
-    fi
-    sudo cp "${LOCAL_CONF_FILE}" "${CONF_FILE}"
-    sudo chmod 644 "${CONF_FILE}"
-    sudo chown root:root "${CONF_FILE}"
-    PIPEWIRE_RESTART=1
   fi
 
-  CONF_FILE=/etc/pipewire/media-session.d/bluez-monitor.conf
-  if [[ ! -f "${CONF_FILE}" ]] || ! grep '38_18_4C_06_88_22' "${CONF_FILE}" >/dev/null 2>&1; then
-    LOCAL_CONF_FILE="${DOTFILES_ROOT}"/dotfiles/special/pipewire/bluez-monitor.conf
-    info Updating "${CONF_FILE}"
-    if [[ ! -f "${LOCAL_CONF_FILE}" ]]; then
-      fail Cannot find Alsa Monitor config file in "${LOCAL_CONF_FILE}"
-    fi
-    sudo cp "${LOCAL_CONF_FILE}" "${CONF_FILE}"
-    sudo chmod 644 "${CONF_FILE}"
-    sudo chown root:root "${CONF_FILE}"
-    PIPEWIRE_RESTART=1
-  fi
-
-  if [ "${PIPEWIRE_RESTART}" = 1 ]; then
-    info Starting pipewire user service
-    systemctl --user daemon-reload
-    systemctl --user --now disable pulseaudio.service pulseaudio.socket
-    systemctl --user mask pulseaudio
-    systemctl --user --now enable pipewire pipewire-pulse
-  fi
   # Protect against future pipewire-media-session.service changes
   if [[ "$(systemctl list-unit-files pipewire-media-session.service | wc -l)" -gt 3 ]] && ! systemctl -q is-active --user pipewire-media-session.service; then
     systemctl --user --now enable pipewire-media-session.service

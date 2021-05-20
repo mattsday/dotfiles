@@ -1,5 +1,6 @@
 #!/bin/sh
 # List of dependent files
+#shellcheck disable=SC2034
 
 if [ -z "${DOTFILES_ROOT}" ]; then
 	if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
@@ -82,3 +83,10 @@ ${HOME}/.config/fish/config.fish
 ${HOME}/.config/terminus/config.yaml
 ${VS_DIR}/settings.json
 "
+
+# Pipewire config files
+PIPEWIRE_CONFIG_DIR="${HOME}/.config/pipewire/media-session.d"
+PIPEWIRE_CONFIG_ALSA=alsa-monitor.conf
+PIPEWIRE_CONFIG_BLUEZ=bluez-monitor.conf
+PIPEWIRE_CONFIG_ALSA_PATH="${PIPEWIRE_CONFIG_DIR}"/"${PIPEWIRE_CONFIG_ALSA}"
+PIPEWIRE_CONFIG_BLUEZ_PATH="${PIPEWIRE_CONFIG_DIR}"/"${PIPEWIRE_CONFIG_BLUEZ}"

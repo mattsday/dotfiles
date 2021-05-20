@@ -55,4 +55,22 @@ if [ -L "${USER_CHROME}" ]; then
 	fi
 fi
 
+if [ -L "${PIPEWIRE_CONFIG_ALSA_PATH}" ]; then
+	echo Removing "${PIPEWIRE_CONFIG_ALSA_PATH}"
+	rm "${PIPEWIRE_CONFIG_ALSA_PATH}"
+	if [ -f "${DOTFILES_ROOT}/backup/local-${PIPEWIRE_CONFIG_ALSA}" ]; then
+		echo Restoring "${PIPEWIRE_CONFIG_ALSA_PATH}" from backup
+		mv "${DOTFILES_ROOT}/backup/local-${PIPEWIRE_CONFIG_ALSA}" "${PIPEWIRE_CONFIG_ALSA_PATH}"
+	fi
+fi
+
+if [ -L "${PIPEWIRE_CONFIG_BLUEZ_PATH}" ]; then
+	echo Removing "${PIPEWIRE_CONFIG_BLUEZ_PATH}"
+	rm "${PIPEWIRE_CONFIG_BLUEZ_PATH}"
+	if [ -f "${DOTFILES_ROOT}/backup/local-${PIPEWIRE_CONFIG_BLUEZ}" ]; then
+		echo Restoring "${PIPEWIRE_CONFIG_BLUEZ_PATH}" from backup
+		mv "${DOTFILES_ROOT}/backup/local-${PIPEWIRE_CONFIG_BLUEZ}" "${PIPEWIRE_CONFIG_BLUEZ_PATH}"
+	fi
+fi
+
 echo Done
