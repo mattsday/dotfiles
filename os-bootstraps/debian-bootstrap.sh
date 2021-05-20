@@ -30,12 +30,13 @@ _apt() {
 
 APT_PACKAGES=()
 SNAP_PACKAGES=()
-
+NO_SUDO_CONFIG=0
 # Check for mixins
 export _debian_bootstrap_mattsday=1
 RELEASE="$(grep '^VERSION_CODENAME=' /etc/os-release | cut -d = -f 2 | sed 's/"//g')"
 if [[ "${RELEASE}" = rodete ]]; then
 	if [[ -f "${OS_BOOTSTRAP_ROOT}"/rodete-bootstrap.sh ]]; then
+        NO_SUDO_CONFIG=1
 		echo Detected Rodete
 		. "${OS_BOOTSTRAP_ROOT}"/rodete-bootstrap.sh
 	fi
@@ -77,6 +78,14 @@ if [[ ! -x /usr/bin/sudo ]]; then
 			exit
 		fi
 	fi
+fi
+
+# Passwordless sudo
+if [[ "$(id -u)" -ne 0 ]] && [[ -x /usr/bin/sudo ]] && [[ "${NO_SUDO_CONFIG}" = 0 ]]; then
+    echo Setting up passwordless sudo
+    if [[ ! -f /etc/sudoers.d/nopasswd-"${USER}" ]]; then
+        echo "${USER}"' ALL=(ALL:ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/nopasswd-"${USER}"
+    fi
 fi
 
 # Install standard tmux

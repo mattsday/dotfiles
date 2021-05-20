@@ -73,11 +73,6 @@ install_apt_packages() {
     fi
 }
 
-passwordless_sudo() {
-    if [[ ! -f /etc/sudoers.d/nopasswd-"${USER}" ]]; then
-        echo "${USER}"' ALL=(ALL:ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/nopasswd-"${USER}"
-    fi
-}
 install_spotify() {
     if ! dpkg-query -W -f='${Status}' spotify-client 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
         #curl -sS https://download.spotify.com/debian/pubkey.gpg | sudo apt-key add - >/dev/null
@@ -89,7 +84,6 @@ install_spotify() {
 
 main() {
     CALLBACKS+=(
-        passwordless_sudo
         install_apt_packages
         install_spotify
     )
