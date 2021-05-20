@@ -92,7 +92,6 @@ pipewire() {
   PIPEWIRE_RESTART=0
 
   if [[ -f /usr/share/doc/pipewire/examples/systemd/user/pipewire-pulse.service ]]; then
-    info Starting pipewire user service
     # Enable pulseaudio via pipwire
     if [[ ! -f /etc/pipewire/media-session.d/with-pulseaudio ]]; then
       sudo touch /etc/pipewire/media-session.d/with-pulseaudio
@@ -149,6 +148,7 @@ pipewire() {
   fi
 
   if [ "${PIPEWIRE_RESTART}" = 1 ]; then
+    info Starting pipewire user service
     systemctl --user daemon-reload
     systemctl --user --now disable pulseaudio.service pulseaudio.socket
     systemctl --user mask pulseaudio
