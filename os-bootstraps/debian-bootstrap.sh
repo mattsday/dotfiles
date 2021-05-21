@@ -82,9 +82,9 @@ fi
 
 # Passwordless sudo
 if [[ "$(id -u)" -ne 0 ]] && [[ -x /usr/bin/sudo ]] && [[ "${NO_SUDO_CONFIG}" = 0 ]]; then
-    echo Setting up passwordless sudo
     if [[ ! -f /etc/sudoers.d/nopasswd-"${USER}" ]]; then
-        echo "${USER}"' ALL=(ALL:ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/nopasswd-"${USER}"
+        echo Setting up passwordless sudo
+        echo "${USER}"' ALL=(ALL:ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/nopasswd-"${USER}" >/dev/null
     fi
 fi
 
