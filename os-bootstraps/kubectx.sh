@@ -38,7 +38,7 @@ fail() {
 download() {
     filename="$1"
     output_file="$2"
-    if [ -z "$output_file" ] || [ -z "$filename" ]; then
+    if [ -z "${output_file}" ] || [ -z "${filename}" ]; then
         fail Files not found
     fi
     downloaded_file="${TMP_DIR}/$1"
