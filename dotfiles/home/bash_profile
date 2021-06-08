@@ -10,6 +10,11 @@ if [[ -f "${HOME}/.bash_profile_config" ]]; then
     . "${HOME}/.bash_profile_config"
 fi
 
+# Load the full shebang
+if [[ -f "${HOME}/.bashrc" ]]; then
+    . "${HOME}/.bashrc"
+fi
+
 # ======================
 # Plug-ins and Resources
 # ======================
