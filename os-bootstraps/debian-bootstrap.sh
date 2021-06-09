@@ -10,18 +10,18 @@ if [ -z "${DOTFILES_ROOT}" ]; then
 fi
 
 if [ -z "${OS_BOOTSTRAP_ROOT}" ]; then
-  if [ -f "${DOTFILES_ROOT}"/debian-bootstrap.sh ]; then
-    OS_BOOTSTRAP_ROOT="${DOTFILES_ROOT}"
-    if command -v realpath >/dev/null 2>&1; then
-      DOTFILES_ROOT="$(realpath "${DOTFILES_ROOT}"/..)"
-    fi
-  else
-    OS_BOOTSTRAP_ROOT="${DOTFILES_ROOT}"/os-bootstraps
-    if [ -f "${DOTFILES_ROOT}"/debian-bootstrap.sh ]; then
-      echo Cannot find OS bootstraps
-      exit 1
-    fi
-  fi
+	if [ -f "${DOTFILES_ROOT}"/debian-bootstrap.sh ]; then
+		OS_BOOTSTRAP_ROOT="${DOTFILES_ROOT}"
+		if command -v realpath >/dev/null 2>&1; then
+			DOTFILES_ROOT="$(realpath "${DOTFILES_ROOT}"/..)"
+		fi
+	else
+		OS_BOOTSTRAP_ROOT="${DOTFILES_ROOT}"/os-bootstraps
+		if [ -f "${DOTFILES_ROOT}"/debian-bootstrap.sh ]; then
+			echo Cannot find OS bootstraps
+			exit 1
+		fi
+	fi
 fi
 
 _apt() {
@@ -36,7 +36,7 @@ export _debian_bootstrap_mattsday=1
 RELEASE="$(grep '^VERSION_CODENAME=' /etc/os-release | cut -d = -f 2 | sed 's/"//g')"
 if [[ "${RELEASE}" = rodete ]]; then
 	if [[ -f "${OS_BOOTSTRAP_ROOT}"/rodete-bootstrap.sh ]]; then
-        NO_SUDO_CONFIG=1
+		NO_SUDO_CONFIG=1
 		echo Detected Rodete
 		. "${OS_BOOTSTRAP_ROOT}"/rodete-bootstrap.sh
 	fi
@@ -80,13 +80,7 @@ if [[ ! -x /usr/bin/sudo ]]; then
 	fi
 fi
 
-# Passwordless sudo
-if [[ "$(id -u)" -ne 0 ]] && [[ -x /usr/bin/sudo ]] && [[ "${NO_SUDO_CONFIG}" = 0 ]]; then
-    if [[ ! -f /etc/sudoers.d/nopasswd-"${USER}" ]]; then
-        echo Setting up passwordless sudo
-        echo "${USER}"' ALL=(ALL:ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/nopasswd-"${USER}" >/dev/null
-    fi
-fi
+. "${OS_BOOTSTRAP_ROOT}"/passwordless-sudo.sh
 
 # Install standard tmux
 tmux="tmux"
