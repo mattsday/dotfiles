@@ -2,11 +2,11 @@
 #shellcheck disable=SC1090
 
 if [ -z "${DOTFILES_ROOT}" ]; then
-	if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
-		DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
-	else
-		DOTFILES_ROOT="${PWD}"
-	fi
+  if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
+    DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
+  else
+    DOTFILES_ROOT="${PWD}"
+  fi
 fi
 
 if [ -z "${OS_BOOTSTRAP_ROOT}" ]; then
@@ -77,6 +77,14 @@ passwordless_sudo() {
     info Setting up passwordless sudo
     echo "${USER}"' ALL=(ALL:ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/nopasswd-"${USER}"
     sudo AUTOMATIC_UPDATE=yes glinux-config set custom_etc_sudoers_d true >/dev/null 2>&1
+  fi
+}
+
+install_brave() {
+  if [[ -f "${OS_BOOTSTRAP_ROOT}"/brave.sh ]]; then
+    "${OS_BOOTSTRAP_ROOT}"/brave.sh
+  else
+    echo Could not find kubectx.sh
   fi
 }
 
@@ -242,6 +250,7 @@ main() {
     install_sdk_man
     #fix_ferdi_chat
     install_kubectx
+    install_brave
     install_chromium_flatpak
     install_spotify_flatpak
   )
