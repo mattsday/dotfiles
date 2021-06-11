@@ -87,6 +87,12 @@ pipewire() {
   BACKUP_APT_PACKAGES=("${APT_PACKAGES[@]}")
   # Install build packages immediately
   APT_PACKAGES=(libldacbt-abr2 libldacbt-enc2 pipewire-bin pipewire-audio-client-libraries libpipewire-0.3-0 dbus-user-session libspa-0.2-bluetooth libspa-0.2-jack gstreamer1.0-pipewire)
+  # Check they exist (they won't in older Debian or Ubuntu versions)
+  for package in "${APT_PACKAGES[@]}"; do 
+      if ! apt-cache show "${package}" >/dev/null 2>&1; then
+          fail "Pipewire not supported on this OS ${package} not found"
+      fi
+  done
   install_apt_packages
   APT_PACKAGES=("${BACKUP_APT_PACKAGES[@]}")
 
