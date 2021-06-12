@@ -74,11 +74,11 @@ EOF
 
     # Install upstream Docker
     curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
-  $(grep VERSION_CODENAME /etc/os-release | cut -f 2 -d =) stable" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(grep VERSION_CODENAME /etc/os-release | cut -f 2 -d =) stable" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
 
     APT_PACKAGES=(docker-ce docker-ce-cli containerd.io)
     install_apt_packages
+    EBIAN_FRONTEND="noninteractive" sudo apt-get update
 
     # Install a Docker IPv6 NAT tool (hacky, but effective)
     #docker run -d --name ipv6nat --cap-add NET_ADMIN --cap-add SYS_MODULE --network host --restart unless-stopped -v /var/run/docker.sock:/var/run/docker.sock:ro -v /lib/modules:/lib/modules:ro robbertkl/ipv6nat
@@ -86,7 +86,9 @@ EOF
 
 containers() {
     for container in "${CONTAINERS[@]}"; do
-        "${CONTAINER_HOME}/${container}/start.sh"
+        if [ "$(docker container inspect -f '{{.State.Running}}' "${container}")" != "true" ]; then
+            "${CONTAINER_HOME}/${container}/start.sh"
+        fi
     done
 }
 
