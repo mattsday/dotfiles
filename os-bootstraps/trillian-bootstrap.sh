@@ -11,7 +11,7 @@ USERS=(
     "traffic-gen:Traffic Generator:991:/sbin/nologin:/opt/containerised-apps/traffic-gen:traffic-gen"
 )
 
-APT_PACKAGES=(apt-transport-https ca-certificates curl gnupg)
+APT_PACKAGES=(apt-transport-https ca-certificates curl gnupg avahi-daemon avahi-utils ethtool build-essential cmake lm-sensors)
 
 CONTAINER_HOME=/opt/containerised-apps
 
@@ -55,10 +55,6 @@ users() {
     done
 }
 
-packages() {
-    install_apt_packages
-}
-
 install_docker() {
     # Set up Docker IPv6 support
     if [ ! -f /etc/docker/daemon.json ]; then
@@ -76,19 +72,20 @@ EOF
     if [ ! -f /usr/share/keyrings/docker-archive-keyring.gpg ]; then
         curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
         echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(grep VERSION_CODENAME /etc/os-release | cut -f 2 -d =) stable" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
+        DEBIAN_FRONTEND="noninteractive" sudo apt-get update
     fi
 
-    APT_PACKAGES=(docker-ce docker-ce-cli containerd.io)
-    install_apt_packages
-    DEBIAN_FRONTEND="noninteractive" sudo apt-get update
-
-    # Install a Docker IPv6 NAT tool (hacky, but effective)
-    #docker run -d --name ipv6nat --cap-add NET_ADMIN --cap-add SYS_MODULE --network host --restart unless-stopped -v /var/run/docker.sock:/var/run/docker.sock:ro -v /lib/modules:/lib/modules:ro robbertkl/ipv6nat
+    if ! dpkg-query -W -f='${Status}' "docker-ce" 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
+        APT_PACKAGES=(docker-ce docker-ce-cli containerd.io)
+        install_apt_packages
+        info Sleeping 30 seconds to allow Docker Daemon to start
+        sleep 30
+    fi
 }
 
 containers() {
     for container in "${CONTAINERS[@]}"; do
-        if [ "$(docker container inspect -f '{{.State.Running}}' "${container}" 2>/dev/null)" != true ]; then
+        if [ "$(sudo docker container inspect -f '{{.State.Running}}' "${container}" 2>/dev/null)" != true ]; then
             "${CONTAINER_HOME}/${container}/start.sh"
         fi
     done
@@ -107,11 +104,29 @@ install_apt_packages() {
     fi
 }
 
+# Set up HPE bundled software
+hpe() {
+    if [ ! -f /usr/share/keyrings/hpe-mcp-archive-keyring.gpg ]; then
+        curl -fsSL https://downloads.linux.hpe.com/SDR/hpePublicKey2048_key1.pub | sudo gpg --dearmor -o /usr/share/keyrings/hpe-mcp-archive-keyring.gpg
+        echo "deb [arch=amd64 signed-by=/usr/share/keyrings/hpe-mcp-archive-keyring.gpg] http://downloads.linux.hpe.com/SDR/repo/mcp stable/current non-free" | sudo tee /etc/apt/sources.list.d/hpe-mcp.list >/dev/null
+        DEBIAN_FRONTEND="noninteractive" sudo apt-get update
+    fi
+    APT_PACKAGES=(amsd)
+    install_apt_packages
+}
+
+sensors() {
+    info "Setting up sensors (may take some time)"
+    sensors-detect --auto >/dev/null
+}
+
 main() {
     users
-    packages
+    install_apt_packages
     install_docker
     containers
+    hpe
+    sensors
 }
 
 main
