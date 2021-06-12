@@ -11,7 +11,7 @@ USERS=(
     "traffic-gen:Traffic Generator:991:/sbin/nologin:/opt/containerised-apps/traffic-gen:traffic-gen"
 )
 
-APT_PACKAGES=(apt-transport-https ca-certificates curl gnupg lsb-release)
+APT_PACKAGES=(apt-transport-https ca-certificates curl gnupg)
 
 CONTAINER_HOME=/opt/containerised-apps
 
@@ -53,6 +53,10 @@ users() {
             sudo useradd -c "${fullname}" -M -u "${uid}" -g "${uid}" -d "${home}" -G "${groups}" -s "${shell}" "${name}"
         fi
     done
+}
+
+packages() {
+    install_apt_packages
 }
 
 docker() {
@@ -101,6 +105,7 @@ install_apt_packages() {
 
 main() {
     users
+    packages
     docker
     containers
 }
