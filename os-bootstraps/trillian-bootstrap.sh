@@ -82,16 +82,13 @@ EOF
     install_apt_packages
     DEBIAN_FRONTEND="noninteractive" sudo apt-get update
 
-    info Sleeping for 10 seconds to allow the Docker daemon to start
-    sleep 10
-
     # Install a Docker IPv6 NAT tool (hacky, but effective)
     #docker run -d --name ipv6nat --cap-add NET_ADMIN --cap-add SYS_MODULE --network host --restart unless-stopped -v /var/run/docker.sock:/var/run/docker.sock:ro -v /lib/modules:/lib/modules:ro robbertkl/ipv6nat
 }
 
 containers() {
     for container in "${CONTAINERS[@]}"; do
-        if [ "$(docker container inspect -f '{{.State.Running}}' "${container}")" != true ]; then
+        if [ "$(docker container inspect -f '{{.State.Running}}' "${container}") 2>/dev/null" != true ]; then
             "${CONTAINER_HOME}/${container}/start.sh"
         fi
     done
