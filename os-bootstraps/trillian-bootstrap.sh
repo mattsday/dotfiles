@@ -88,7 +88,7 @@ EOF
 
 containers() {
     for container in "${CONTAINERS[@]}"; do
-        if [ "$(docker container inspect -f '{{.State.Running}}' "${container}") 2>/dev/null" != true ]; then
+        if [ "$(docker container inspect -f '{{.State.Running}}' "${container}" 2>/dev/null)" != true ]; then
             "${CONTAINER_HOME}/${container}/start.sh"
         fi
     done
