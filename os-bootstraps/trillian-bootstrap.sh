@@ -9,9 +9,10 @@ USERS=(
     "transmission:Transmission:993:/sbin/nologin:/opt/containerised-apps/transmission/config:media"
     "unifi:Unifi Controller:992:/sbin/nologin:/opt/containerised-apps/unifi/config:unifi"
     "traffic-gen:Traffic Generator:991:/sbin/nologin:/opt/containerised-apps/traffic-gen:traffic-gen"
+    "openvpn:OpenVPN Access Server:990:/sbin/nologin:/opt/containerised-apps/openvpn:openvpn"
 )
 
-APT_PACKAGES=(apt-transport-https ca-certificates curl gnupg avahi-daemon avahi-utils ethtool build-essential cmake lm-sensors)
+APT_PACKAGES=(apt-transport-https ca-certificates curl gnupg avahi-daemon avahi-utils ethtool build-essential cmake lm-sensors fwupd)
 
 CONTAINER_HOME=/opt/containerised-apps
 
@@ -30,6 +31,15 @@ info() {
     echo "$@"
 }
 users() {
+    # Create docker and backups groups
+    if ! getent group docker >/dev/null 2>&1; then
+        info Adding Docker group
+        groupadd -g 998 docker
+    fi
+    if ! getent group backups >/dev/null 2>&1; then
+        info Adding backups group
+        groupadd -g 901 backups
+    fi
     # Loop through users and create/update them
     for user in "${USERS[@]}"; do
         name="$(echo "${user}" | cut -d : -f 1)"
@@ -38,7 +48,7 @@ users() {
         shell="$(echo "${user}" | cut -d : -f 4)"
         home="$(echo "${user}" | cut -d : -f 5)"
         groups="$(echo "${user}" | cut -d : -f 6)"
-        if id -g "${name}" >/dev/null 2>&1; then
+        if getent group "${name}" >/dev/null 2>&1; then
             info Updating group "${name}"
             sudo groupmod -g "${uid}" "${name}"
         else
@@ -56,8 +66,17 @@ users() {
 }
 
 install_docker() {
+    # Install upstream Docker
+    if [ ! -f /usr/share/keyrings/docker-archive-keyring.gpg ]; then
+        curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+        echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(grep VERSION_CODENAME /etc/os-release | cut -f 2 -d =) stable" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
+        DEBIAN_FRONTEND="noninteractive" sudo apt-get update
+    fi
     # Set up Docker IPv6 support
     if [ ! -f /etc/docker/daemon.json ]; then
+        if [ ! -d /etc/docker ]; then
+            mkdir /etc/docker
+        fi
         cat <<'EOF' | sudo tee /etc/docker/daemon.json >/dev/null
 {
   "ipv6": true,
@@ -66,13 +85,8 @@ install_docker() {
   "ip6tables": true
 }
 EOF
-    fi
-
-    # Install upstream Docker
-    if [ ! -f /usr/share/keyrings/docker-archive-keyring.gpg ]; then
-        curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-        echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(grep VERSION_CODENAME /etc/os-release | cut -f 2 -d =) stable" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
-        DEBIAN_FRONTEND="noninteractive" sudo apt-get update
+    # Restart Docker
+    systemctl restart docker
     fi
 
     if ! dpkg-query -W -f='${Status}' "docker-ce" 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
@@ -116,8 +130,10 @@ hpe() {
 }
 
 sensors() {
-    info "Setting up sensors (may take some time)"
-    sensors-detect --auto >/dev/null
+    info "Setting up sensors"
+    if ! grep coretemp /etc/modules >/dev/null 2>&1; then
+        echo coretemp | sudo tee -a /etc/modules >/dev/null 2>&1
+    fi
 }
 
 main() {
