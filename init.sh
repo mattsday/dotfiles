@@ -15,9 +15,13 @@ fi
 
 # Allow manually disabling sudo for aliases etc
 if [ "${NO_SUDO}" = 1 ]; then
+	echo Disabling sudo aliases
 	touch "${HOME}/.disable_dotfiles_sudo"
-elif [ -f "${HOME}/.disable_dotfiles_sudo" ]; then
+elif [ "${NO_SUDO}" = 0 ]; then
+	echo Enabling sudo aliases
 	rm "${HOME}/.disable_dotfiles_sudo"
+elif [ -f "${HOME}/.disable_dotfiles_sudo" ]; then
+	echo Sudo aliases disabled - run this script with NO_SUDO=0 to re-enable
 fi
 
 mkdir "${DOTFILES_ROOT}"/backup >/dev/null 2>&1
