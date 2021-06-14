@@ -61,85 +61,6 @@ write_export() {
 	debug export "${export_name}='${export_data}'"
 }
 
-msg Updating aliases and environment variables
-
-IS_ROOT=0
-if command -v id >/dev/null 2>&1; then
-	if [ "$(id -u)" = 0 ]; then
-		msg "Updating as root (ignoring sudo aliases)"
-		IS_ROOT=1
-	fi
-fi
-
-rm "${SH_ALIAS_FILE}" >/dev/null 2>&1
-rm "${CSH_ALIAS_FILE}" >/dev/null 2>&1
-rm "${FISH_ALIAS_FILE}" >/dev/null 2>&1
-rm "${SH_ENV_FILE}" >/dev/null 2>&1
-rm "${CSH_ENV_FILE}" >/dev/null 2>&1
-rm "${FISH_ENV_FILE}" >/dev/null 2>&1
-
-updated="$(date)"
-
-cat <<EOT >"${SH_ALIAS_FILE}"
-# Bourne shell alias file
-#
-# This file is auto generated and replaced every 7 days.
-# Edit '${HOME}/.alias_list' to change them and then run
-# \`${HOME}/.update_aliases force\` to update this file.
-# Last updated: ${updated}
-
-EOT
-
-cat <<EOT >"${CSH_ALIAS_FILE}"
-# csh and tcsh alias file
-#
-# This file is auto generated and replaced every 7 days.
-# Edit '${HOME}/.alias_list' to change them and then run
-# \`${HOME}/.update_aliases force\` to update this file.
-# Last updated: ${updated}
-
-EOT
-
-cat <<EOT >"${FISH_ALIAS_FILE}"
-# Fish shell alias file
-#
-# This file is auto generated and replaced every 7 days.
-# Edit '${HOME}/.alias_list' to change them and then run
-# \`${HOME}/.update_aliases force\` to update this file.
-# Last updated: ${updated}
-
-EOT
-
-cat <<EOT >"${SH_ENV_FILE}"
-# Bourne shell env file
-#
-# This file is auto generated and replaced every 7 days.
-# Edit '${HOME}/.alias_list' to change them and then run
-# \`${HOME}/.update_aliases force\` to update this file.
-# Last updated: ${updated}
-
-EOT
-
-cat <<EOT >"${CSH_ENV_FILE}"
-# csh and tcsh env file
-#
-# This file is auto generated and replaced every 7 days.
-# Edit '${HOME}/.alias_list' to change them and then run
-# \`${HOME}/.update_aliases force\` to update this file.
-# Last updated: ${updated}
-
-EOT
-
-cat <<EOT >"${FISH_ENV_FILE}"
-# Fish shell env file
-#
-# This file is auto generated and replaced every 7 days.
-# Edit '${HOME}/.alias_list' to change them and then run
-# \`${HOME}/.update_aliases force\` to update this file.
-# Last updated: ${updated}
-
-EOT
-
 add_alias() {
 	IFS='@'
 	for alias in $1; do
@@ -187,98 +108,193 @@ add_export() {
 		write_export "${export_name}" "${export_data}"
 	done
 }
-aliases_count=0
-variables_count=0
-while IFS='' read -r line || [ -n "${line}" ]; do
-	case ${line} in
-	# Ignore comments
-	'#'*) ;;
-		# Check for tests
-	'talias @'*)
-		IFS=''
-		# Get the list of command_list to test
-		test="$(echo "${line}" | cut -d @ -f 2 | sed 's/^@//' | xargs)"
-		execute=1
-		if ! eval "${test}" >/dev/null 2>&1; then
-			execute=0
-		fi
-		if [ "${execute}" = 1 ]; then
-			add_alias "$(echo "${line}" | cut -f 3- -d @ | xargs)"
-		fi
-		;;
-	'texport @'*)
-		IFS=''
-		# Get the list of command_list to test
-		test="$(echo "${line}" | cut -d @ -f 2 | sed 's/^@//' | xargs)"
-		execute=1
-		if ! eval "${test}" >/dev/null 2>&1; then
-			execute=0
-		fi
-		if [ "${execute}" = 1 ]; then
-			add_export "$(echo "${line}" | cut -f 3- -d @ | xargs)"
-		fi
-		;;
-	'alias @'* | 'export @'* | 'update @'*)
-		# Get the list of command_list to test
-		command_list="$(echo "${line}" | cut -f 2 -d ' ' | sed 's/^@//')"
+create_files() {
 
-		IFS=,
-		execute=1
-		for command in ${command_list}; do
-			case ${command} in
-			# If it's an absolute path just test if it is executable
-			*/*)
-				if [ ! -x "${command}" ]; then
-					execute=0
-					break
-				fi
-				;;
-			# Otherwise search the path for it
-			*)
-				if ! command -v "${command}" >/dev/null 2>&1; then
-					execute=0
-					break
-				fi
-				;;
-			esac
-		done
-		IFS=''
-		if [ "${execute}" = 1 ]; then
-			type="$(echo "${line}" | cut -f 1 -d ' ' | xargs)"
-			if [ "${type}" = alias ]; then
-				add_alias "$(echo "${line}" | sed 's/^alias//' | sed 's|@'"${command_list}"'||' | xargs)"
-			elif [ "${type}" = export ]; then
-				add_export "$(echo "${line}" | sed 's/^export//' | sed 's|@'"${command_list}"'||' | xargs)"
-			elif [ "${type}" = update ]; then
-				add_update "$(echo "${line}" | sed 's/^update//' | sed 's|@'"${command_list}"'||' | xargs)"
+	rm "${SH_ALIAS_FILE}" >/dev/null 2>&1
+	rm "${CSH_ALIAS_FILE}" >/dev/null 2>&1
+	rm "${FISH_ALIAS_FILE}" >/dev/null 2>&1
+	rm "${SH_ENV_FILE}" >/dev/null 2>&1
+	rm "${CSH_ENV_FILE}" >/dev/null 2>&1
+	rm "${FISH_ENV_FILE}" >/dev/null 2>&1
+
+	updated="$(date)"
+
+	cat <<EOT >"${SH_ALIAS_FILE}"
+# Bourne shell alias file
+#
+# This file is auto generated and replaced every 7 days.
+# Edit '${HOME}/.alias_list' to change them and then run
+# \`${HOME}/.update_aliases force\` to update this file.
+# Last updated: ${updated}
+
+EOT
+
+	cat <<EOT >"${CSH_ALIAS_FILE}"
+# csh and tcsh alias file
+#
+# This file is auto generated and replaced every 7 days.
+# Edit '${HOME}/.alias_list' to change them and then run
+# \`${HOME}/.update_aliases force\` to update this file.
+# Last updated: ${updated}
+
+EOT
+
+	cat <<EOT >"${FISH_ALIAS_FILE}"
+# Fish shell alias file
+#
+# This file is auto generated and replaced every 7 days.
+# Edit '${HOME}/.alias_list' to change them and then run
+# \`${HOME}/.update_aliases force\` to update this file.
+# Last updated: ${updated}
+
+EOT
+
+	cat <<EOT >"${SH_ENV_FILE}"
+# Bourne shell env file
+#
+# This file is auto generated and replaced every 7 days.
+# Edit '${HOME}/.alias_list' to change them and then run
+# \`${HOME}/.update_aliases force\` to update this file.
+# Last updated: ${updated}
+
+EOT
+
+	cat <<EOT >"${CSH_ENV_FILE}"
+# csh and tcsh env file
+#
+# This file is auto generated and replaced every 7 days.
+# Edit '${HOME}/.alias_list' to change them and then run
+# \`${HOME}/.update_aliases force\` to update this file.
+# Last updated: ${updated}
+
+EOT
+
+	cat <<EOT >"${FISH_ENV_FILE}"
+# Fish shell env file
+#
+# This file is auto generated and replaced every 7 days.
+# Edit '${HOME}/.alias_list' to change them and then run
+# \`${HOME}/.update_aliases force\` to update this file.
+# Last updated: ${updated}
+
+EOT
+}
+
+main() {
+
+	msg Updating aliases and environment variables
+	
+	create_files
+
+	aliases_count=0
+	variables_count=0
+
+	IS_ROOT=0
+	if command -v id >/dev/null 2>&1; then
+		if [ "$(id -u)" = 0 ]; then
+			msg "Updating as root (ignoring sudo aliases)"
+			IS_ROOT=1
+		fi
+	fi
+	if [ -f "${HOME}/.disable_dotfiles_sudo" ]; then
+		# By "being root" no sudo aliases get created
+		IS_ROOT=1
+	fi
+
+	while IFS='' read -r line || [ -n "${line}" ]; do
+		case ${line} in
+		# Ignore comments
+		'#'*) ;;
+			# Check for tests
+		'talias @'*)
+			IFS=''
+			# Get the list of command_list to test
+			test="$(echo "${line}" | cut -d @ -f 2 | sed 's/^@//' | xargs)"
+			execute=1
+			if ! eval "${test}" >/dev/null 2>&1; then
+				execute=0
 			fi
-		fi
-		;;
-	export*)
-		add_export "$(echo "${line}" | sed 's/^export//' | xargs)"
-		;;
-	alias*)
-		if [ -n "${line}" ]; then
-			add_alias "$(echo "${line}" | sed 's/^alias//' | xargs)"
-		fi
-		;;
-	update*)
-		add_update "$(echo "${line}" | sed 's/^update//' | xargs)"
-		;;
-	*) ;;
-	esac
-done <"${HOME}/.alias_list"
+			if [ "${execute}" = 1 ]; then
+				add_alias "$(echo "${line}" | cut -f 3- -d @ | xargs)"
+			fi
+			;;
+		'texport @'*)
+			IFS=''
+			# Get the list of command_list to test
+			test="$(echo "${line}" | cut -d @ -f 2 | sed 's/^@//' | xargs)"
+			execute=1
+			if ! eval "${test}" >/dev/null 2>&1; then
+				execute=0
+			fi
+			if [ "${execute}" = 1 ]; then
+				add_export "$(echo "${line}" | cut -f 3- -d @ | xargs)"
+			fi
+			;;
+		'alias @'* | 'export @'* | 'update @'*)
+			# Get the list of command_list to test
+			command_list="$(echo "${line}" | cut -f 2 -d ' ' | sed 's/^@//')"
 
-if [ -n "${UPDATE_CALLBACKS}" ]; then
-	write_export _UPDATE_CALLBACKS "${UPDATE_CALLBACKS}"
-fi
+			IFS=,
+			execute=1
+			for command in ${command_list}; do
+				case ${command} in
+				# If it's an absolute path just test if it is executable
+				*/*)
+					if [ ! -x "${command}" ]; then
+						execute=0
+						break
+					fi
+					;;
+				# Otherwise search the path for it
+				*)
+					if ! command -v "${command}" >/dev/null 2>&1; then
+						execute=0
+						break
+					fi
+					;;
+				esac
+			done
+			IFS=''
+			if [ "${execute}" = 1 ]; then
+				type="$(echo "${line}" | cut -f 1 -d ' ' | xargs)"
+				if [ "${type}" = alias ]; then
+					add_alias "$(echo "${line}" | sed 's/^alias//' | sed 's|@'"${command_list}"'||' | xargs)"
+				elif [ "${type}" = export ]; then
+					add_export "$(echo "${line}" | sed 's/^export//' | sed 's|@'"${command_list}"'||' | xargs)"
+				elif [ "${type}" = update ]; then
+					add_update "$(echo "${line}" | sed 's/^update//' | sed 's|@'"${command_list}"'||' | xargs)"
+				fi
+			fi
+			;;
+		export*)
+			add_export "$(echo "${line}" | sed 's/^export//' | xargs)"
+			;;
+		alias*)
+			if [ -n "${line}" ]; then
+				add_alias "$(echo "${line}" | sed 's/^alias//' | xargs)"
+			fi
+			;;
+		update*)
+			add_update "$(echo "${line}" | sed 's/^update//' | xargs)"
+			;;
+		*) ;;
+		esac
+	done <"${HOME}/.alias_list"
 
-# Write out last update time:
-if [ -f "${HOME}/.alias_update_time" ]; then
-	rm "${HOME}/.alias_update_time"
-fi
-echo "${date}" >"${HOME}/.alias_update_time"
+	if [ -n "${UPDATE_CALLBACKS}" ]; then
+		write_export _UPDATE_CALLBACKS "${UPDATE_CALLBACKS}"
+	fi
 
-msg Created "${aliases_count}" aliases and "${variables_count}" environment variables
+	# Write out last update time:
+	if [ -f "${HOME}/.alias_update_time" ]; then
+		rm "${HOME}/.alias_update_time"
+	fi
+	echo "${date}" >"${HOME}/.alias_update_time"
+
+	msg Created "${aliases_count}" aliases and "${variables_count}" environment variables
+
+}
+
+main
 
 # vim: syntax=sh

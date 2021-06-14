@@ -13,6 +13,13 @@ fi
 # Load dependencies
 . "${DOTFILES_ROOT}"/dotfiles/dependencies
 
+# Allow manually disabling sudo for aliases etc
+if [ "${NO_SUDO}" = 1 ]; then
+	touch "${HOME}/.disable_dotfiles_sudo"
+elif [ -f "${HOME}/.disable_dotfiles_sudo" ]; then
+	rm "${HOME}/.disable_dotfiles_sudo"
+fi
+
 mkdir "${DOTFILES_ROOT}"/backup >/dev/null 2>&1
 
 # shellcheck disable=SC2154
