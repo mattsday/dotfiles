@@ -24,6 +24,8 @@ if [ -z "${OS_BOOTSTRAP_ROOT}" ]; then
   fi
 fi
 
+. "${OS_BOOTSTRAP_ROOT}/debian-common.sh"
+
 DEBIAN_DESKTOP_BOOTSTRAP=debian-desktop-bootstrap.sh
 
 # Load generic desktop bootstraps
@@ -34,49 +36,17 @@ else
   echo Could not find "${DEBIAN_DESKTOP_BOOTSTRAP}"
 fi
 
-fail() {
-  echo >&2 '[Failure]' "$@"
-  exit 1
-}
-
-warn() {
-  echo >&2 '[Warning]' "$@"
-}
-
-info() {
-  echo "$@"
-}
-
-# Ensure apt runs in non-interactive mode
-_apt() {
-  DEBIAN_FRONTEND="noninteractive" sudo apt-get "$@"
-}
-
 get_apt_packages() {
   APT_PACKAGES+=(google-cloud-sdk google-cloud-sdk-anthos-auth flatpak)
   APT_PACKAGES+=(google-cloud-sdk-kpt google-cloud-sdk-skaffold kubectl openjdk-8-jdk openjdk-11-jdk)
   APT_PACKAGES+=(print-manager avahi-discover avahi-utils okular sddm-theme-debian-breeze)
 }
 
-install_apt_packages() {
-  get_apt_packages
-  INSTALL_PACKAGES=()
-  for package in "${APT_PACKAGES[@]}"; do
-    if ! dpkg-query -W -f='${Status}' "${package}" 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
-      INSTALL_PACKAGES+=("${package}")
-    fi
-  done
-  if [[ -n "${INSTALL_PACKAGES[*]}" ]]; then
-    info Installing packages "${INSTALL_PACKAGES[@]}"
-    _apt -y install "${INSTALL_PACKAGES[@]}" >/dev/null || fail "Failed installing packages"
-  fi
-}
-
 passwordless_sudo() {
-  if [[ ! -f /etc/sudoers.d/nopasswd-"${USER}" ]]; then
+  if [[ ! -f /etc/sudoers.d/nopasswd-"${USER}" ]] && [[ "${NO_SUDO}" != 1 ]]; then
     info Setting up passwordless sudo
-    echo "${USER}"' ALL=(ALL:ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/nopasswd-"${USER}"
-    sudo AUTOMATIC_UPDATE=yes glinux-config set custom_etc_sudoers_d true >/dev/null 2>&1
+    echo "${USER}"' ALL=(ALL:ALL) NOPASSWD:ALL' | _sudo tee /etc/sudoers.d/nopasswd-"${USER}"
+    _sudo AUTOMATIC_UPDATE=yes glinux-config set custom_etc_sudoers_d true >/dev/null 2>&1
   fi
 }
 
@@ -100,6 +70,10 @@ install_kubectx() {
 }
 
 install_spotify_flatpak() {
+  # Don't run this if we can't run as root
+  if [[ "${NO_SUDO}" = 1 ]]; then
+    return
+  fi
   if ! command -v flatpak >/dev/null 2>&1; then
     return
   fi
@@ -121,6 +95,10 @@ install_spotify_flatpak() {
 }
 
 install_chromium_flatpak() {
+  # Don't run this if we can't run as root
+  if [[ "${NO_SUDO}" = 1 ]]; then
+    return
+  fi
   if ! command -v flatpak >/dev/null 2>&1; then
     return
   fi
@@ -165,6 +143,10 @@ install_chromium_flatpak() {
 }
 
 install_vs_code() {
+  # Don't run this if we can't run as root
+  if [[ "${NO_SUDO}" = 1 ]]; then
+    return
+  fi
   if ! dpkg-query -W -f='${Status}' code 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
     sudo glinux-add-repo -b typescript stable >/dev/null || fail Failed to add Typescript repo
     _apt update >/dev/null 2>&1
@@ -209,6 +191,10 @@ fix_ferdi_chat() {
 }
 
 docker_setup() {
+  # Don't run this if we can't run as root
+  if [[ "${NO_SUDO}" = 1 ]]; then
+    return
+  fi
   if ! dpkg-query -W -f='${Status}' docker-ce 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
     info Setting up Docker
     sudo glinux-add-repo -b docker-ce-"$(lsb_release -cs)" >/dev/null || fail Failed to add Docker repo

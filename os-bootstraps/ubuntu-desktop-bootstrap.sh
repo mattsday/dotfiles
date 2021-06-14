@@ -23,6 +23,8 @@ if [ -z "${OS_BOOTSTRAP_ROOT}" ]; then
     fi
 fi
 
+. "${OS_BOOTSTRAP_ROOT}/debian-common.sh"
+
 DEBIAN_DESKTOP_BOOTSTRAP=debian-desktop-bootstrap.sh
 
 # Load generic desktop bootstraps
@@ -33,24 +35,6 @@ else
     echo Could not find debian-desktop.sh
 fi
 
-fail() {
-    echo >&2 '[Failure]' "$@"
-    exit 1
-}
-
-warn() {
-    echo >&2 '[Warning]' "$@"
-}
-
-info() {
-    echo "$@"
-}
-
-# Ensure apt runs in non-interactive mode
-_apt() {
-    DEBIAN_FRONTEND="noninteractive" sudo apt-get "$@"
-}
-
 get_apt_packages() {
     APT_PACKAGES+=(openjdk-8-jdk openjdk-11-jdk python-is-python3 zenity)
 }
@@ -59,24 +43,14 @@ get_snap_packages() {
     SNAP_PACKAGES+=("code --classic")
 }
 
-install_apt_packages() {
-    get_apt_packages
-    INSTALL_PACKAGES=()
-    for package in "${APT_PACKAGES[@]}"; do
-        if ! dpkg-query -W -f='${Status}' "${package}" 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
-            INSTALL_PACKAGES+=("${package}")
-        fi
-    done
-    if [[ -n "${INSTALL_PACKAGES[*]}" ]]; then
-        info Installing packages "${INSTALL_PACKAGES[@]}"
-        _apt -y install "${INSTALL_PACKAGES[@]}" >/dev/null || fail "Failed installing packages"
-    fi
-}
-
 install_spotify() {
+    # Don't run this if we can't run as root
+    if [[ "${NO_SUDO}" = 1 ]]; then
+        return
+    fi
     if ! dpkg-query -W -f='${Status}' spotify-client 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
         #curl -sS https://download.spotify.com/debian/pubkey.gpg | sudo apt-key add - >/dev/null
-        curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | sudo apt-key add -
+        curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | _sudo apt-key add -
         echo "deb http://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list >/dev/null
         _apt update && _apt install -y spotify-client >/dev/null 2>&1
     fi

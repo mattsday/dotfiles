@@ -24,9 +24,7 @@ if [ -z "${OS_BOOTSTRAP_ROOT}" ]; then
 	fi
 fi
 
-_apt() {
-	DEBIAN_FRONTEND="noninteractive" sudo apt-get "$@"
-}
+. "${OS_BOOTSTRAP_ROOT}/debian-common.sh"
 
 APT_PACKAGES=()
 SNAP_PACKAGES=()
@@ -66,21 +64,9 @@ if [[ ! -x "/usr/bin/apt-get" ]] || [[ ! -x "/usr/bin/dpkg" ]]; then
 	exit
 fi
 
-# Check if sudo is installed
-if [[ ! -x /usr/bin/sudo ]]; then
-	if command -v id >/dev/null 2>&1; then
-		if [[ "$(id -u)" = 0 ]]; then
-			echo Installing sudo
-			DEBIAN_FRONTEND="noninteractive" apt-get update >/dev/null
-			DEBIAN_FRONTEND="noninteractive" apt-get install -y sudo >/dev/null
-		else
-			echo "User is not root and sudo isn't installed. Install sudo first"
-			exit
-		fi
-	fi
+if [[ "${NO_SUDO}" != 1 ]] && [[ "${IS_ROOT}" != 1 ]]; then
+	. "${OS_BOOTSTRAP_ROOT}"/passwordless-sudo.sh
 fi
-
-. "${OS_BOOTSTRAP_ROOT}"/passwordless-sudo.sh
 
 # Install standard tmux
 tmux="tmux"
@@ -99,8 +85,10 @@ if [[ "${RELEASE}" = ubuntu ]] && [[ -f "/etc/os-release" ]]; then
 	fi
 fi
 
-echo Updating package list
-_apt update >/dev/null
+if [[ "${NO_SUDO}" != 1 ]]; then
+	echo Updating package list
+	_apt update >/dev/null
+fi
 
 APT_PACKAGES+=(
 	apt-utils
@@ -126,27 +114,7 @@ APT_PACKAGES+=(
 	whois
 )
 
-INSTALL_PACKAGES=()
-for package in "${APT_PACKAGES[@]}"; do
-	if ! dpkg-query -W -f='${Status}' "${package}" 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
-		INSTALL_PACKAGES+=("${package}")
-	fi
-done
-if [[ -n "${INSTALL_PACKAGES[*]}" ]]; then
-	echo Installing packages "${INSTALL_PACKAGES[@]}"
-	_apt -y install "${INSTALL_PACKAGES[@]}" >/dev/null
-fi
-
-if command -v snap >/dev/null 2>&1; then
-	for snap in "${SNAP_PACKAGES[@]}"; do
-		pkg_name="$(echo "${snap}" | cut -d ' ' -f 1)"
-		if ! snap info "${pkg_name}" | grep installed: >/dev/null 2>&1; then
-			echo Installing snap package "${snap}"
-			# shellcheck disable=SC2086
-			sudo snap install ${snap} >/dev/null || warn "Failed to install ${snap}"
-		fi
-	done
-fi
+install_apt_packages
 
 if [[ -n "${CALLBACKS}" ]]; then
 	echo Running platform specific callbacks
