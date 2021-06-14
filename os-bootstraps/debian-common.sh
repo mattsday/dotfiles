@@ -30,7 +30,7 @@ _sudo() {
 
 sudo_disabled() {
 	if [[ "${NO_SUDO}" != 1 ]]; then
-		echo Warning - sudo is either not installed or disabled - consider enabling it for all features to work
+		echo Warning - sudo is either not installed or is disabled
 	fi
 	NO_SUDO=1
 }

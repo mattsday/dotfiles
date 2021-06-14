@@ -90,29 +90,31 @@ if [[ "${NO_SUDO}" != 1 ]]; then
 	_apt update >/dev/null
 fi
 
-APT_PACKAGES+=(
-	apt-utils
-	bash-completion
-	dnsutils
-	zsh
-	rsync
-	curl
-	vim
-	findutils
-	coreutils
-	git
-	htop
-	tcsh
-	openssh-client
-	wget
-	jq
-	xz-utils
-	zip
-	unzip
-	"${tmux}"
-	shellcheck
-	whois
-)
+get_apt_packages() {
+	APT_PACKAGES+=(
+		apt-utils
+		bash-completion
+		dnsutils
+		zsh
+		rsync
+		curl
+		vim
+		findutils
+		coreutils
+		git
+		htop
+		tcsh
+		openssh-client
+		wget
+		jq
+		xz-utils
+		zip
+		unzip
+		"${tmux}"
+		shellcheck
+		whois
+	)
+}
 
 install_apt_packages
 
