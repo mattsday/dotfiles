@@ -1,5 +1,6 @@
 #!/bin/bash
 #shellcheck disable=SC1090
+
 if [ -z "${DOTFILES_ROOT}" ]; then
     if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
         DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
@@ -8,22 +9,11 @@ if [ -z "${DOTFILES_ROOT}" ]; then
     fi
 fi
 
-if [ -z "${OS_BOOTSTRAP_ROOT}" ]; then
-    if [ -f "${DOTFILES_ROOT}"/debian-bootstrap.sh ]; then
-        OS_BOOTSTRAP_ROOT="${DOTFILES_ROOT}"
-        if command -v realpath >/dev/null 2>&1; then
-            DOTFILES_ROOT="$(realpath "${DOTFILES_ROOT}"/..)"
-        fi
-    else
-        OS_BOOTSTRAP_ROOT="${DOTFILES_ROOT}"/os-bootstraps
-        if [ -f "${DOTFILES_ROOT}"/debian-bootstrap.sh ]; then
-            echo Cannot find OS bootstraps
-            exit 1
-        fi
-    fi
-fi
+# Load common settings and functions
+. "${DOTFILES_ROOT}/common.sh"
 
-. "${OS_BOOTSTRAP_ROOT}/debian-common.sh"
+# Load Debian common functions (from common.sh)
+load_debian_common
 
 DEBIAN_DESKTOP_BOOTSTRAP=debian-desktop-bootstrap.sh
 

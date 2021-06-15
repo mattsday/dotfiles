@@ -1,38 +1,16 @@
 #!/bin/bash
 
-fail() {
-	echo >&2 '[Failure]' "$@"
-	return 1
-}
+# Set DOTFILES_COMMON so this doesn't get called too much
+[ -n "${DOTFILES_DEBIAN_COMMON}" ] && return
+DOTFILES_DEBIAN_COMMON=1
 
-warn() {
-	echo >&2 '[Warning]' "$@"
-}
-
-info() {
-	echo "$@"
-}
+if [ -z "${DOTFILES_ROOT}" ]; then
+	echo >&2 '[Failure]' "Cannot find dotfiles root directory"
+	exit 1
+fi
 
 _apt() {
 	DEBIAN_FRONTEND="noninteractive" _sudo apt-get "$@"
-}
-
-_sudo() {
-	echo _sudo
-	if [[ "${NO_SUDO}" = 1 ]]; then
-		return
-	elif [[ "${IS_ROOT}" = 1 ]]; then
-		"$@"
-	else
-		sudo "$@"
-	fi
-}
-
-sudo_disabled() {
-	if [[ "${NO_SUDO}" != 1 ]]; then
-		echo Warning - sudo is either not installed or is disabled
-	fi
-	NO_SUDO=1
 }
 
 install_apt_packages() {
@@ -48,18 +26,3 @@ install_apt_packages() {
 		_apt -y install "${INSTALL_PACKAGES[@]}" >/dev/null || fail "Failed installing packages"
 	fi
 }
-
-# Check if sudo is installed
-if [[ ! -x /usr/bin/sudo ]]; then
-	if command -v id >/dev/null 2>&1; then
-		if [[ "$(id -u)" = 0 ]]; then
-			IS_ROOT=1
-		else
-			sudo_disabled
-		fi
-	fi
-fi
-
-if [[ -f "${HOME}/.disable_dotfiles_sudo" ]]; then
-	sudo_disabled
-fi

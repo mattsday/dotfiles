@@ -2,29 +2,18 @@
 #shellcheck disable=SC1091
 
 if [ -z "${DOTFILES_ROOT}" ]; then
-	if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
-		DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
-	else
-		DOTFILES_ROOT="${PWD}"
-	fi
+    if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
+        DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
+    else
+        DOTFILES_ROOT="${PWD}"
+    fi
 fi
 
-if [ -z "${OS_BOOTSTRAP_ROOT}" ]; then
-	if [ -f "${DOTFILES_ROOT}"/debian-bootstrap.sh ]; then
-		OS_BOOTSTRAP_ROOT="${DOTFILES_ROOT}"
-		if command -v realpath >/dev/null 2>&1; then
-			DOTFILES_ROOT="$(realpath "${DOTFILES_ROOT}"/..)"
-		fi
-	else
-		OS_BOOTSTRAP_ROOT="${DOTFILES_ROOT}"/os-bootstraps
-		if [ -f "${DOTFILES_ROOT}"/debian-bootstrap.sh ]; then
-			echo Cannot find OS bootstraps
-			exit 1
-		fi
-	fi
-fi
+# Load common settings and functions
+. "${DOTFILES_ROOT}/common.sh"
 
-. "${OS_BOOTSTRAP_ROOT}/debian-common.sh"
+# Load Debian common functions (from common.sh)
+load_debian_common
 
 APT_PACKAGES=()
 SNAP_PACKAGES=()
@@ -35,32 +24,33 @@ RELEASE="$(grep '^VERSION_CODENAME=' /etc/os-release | cut -d = -f 2 | sed 's/"/
 if [[ "${RELEASE}" = rodete ]]; then
 	if [[ -f "${OS_BOOTSTRAP_ROOT}"/rodete-bootstrap.sh ]]; then
 		NO_SUDO_CONFIG=1
-		echo Detected Rodete
+		info Detected Rodete
 		. "${OS_BOOTSTRAP_ROOT}"/rodete-bootstrap.sh
 	fi
 fi
 RELEASE="$(grep '^ID=' /etc/os-release | cut -d = -f 2 | sed 's/"//g')"
 if [[ "${RELEASE}" = neon ]]; then
 	if [[ -f "${OS_BOOTSTRAP_ROOT}"/ubuntu-desktop-bootstrap.sh ]]; then
-		echo Detected KDE Neon Desktop
+		info Detected KDE Neon Desktop
 		. "${OS_BOOTSTRAP_ROOT}"/ubuntu-desktop-bootstrap.sh
 	fi
 elif [[ "${RELEASE}" = ubuntu ]]; then
 	if dpkg-query -W -f='${Status}' kwin-common 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
-		echo Detected Kubuntu
+		info Detected Kubuntu
 		. "${OS_BOOTSTRAP_ROOT}"/ubuntu-desktop-bootstrap.sh
 	fi
 fi
 
 # Only run on Debian and derivatives
 if [[ ! -f "/etc/debian_version" ]]; then
-	echo Not Debian, stopping
+	error Not Debian, stopping
 	exit
 fi
 
 # Use apt and assume somewhat recent versions
 if [[ ! -x "/usr/bin/apt-get" ]] || [[ ! -x "/usr/bin/dpkg" ]]; then
-	echo "You need apt to run this"
+	warn "Cannot find apt"
+	NO_SUDO=1
 	exit
 fi
 
@@ -75,7 +65,7 @@ tmux="tmux"
 if [[ "${RELEASE}" = ubuntu ]] && [[ -f "/etc/os-release" ]]; then
 	OS_VER=$(grep '^VERSION_ID' /etc/os-release | cut -d = -f 2 | xargs)
 	if [[ -n "${OS_VER}" ]] && [[ "${OS_VER}" = "14.04" ]]; then
-		echo Adding PPA repository
+		info Adding PPA repository
 		if [[ ! -x "/usr/bin/apt-add-repository" ]]; then
 			_apt -y install software-properties-common >/dev/null
 		fi
@@ -86,7 +76,7 @@ if [[ "${RELEASE}" = ubuntu ]] && [[ -f "/etc/os-release" ]]; then
 fi
 
 if [[ "${NO_SUDO}" != 1 ]]; then
-	echo Updating package list
+	info Updating package list
 	_apt update >/dev/null
 fi
 
@@ -119,7 +109,7 @@ get_apt_packages() {
 install_apt_packages
 
 if [[ -n "${CALLBACKS}" ]]; then
-	echo Running platform specific callbacks
+	info Running platform specific callbacks
 	for callback in "${CALLBACKS[@]}"; do
 		"${callback}"
 	done

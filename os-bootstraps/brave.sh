@@ -44,7 +44,7 @@ check_cmd unzip
 
 if [ ! -d /opt/brave ]; then
     sudo mkdir "${DEST}" || fail "Cannot create dir ${DEST}"
-    sudo chmod "${USER}" "${DEST}" || fail "Cannot claim ownership of ${DEST}"
+    sudo chown "${USER}" "${DEST}" || fail "Cannot claim ownership of ${DEST}"
 fi
 
 # Take ownership of the brave destination

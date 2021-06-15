@@ -2,38 +2,27 @@
 #shellcheck disable=SC1090
 
 if [ -z "${DOTFILES_ROOT}" ]; then
-  if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
-    DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
-  else
-    DOTFILES_ROOT="${PWD}"
-  fi
+    if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
+        DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
+    else
+        DOTFILES_ROOT="${PWD}"
+    fi
 fi
 
-if [ -z "${OS_BOOTSTRAP_ROOT}" ]; then
-  if [ -f "${DOTFILES_ROOT}"/debian-bootstrap.sh ]; then
-    OS_BOOTSTRAP_ROOT="${DOTFILES_ROOT}"
-    if command -v realpath >/dev/null 2>&1; then
-      DOTFILES_ROOT="$(realpath "${DOTFILES_ROOT}"/..)"
-    fi
-  else
-    OS_BOOTSTRAP_ROOT="${DOTFILES_ROOT}"/os-bootstraps
-    if [ -f "${DOTFILES_ROOT}"/debian-bootstrap.sh ]; then
-      echo Cannot find OS bootstraps
-      exit 1
-    fi
-  fi
-fi
+# Load common settings and functions
+. "${DOTFILES_ROOT}/common.sh"
 
-. "${OS_BOOTSTRAP_ROOT}/debian-common.sh"
+# Load Debian common functions (from common.sh)
+load_debian_common
 
 DEBIAN_DESKTOP_BOOTSTRAP=debian-desktop-bootstrap.sh
 
 # Load generic desktop bootstraps
 if [[ -f "${OS_BOOTSTRAP_ROOT}"/"${DEBIAN_DESKTOP_BOOTSTRAP}" ]]; then
-  echo Detected generic Debian-derived desktop
+  info Detected generic Debian-derived desktop
   . "${OS_BOOTSTRAP_ROOT}"/"${DEBIAN_DESKTOP_BOOTSTRAP}"
 else
-  echo Could not find "${DEBIAN_DESKTOP_BOOTSTRAP}"
+  info Could not find "${DEBIAN_DESKTOP_BOOTSTRAP}"
 fi
 
 get_apt_packages() {
@@ -54,17 +43,17 @@ install_brave() {
   if [[ -f "${OS_BOOTSTRAP_ROOT}"/brave.sh ]]; then
     "${OS_BOOTSTRAP_ROOT}"/brave.sh
   else
-    echo Could not find kubectx.sh
+    warn Could not find kubectx.sh
   fi
 }
 
 install_kubectx() {
   if ! command -v kubectx >/dev/null 2>&1 || ! command -v kubens >/dev/null 2>&1; then
-    echo Installing Kubectx
+    info Installing Kubectx
     if [[ -f "${OS_BOOTSTRAP_ROOT}"/kubectx.sh ]]; then
       "${OS_BOOTSTRAP_ROOT}"/kubectx.sh
     else
-      echo Could not find kubectx.sh
+      fail Could not find kubectx.sh
     fi
   fi
 }
@@ -81,15 +70,15 @@ install_spotify_flatpak() {
   sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo >/dev/null
   package=com.spotify.Client
   if ! flatpak info "${package}" >/dev/null 2>&1; then
-    echo "Installing Spotify (flatpak)"
+    info "Installing Spotify (flatpak)"
     if ! sudo flatpak -y install "${package}" >/dev/null; then
-      echo Flatpak installation failed for "${package}"
+      fail Flatpak installation failed for "${package}"
       return
     fi
   fi
   # Remove spotify-client debian package
   if dpkg-query -W -f='${Status}' spotify-client 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
-    echo Removing spotify-client from apt
+    info Removing spotify-client from apt
     sudo apt-get -y remove spotify-client >/dev/null 2>&1
   fi
 }
@@ -117,9 +106,9 @@ install_chromium_flatpak() {
   FLATPAK_PACKAGES+=(org.chromium.Chromium org.gtk.Gtk3theme.Breeze-Dark)
   for package in "${FLATPAK_PACKAGES[@]}"; do
     if ! flatpak info "${package}" >/dev/null 2>&1; then
-      echo "Installing Chromium (flatpak) - ${package}"
+      info "Installing Chromium (flatpak) - ${package}"
       if ! sudo flatpak -y install "${package}" >/dev/null; then
-        echo Flatpak installation failed for "${package}"
+        warn Flatpak installation failed for "${package}"
         return
       fi
     fi
@@ -135,7 +124,7 @@ install_chromium_flatpak() {
     return
   fi
   if [[ ! -f "${FLATPAK_FILE}" ]]; then
-    echo Warning "${FLATPAK_FILE}" does not exist
+    warn Warning "${FLATPAK_FILE}" does not exist
     return
   fi
   cp "${FLATPAK_FILE}" "${LOCAL_FILE}"
