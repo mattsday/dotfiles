@@ -1,27 +1,19 @@
 #!/bin/bash
 
+if [ -z "${DOTFILES_ROOT}" ]; then
+    if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
+        DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
+    else
+        DOTFILES_ROOT="${PWD}"
+    fi
+fi
+
+# Load common settings and functions
+. "${DOTFILES_ROOT}/common.sh"
+
 BASE_DIR="${HOME}/.config/Ferdi/recipes/dev"
 GIT_LOCATION="https://github.com/sharkpp/franz-recipe-google-shoppinglist"
 PLUGIN_DIR="google-shopping-list"
-
-error() {
-    echo >&2 '[Error]' "$@"
-    exit 1
-}
-
-warn() {
-    echo >&2 '[Warn]' "$@"
-}
-
-info() {
-    echo "$@"
-}
-
-check_cmd() {
-    if ! command -v "$@" >/dev/null 2>&1; then
-        error Command "$@" not found - please install it
-    fi
-}
 
 main() {
     check_cmd git

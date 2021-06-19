@@ -10,9 +10,15 @@ if [ -z "${DOTFILES_ROOT}" ]; then
 	fi
 fi
 
-if [ ! -d "${DOTFILES_ROOT}"/dotfiles/home ]; then
-	echo Cannot find "${DOTFILES_ROOT}"/dotfiles/home
+if [ ! -f "${DOTFILES_ROOT}/common.sh" ]; then
+	echo >&2 Cannot find . "${DOTFILES_ROOT}/common.sh"
 	exit 1
+else
+	. "${DOTFILES_ROOT}/common.sh"
+fi
+
+if [ ! -d "${DOTFILES_ROOT}"/dotfiles/home ]; then
+	error Cannot find "${DOTFILES_ROOT}"/dotfiles/home
 fi
 
 for i in "${DOTFILES_ROOT}"/dotfiles/home/*; do
@@ -20,8 +26,7 @@ for i in "${DOTFILES_ROOT}"/dotfiles/home/*; do
 done
 
 if [ ! -d "${DOTFILES_ROOT}"/dotfiles/config ]; then
-	echo Cannot find "${DOTFILES_ROOT}"/dotfiles/home
-	exit 1
+	error Cannot find "${DOTFILES_ROOT}"/dotfiles/home
 fi
 
 for i in "${DOTFILES_ROOT}"/dotfiles/config/*; do

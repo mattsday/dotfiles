@@ -1,28 +1,20 @@
 #!/bin/bash
 
-fail_exit() {
-	echo >&2 '[Failure]' "$@"
-	exit 1
-}
+if [ -z "${DOTFILES_ROOT}" ]; then
+    if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
+        DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
+    else
+        DOTFILES_ROOT="${PWD}"
+    fi
+fi
 
-fail() {
-	echo >&2 '[Failure]' "$@"
-	return 1
-}
-
-warn() {
-	echo >&2 '[Warning]' "$@"
-}
-
-info() {
-	echo "$@"
-}
+# Load common settings and functions
+. "${DOTFILES_ROOT}/common.sh"
 
 configure_ports() {
 	xcode-select --install 2>/dev/null
 	if [ ! -x /opt/local/bin/port ]; then
-		echo "Install MacPorts - https://www.macports.org/install.php"
-		return
+		fail "Install MacPorts - https://www.macports.org/install.php"
 	fi
 	PORTS=(gawk grep shellcheck coreutils bash htop gsed gnutar multimarkdown jq findutils tmux wget ffmpeg youtube-dl watch)
 	for port in "${PORTS[@]}"; do
@@ -134,7 +126,7 @@ main() {
 	# Only run on a mac
 	OS="$(uname)"
 	if [[ "${OS}" != "Darwin" ]]; then
-		fail_exit Not OS X, stopping
+		error Not OS X, stopping
 	fi
 
 	#configure_homebrew

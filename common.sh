@@ -5,22 +5,34 @@
 DOTFILES_COMMON=1
 
 # Messages
+
+# Exits completely
 error() {
-    echo >&2 '[Failure]' "$@"
+    echo >&2 '[Error]' "$@"
     exit 1
 }
 
+# Stops the current script
 fail() {
     echo >&2 '[Failure]' "$@"
     return 1
 }
 
+# Sends a warning to stderr
 warn() {
     echo >&2 '[Warning]' "$@"
 }
 
+# Informational messages
 info() {
     echo "$@"
+}
+
+# Check if a command exists already
+check_cmd() {
+    if ! command -v "$@" >/dev/null 2>&1; then
+        error Command "$@" not found - please install it
+    fi
 }
 
 # Utility commands

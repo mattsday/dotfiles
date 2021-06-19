@@ -1,9 +1,16 @@
 #!/bin/bash
 # Configuration for all KDE desktops - mainly for Baloo
 
-info() {
-    echo "$@"
-}
+if [ -z "${DOTFILES_ROOT}" ]; then
+    if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
+        DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
+    else
+        DOTFILES_ROOT="${PWD}"
+    fi
+fi
+
+# Load common settings and functions
+. "${DOTFILES_ROOT}/common.sh"
 
 configure_baloo() {
     if ! command -v balooctl >/dev/null 2>&1; then

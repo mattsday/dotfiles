@@ -1,25 +1,23 @@
 #!/bin/bash
 # Install the brave browser manually
 
+if [ -z "${DOTFILES_ROOT}" ]; then
+    if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
+        DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
+    else
+        DOTFILES_ROOT="${PWD}"
+    fi
+fi
+
+# Load common settings and functions
+. "${DOTFILES_ROOT}/common.sh"
+
 VERSION=1.25.70
 URL="https://github.com/brave/brave-browser/releases/download/v${VERSION}/brave-browser-${VERSION}-linux-amd64.zip"
 DEST=/opt/brave
 ZIP=/opt/brave/brave-browser.zip
 ICON_DIR="${HOME}"/.local/share/icons/hicolor
 DESKTOP_DIR="${HOME}"/.local/share/applications
-
-fail() {
-    echo >&2 '[Failure]' "$@"
-    exit 1
-}
-
-warn() {
-    echo >&2 '[Warning]' "$@"
-}
-
-info() {
-    echo "$@"
-}
 
 # Check existing version to see if we need to run this
 if [ -x "${DEST}/brave" ]; then
@@ -31,13 +29,6 @@ if [ -x "${DEST}/brave" ]; then
 fi
 
 info Installing or Upgrading Brave Browser
-
-check_cmd() {
-    if ! command -v "${1}" >/dev/null 2>&1; then
-        fail Command "${1}" not found - please install it
-        exit 1
-    fi
-}
 
 check_cmd curl
 check_cmd unzip

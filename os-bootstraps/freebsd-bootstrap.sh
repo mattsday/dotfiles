@@ -1,36 +1,44 @@
 #!/bin/sh
 
+if [ -z "${DOTFILES_ROOT}" ]; then
+    if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
+        DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
+    else
+        DOTFILES_ROOT="${PWD}"
+    fi
+fi
+
+# Load common settings and functions
+. "${DOTFILES_ROOT}/common.sh"
+
 OS="$(uname)"
 
 if [ "${OS}" != FreeBSD ]; then
-	echo Not FreeBSD, stopping
-	exit
+	error Not FreeBSD, stopping
 fi
 
-echo Disabling clever prompt for /bin/sh
+info Disabling clever prompt for /bin/sh
 touch "${HOME}/.simple_shell"
 
 # Can I find pkg?
 if [ ! -x "/usr/sbin/pkg" ]; then
-	echo Cannot find package manager, stopping
-	exit
+	error Cannot find package manager, stopping
 fi
 
 # Check if sudo is installed
 if [ ! -x "/usr/bin/sudo" ] && [ ! -x "/usr/local/bin/sudo" ]; then
 	if command -v id >/dev/null 2>&1; then
 		if [ "$(id -u)" = 0 ]; then
-			echo Installing sudo
+			info Installing sudo
 			pkg install -q sudo
 		else
-			echo "User is not root and sudo isn't installed. Install sudo first"
-			exit
+			error "User is not root and sudo isn't installed. Install sudo first"
 		fi
 	fi
 fi
 
 # Update
-echo Updating system
+info Updating system
 sudo pkg update -q
 sudo pkg upgrade -qy
 
@@ -58,7 +66,7 @@ htop
 for utility in ${list}; do
 	exists="$(echo "${installed}" | tr " " "\\n" | grep -wx "${utility}")"
 	if [ -z "${exists}" ]; then
-		echo Installing "${utility}"
+		info Installing "${utility}"
 		sudo pkg install -yq "${utility}"
 	fi
 done

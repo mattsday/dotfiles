@@ -8,6 +8,9 @@ if [ -z "${DOTFILES_ROOT}" ]; then
 	fi
 fi
 
+# Load common settings and functions
+. "${DOTFILES_ROOT}/common.sh"
+
 _pacman() {
 	sudo pacman "$@"
 }
@@ -17,35 +20,32 @@ if [[ -f /etc/os-release ]]; then
 	RELEASE="$(grep '^ID=' /etc/os-release | cut -d = -f 2 | sed 's/"//g')"
 	case "${RELEASE}" in
 	arch*)
-		echo Detected Arch Linux
+		info Detected Arch Linux
 		;;
 	manjaro*)
-		echo Detected Manjaro
+		info Detected Manjaro
 		;;
 	*)
-		echo Cannot detect supported OS, stopping
-		exit
+		error Cannot detect supported OS, stopping
 		;;
 	esac
 else
-	echo Cannot detect OS, stopping
-	exit
+	error Cannot detect OS, stopping
 fi
 
 # Check if sudo is installed
 if [[ ! -x /usr/bin/sudo ]]; then
 	if command -v id >/dev/null 2>&1; then
 		if [[ "$(id -u)" = 0 ]]; then
-			echo Installing sudo
+			info Installing sudo
 			pacman -Sy --noconfirm sudo >/dev/null
 		else
-			echo "User is not root and sudo isn't installed. Install sudo first"
-			exit
+			error "User is not root and sudo isn't installed. Install sudo first"
 		fi
 	fi
 fi
 
-echo Updating System
+info Updating System
 _pacman -Syuq --noconfirm >/dev/null
 
 # Get list of installed apps
@@ -81,12 +81,12 @@ for utility in "${list[@]}"; do
 	fi
 done
 if ((${#to_install[@]})); then
-	echo Installing "${to_install[@]}"
+	info Installing "${to_install[@]}"
 	_pacman -Sq --noconfirm "${to_install[@]}" >/dev/null
 fi
 
 if ! command -v yay >/dev/null 2>&1; then
-	echo Installing yay
+	info Installing yay
 	git clone https://aur.archlinux.org/yay.git /tmp/yay >/dev/null 2>&1
 	pushd /tmp/yay >/dev/null 2>&1 || return
 	makepkg -si --noconfirm >/dev/null 2>&1
@@ -97,7 +97,7 @@ fi
 # Only run yay if not root
 if [[ "$(id -u)" != 0 ]]; then
 	if command -v yay >/dev/null 2>&1; then
-		echo Updating yay
+		info Updating yay
 		yay -Syuq --noconfirm >/dev/null 2>&1
 	fi
 fi

@@ -1,4 +1,16 @@
 #!/bin/sh
+
+if [ -z "${DOTFILES_ROOT}" ]; then
+    if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
+        DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
+    else
+        DOTFILES_ROOT="${PWD}"
+    fi
+fi
+
+# Load common settings and functions
+. "${DOTFILES_ROOT}/common.sh"
+
 FONT_LOCATION="https://download.jetbrains.com/fonts/JetBrainsMono-1.0.3.zip"
 FONT_ARCHIVE="/tmp/JetBrainsMono-1.0.3.zip"
 FONT_DIR="/tmp/jetbrains-mono"
@@ -10,26 +22,6 @@ if [ "$(uname)" = Darwin ]; then
     MAC=1
     LOCAL_FONT="${HOME}/Library/Fonts"
 fi
-
-fail() {
-    echo >&2 '[Failure]' "$@"
-    exit 1
-}
-
-warn() {
-    echo >&2 '[Warning]' "$@"
-}
-
-info() {
-    echo "$@"
-}
-
-check_cmd() {
-    if ! command -v "${1}" >/dev/null 2>&1; then
-        fail Command "${1}" not found - please install it
-        exit 1
-    fi
-}
 
 main() {
     if [ -f "${LOCAL_FONT}"/JetBrainsMono-Regular.ttf ]; then

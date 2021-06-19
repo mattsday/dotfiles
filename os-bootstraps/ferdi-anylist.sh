@@ -1,29 +1,21 @@
 #!/bin/bash
 
+if [ -z "${DOTFILES_ROOT}" ]; then
+    if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
+        DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
+    else
+        DOTFILES_ROOT="${PWD}"
+    fi
+fi
+
+# Load common settings and functions
+. "${DOTFILES_ROOT}/common.sh"
+
 if [[ -z "${FERDI_DEV_BASE_DIR}" ]]; then
     FERDI_DEV_BASE_DIR="${HOME}/.config/Ferdi/recipes/dev"
 fi
 GIT_LOCATION="https://github.com/mattsday/ferdi-anylist"
 PLUGIN_DIR="anylist"
-
-error() {
-    echo >&2 '[Error]' "$@"
-    exit 1
-}
-
-warn() {
-    echo >&2 '[Warn]' "$@"
-}
-
-info() {
-    echo "$@"
-}
-
-check_cmd() {
-    if ! command -v "$@" >/dev/null 2>&1; then
-        error Command "$@" not found - please install it
-    fi
-}
 
 main() {
     check_cmd git
