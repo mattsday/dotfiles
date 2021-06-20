@@ -34,20 +34,20 @@ check_cmd curl
 check_cmd unzip
 
 if [ ! -d /opt/brave ]; then
-    sudo mkdir "${DEST}" || fail "Cannot create dir ${DEST}"
-    sudo chown "${USER}" "${DEST}" || fail "Cannot claim ownership of ${DEST}"
+    sudo mkdir "${DEST}" || error "Cannot create dir ${DEST}"
+    sudo chown "${USER}" "${DEST}" || error "Cannot claim ownership of ${DEST}"
 fi
 
 # Take ownership of the brave destination
 sudo chown -R "${USER}" "${DEST}" || warn "Failed to take ownership of ${DEST} as ${USER}"
 
 if [ -f "${ZIP}" ]; then
-    rm "${ZIP}" || fail Cannot delete "${ZIP}"
+    rm "${ZIP}" || error Cannot delete "${ZIP}"
 fi
 
-curl -s -L -o "${ZIP}" "${URL}" || fail Could not download "${URL}"
+curl -s -L -o "${ZIP}" "${URL}" || error Could not download "${URL}"
 
-unzip -qq -od "${DEST}" "${ZIP}" || fail Could not extract "${ZIP}"
+unzip -qq -od "${DEST}" "${ZIP}" || error Could not extract "${ZIP}"
 
 if [ ! -d "${ICON_DIR}" ]; then
     mkdir -p "${ICON_DIR}" || warn "Could not create ${ICON_DIR}"

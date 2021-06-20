@@ -12,7 +12,8 @@ error() {
     exit 1
 }
 
-# Stops the current script
+# Prints a failure message but the caller should terminate execution itself
+# Returns 1 for error handling
 fail() {
     echo >&2 '[Failure]' "$@"
     return 1

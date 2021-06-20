@@ -2,11 +2,11 @@
 #shellcheck disable=SC1090
 
 if [ -z "${DOTFILES_ROOT}" ]; then
-    if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
-        DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
-    else
-        DOTFILES_ROOT="${PWD}"
-    fi
+  if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
+    DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
+  else
+    DOTFILES_ROOT="${PWD}"
+  fi
 fi
 
 # Load common settings and functions
@@ -63,7 +63,7 @@ install_spotify_flatpak() {
   if [[ "${NO_SUDO}" = 1 ]]; then
     return
   fi
-  if ! command -v flatpak >/dev/null 2>&1; then
+  if ! command -v flatpak >/dev/null 2>&1; then 
     return
   fi
   # Install spotify flatpak
@@ -73,7 +73,7 @@ install_spotify_flatpak() {
     info "Installing Spotify (flatpak)"
     if ! sudo flatpak -y install "${package}" >/dev/null; then
       fail Flatpak installation failed for "${package}"
-      return
+      return 1
     fi
   fi
   # Remove spotify-client debian package
@@ -137,7 +137,7 @@ install_vs_code() {
     return
   fi
   if ! dpkg-query -W -f='${Status}' code 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
-    sudo glinux-add-repo -b typescript stable >/dev/null || fail Failed to add Typescript repo
+    sudo glinux-add-repo -b typescript stable >/dev/null || error Failed to add Typescript repo
     _apt update >/dev/null 2>&1
     # Back up current packages
     BACKUP_APT_PACKAGES=("${APT_PACKAGES[@]}")
@@ -188,7 +188,7 @@ docker_setup() {
     info Setting up Docker
     sudo glinux-add-repo -b docker-ce-"$(lsb_release -cs)" >/dev/null || fail Failed to add Docker repo
     _apt update >/dev/null || fail Failed to update
-    _apt -y install docker-ce >/dev/null || fail Failed to install Docker
+    _apt -y install docker-ce >/dev/null || error Failed to install Docker
     sudo service docker stop
     sudo ip link set docker0 down
     sudo ip link del docker0

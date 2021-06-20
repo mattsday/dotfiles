@@ -1,11 +1,11 @@
 #!/bin/bash
 
 if [ -z "${DOTFILES_ROOT}" ]; then
-    if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
-        DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
-    else
-        DOTFILES_ROOT="${PWD}"
-    fi
+	if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
+		DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
+	else
+		DOTFILES_ROOT="${PWD}"
+	fi
 fi
 
 # Load common settings and functions
@@ -15,6 +15,7 @@ configure_ports() {
 	xcode-select --install 2>/dev/null
 	if [ ! -x /opt/local/bin/port ]; then
 		fail "Install MacPorts - https://www.macports.org/install.php"
+		return 1
 	fi
 	PORTS=(gawk grep shellcheck coreutils bash htop gsed gnutar multimarkdown jq findutils tmux wget ffmpeg youtube-dl watch)
 	for port in "${PORTS[@]}"; do
@@ -25,75 +26,6 @@ configure_ports() {
 	if [[ -n "${PORTS_INSTALL[*]}" ]]; then
 		info Installing ports "${PORTS_INSTALL[@]}"
 		sudo /opt/local/bin/port -q install "${PORTS_INSTALL[@]}"
-	fi
-}
-
-# Deprecated, don't install homebrew any more
-configure_homebrew() {
-	# Is homebrew installed?
-	if [[ ! -x /usr/local/bin/brew ]]; then
-		# Install homebrew
-		info Installing homebrew
-		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
-	fi
-
-	# NOW is homebrew installed?
-	if [[ ! -x /usr/local/bin/brew ]]; then
-		fail Homebrew installation failed. Aborting
-	fi
-
-	# Update homebrew
-	info Updating homebrew
-	brew update >/dev/null
-	info Updating system
-	brew upgrade >/dev/null
-	brew cleanup >/dev/null
-
-	installed="$(brew list --formula)"
-	features="
-	gawk
-	grep
-	shellcheck
-	coreutils
-	bash
-	htop
-	gnu-sed
-	gnu-tar
-	gnu-which
-	multimarkdown
-	jq
-	findutils
-	tmux
-	wget
-	ffmpeg
-	youtube-dl
-	watch
-"
-	for feature in ${features}; do
-		exists="$(echo "${installed}" | grep -w "${feature}")"
-		if [[ -z "${exists}" ]]; then
-			info Installing "${feature}"
-			brew install "${feature}" >/dev/null
-		fi
-	done
-}
-# Deprecated, don't install Ferdi
-configure_ferdi() {
-	if [ -d /Applications/Ferdi.app ]; then
-		info Adding Ferdi features
-		FERDI_HOME="${HOME}/Library/Application Support/Ferdi/recipes"
-		export FERDI_DEV_BASE_DIR="${FERDI_HOME}"/dev
-		if [ -x ferdi-anylist.sh ]; then
-			./ferdi-anylist.sh
-		elif [ -x os-bootstraps/ferdi-anylist.sh ]; then
-			./os-bootstraps/ferdi-anylist.sh
-		fi
-		CONFIG_FILE="${FERDI_HOME}/hangoutschat/index.js"
-		if [ -f "${CONFIG_FILE}" ] && command -v gsed >/dev/null 2>&1; then
-			info Fixing up Hangouts Chat Config
-			gsed -i 's|https://chat.google.com|https://dynamite-preprod.sandbox.google.com|g' "${CONFIG_FILE}"
-			gsed -i 's|Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:72.0) Gecko/20100101 Firefox/72.0|Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36|' "${CONFIG_FILE}"
-		fi
 	fi
 }
 

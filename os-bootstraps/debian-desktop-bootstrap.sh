@@ -22,27 +22,6 @@ get_apt_packages() {
   APT_PACKAGES+=(kde-spectacle vlc kdegames ksshaskpass flatpak unrar wbritish libappindicator3-1)
 }
 
-get_snap_packages() {
-  # deprecated
-  SNAP_PACKAGES+=(signal-desktop)
-}
-
-install_snap_packages() {
-  # Don't run this if we can't run as root
-  if [[ "${NO_SUDO}" = 1 ]]; then
-    return
-  fi
-  if command -v snap >/dev/null 2>&1; then
-    for snap in "${SNAP_PACKAGES[@]}"; do
-      pkg_name="$(echo "${snap}" | cut -d ' ' -f 1)"
-      if ! snap info "${pkg_name}" | grep installed: >/dev/null 2>&1; then
-        # shellcheck disable=SC2086
-        _sudo snap install ${snap} >/dev/null || warn "Failed to install ${snap}"
-      fi
-    done
-  fi
-}
-
 # Install pipewire support on Linux
 pipewire() {
   # Don't run this if we can't run as root
@@ -58,6 +37,8 @@ pipewire() {
   for package in "${APT_PACKAGES[@]}"; do
     if ! apt-cache show "${package}" >/dev/null 2>&1; then
       fail "Pipewire not supported on this OS ${package} not found"
+      APT_PACKAGES=("${BACKUP_APT_PACKAGES[@]}")
+      return 1
     fi
   done
   install_apt_packages
@@ -115,6 +96,7 @@ install_flatpak_packages() {
   fi
   if ! command -v flatpak >/dev/null 2>&1; then
     fail Flatpak not installed
+    return 1
   fi
   # Add flathub
   _sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo >/dev/null
@@ -165,7 +147,7 @@ fix_signal_flatpak_desktop_entry() {
 ssh_configuration() {
   SSH_FILE="${HOME}"/.config/autostart-scripts/ssh.sh
   if [[ ! -f "${SSH_FILE}" ]]; then
-    mkdir -p "${HOME}"/.config/autostart-scripts/ || fail Cannot create ssh dir
+    mkdir -p "${HOME}"/.config/autostart-scripts/ || error Cannot create ssh dir
     info Setting up ssh with ksshaskpass
     cat <<'EOF' | tee "${SSH_FILE}" >/dev/null
 #!/bin/bash
@@ -177,7 +159,7 @@ EOF
 
   SSH_FILE="${HOME}"/.config/plasma-workspace/env/ssh-agent-startup.sh
   if [[ ! -f "${SSH_FILE}" ]]; then
-    mkdir -p "${HOME}"/.config/plasma-workspace/env || fail Cannot create ssh dir
+    mkdir -p "${HOME}"/.config/plasma-workspace/env || error Cannot create ssh dir
     info Setting up ssh agent autostart
     cat <<'EOF' | tee "${SSH_FILE}" >/dev/null
 #!/bin/sh
@@ -188,87 +170,9 @@ EOF
   fi
 }
 
-# Deprecated
-fix_signal_desktop_entry() {
-  SNAP_FILE=/var/lib/snapd/desktop/applications/signal-desktop_signal-desktop.desktop
-  LOCAL_FILE="${HOME}"/.local/share/applications/signal-desktop_signal-desktop.desktop
-  if [[ ! -d "${HOME}"/.local/share/applications ]]; then
-    mkdir -p "${HOME}"/.local/share/applications
-  fi
-  # if we exist just return
-  if [[ -f "${LOCAL_FILE}" ]]; then
-    return
-  fi
-  if [[ ! -f "${SNAP_FILE}" ]]; then
-    warn "Signal desktop entry not found in ${SNAP_FILE}"
-    return
-  fi
-  cp "${SNAP_FILE}" "${LOCAL_FILE}"
-  sed -i 's/Exec=env/Exec=env GTK_THEME="Breeze-Dark"/g; s|Icon=.*|Icon=/snap/signal-desktop/current/usr/share/icons/hicolor/512x512/apps/signal-desktop.png|g' "${LOCAL_FILE}"
-}
-
 configure_fonts() {
   if [[ -f "${OS_BOOTSTRAP_ROOT}"/jetbrains-mono-font.sh ]]; then
     "${OS_BOOTSTRAP_ROOT}"/jetbrains-mono-font.sh
-  fi
-}
-
-rambox() {
-  # Don't run this if we can't run as root
-  if [[ "${NO_SUDO}" = 1 ]]; then
-    return
-  fi
-  RAMBOX_VERSION=1.5.1
-  if ! dpkg-query -W -f='${Status}' ramboxpro 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
-    info Installing Rambox Pro
-    UPDATE_RAMBOX=true
-  else
-    CURRENT_RAMBOX_VERSION="$(apt-cache policy ramboxpro | grep Installed: | cut -d ':' -f 2 | xargs)"
-    if [[ "${CURRENT_RAMBOX_VERSION}" != "${RAMBOX_VERSION}" ]]; then
-      info "Updating Rambox Pro to ${RAMBOX_VERSION} (from ${CURRENT_RAMBOX_VERSION})"
-      UPDATE_RAMBOX=true
-    fi
-  fi
-  if [[ -n "${UPDATE_RAMBOX}" ]]; then
-    # TODO - needs a lot of TLC
-    RAMBOX_FILE=/tmp/RamboxPro-"${RAMBOX_VERSION}"-linux-x64.deb
-    RAMBOX_URL=https://github.com/ramboxapp/download/releases/download/v"${RAMBOX_VERSION}"/RamboxPro-"${RAMBOX_VERSION}"-linux-x64.deb
-    if ! wget -O "${RAMBOX_FILE}" "${RAMBOX_URL}"; then
-      fail Could not download Rambox Pro
-    fi
-    _sudo dpkg -i "${RAMBOX_FILE}" || fail Could not install Ferdi
-  fi
-}
-
-# Deprecated, use rambox now
-ferdi() {
-  # Don't run this if we can't run as root
-  if [[ "${NO_SUDO}" = 1 ]]; then
-    return
-  fi
-  FERDI_VERSION=5.6.0-beta.5
-  FERDI_COMPARE_VERSION="${FERDI_VERSION}"-2741
-  if ! dpkg-query -W -f='${Status}' ferdi 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
-    info Installing Ferdi
-    UPDATE_FERDI=true
-  else
-    CURRENT_FERDI_VERSION="$(apt-cache policy ferdi | grep Installed: | cut -d ':' -f 2 | xargs)"
-    if [[ "${CURRENT_FERDI_VERSION}" != "${FERDI_COMPARE_VERSION}" ]]; then
-      info "Updating Ferdi to ${FERDI_VERSION} (from ${CURRENT_FERDI_VERSION})"
-      UPDATE_FERDI=true
-    fi
-  fi
-  if [[ -n "${UPDATE_FERDI}" ]]; then
-    # TODO - needs a lot of TLC
-    FERDI_URL=https://github.com/getferdi/ferdi/releases/download/v"${FERDI_VERSION}"/ferdi_"${FERDI_VERSION}"_amd64.deb
-    if ! wget -O /tmp/ferdi-"${FERDI_VERSION}".deb "${FERDI_URL}"; then
-      FERDI_URL=https://github.com/getferdi/ferdi/releases/download/"${FERDI_VERSION}"/ferdi_"${FERDI_VERSION}"_amd64.deb
-      wget -O /tmp/ferdi-"${FERDI_VERSION}".deb "${FERDI_URL}" || fail Could not download Ferdi
-    fi
-    _sudo dpkg -i /tmp/ferdi-"${FERDI_VERSION}".deb || fail Could not install Ferdi
-  fi
-  if [[ -f "${OS_BOOTSTRAP_ROOT}/ferdi-anylist.sh" ]]; then
-    "${OS_BOOTSTRAP_ROOT}/ferdi-anylist.sh"
   fi
 }
 
@@ -287,8 +191,6 @@ emoji() {
 main() {
   CALLBACKS+=(
     emoji
-    #ferdi
-    #rambox
     install_flatpak_packages
     fix_signal_flatpak_desktop_entry
     configure_fonts
@@ -307,7 +209,6 @@ main() {
       "${callback}"
     done
     install_apt_packages
-    install_snap_packages
   fi
 }
 

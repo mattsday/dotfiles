@@ -36,22 +36,22 @@ main() {
     fi
 
     # Download it
-    curl -Lo "${FONT_ARCHIVE}" "${FONT_LOCATION}" || fail Could not download from "${FONT_LOCATION}" to "${FONT_ARCHIVE}"
+    curl -Lo "${FONT_ARCHIVE}" "${FONT_LOCATION}" || error Could not download from "${FONT_LOCATION}" to "${FONT_ARCHIVE}"
 
-    mkdir -p "${FONT_DIR}" || fail Could not create dir "${FONT_DIR}"
+    mkdir -p "${FONT_DIR}" || error Could not create dir "${FONT_DIR}"
 
-    unzip -od "${FONT_DIR}" "${FONT_ARCHIVE}" >/dev/null || fail "Failed to unzip ${FONT_ARCHIVE}"
+    unzip -od "${FONT_DIR}" "${FONT_ARCHIVE}" >/dev/null || error "Failed to unzip ${FONT_ARCHIVE}"
 
     if [ ! -d "${TTF_DIR}" ]; then
-        fail Cannot find ttf directory in "${TTF_DIR}"
+        error Cannot find ttf directory in "${TTF_DIR}"
     fi
 
     # Copy files to local font cache
     if [ ! -d "${LOCAL_FONT}" ]; then
-        mkdir -p "${LOCAL_FONT}" || fail "Could not create local font dir in ${LOCAL_FONT}"
+        mkdir -p "${LOCAL_FONT}" || error "Could not create local font dir in ${LOCAL_FONT}"
     fi
 
-    cp "${TTF_DIR}"/*.ttf "${LOCAL_FONT}" || fail Could not copy fonts to "${LOCAL_FONT}"
+    cp "${TTF_DIR}"/*.ttf "${LOCAL_FONT}" || error Could not copy fonts to "${LOCAL_FONT}"
     if [ "${MAC}" = 0 ]; then
         fc-cache -f -v >/dev/null
     fi

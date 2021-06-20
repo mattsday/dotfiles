@@ -77,7 +77,7 @@ for package in "${RPM_PACKAGES[@]}"; do
 done
 if [ -n "${INSTALL_PACKAGES[*]}" ]; then
 	info Installing packages "${INSTALL_PACKAGES[@]}"
-	sudo zypper -n install "${INSTALL_PACKAGES[@]}" >/dev/null || fail "Failed installing packages"
+	sudo zypper -n install "${INSTALL_PACKAGES[@]}" >/dev/null || error "Failed installing packages"
 fi
 
 if command -v flatpak >/dev/null 2>&1; then
@@ -91,7 +91,7 @@ if command -v flatpak >/dev/null 2>&1; then
     done
     if [ -n "${INSTALL_PACKAGES[*]}" ]; then
         info Installing packages "${INSTALL_PACKAGES[@]}"
-        sudo flatpak -y install "${INSTALL_PACKAGES[@]}" >/dev/null || fail "Failed installing packages"
+        sudo flatpak -y install "${INSTALL_PACKAGES[@]}" >/dev/null || error "Failed installing packages"
     fi
 fi
 

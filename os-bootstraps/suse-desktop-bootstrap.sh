@@ -2,18 +2,16 @@
 # Generic bootstrapping for any SUSE-derived desktop
 #shellcheck disable=SC1090
 
-fail() {
-    echo >&2 '[Failure]' "$@"
-    return 1
-}
+if [ -z "${DOTFILES_ROOT}" ]; then
+    if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
+        DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
+    else
+        DOTFILES_ROOT="${PWD}"
+    fi
+fi
 
-warn() {
-    echo >&2 '[Warning]' "$@"
-}
-
-info() {
-    echo "$@"
-}
+# Load common settings and functions
+. "${DOTFILES_ROOT}/common.sh"
 
 get_rpm_packages() {
     RPM_PACKAGES+=(pulseaudio-module-bluetooth solaar youtube-dl ckb-next kio-fuse gimp)
@@ -31,7 +29,7 @@ install_rpm_packages() {
     done
     if [[ -n "${INSTALL_PACKAGES[*]}" ]]; then
         info Installing packages "${INSTALL_PACKAGES[@]}"
-        sudo zypper -n install "${INSTALL_PACKAGES[@]}" >/dev/null || fail "Failed installing packages"
+        sudo zypper -n install "${INSTALL_PACKAGES[@]}" >/dev/null || warn "Failed installing packages"
     fi
 }
 
@@ -50,7 +48,7 @@ install_flatpak_packages() {
     done
     if [[ -n "${INSTALL_PACKAGES[*]}" ]]; then
         info Installing packages "${INSTALL_PACKAGES[@]}"
-        sudo flatpak -y install "${INSTALL_PACKAGES[@]}" >/dev/null || fail "Failed installing packages"
+        sudo flatpak -y install "${INSTALL_PACKAGES[@]}" >/dev/null || error "Failed installing packages"
     fi
 }
 
@@ -83,41 +81,6 @@ baloo_config() {
     fi
 }
 
-ferdi() {
-    FERDI_VERSION=5.6.0-beta.5
-    #RPM_VERSION="$(echo "${FERDI_VERSION}" | sed 's/-/_/g')"
-    RPM_VERSION="${${FERDI_VERSION}//-/_}"
-    if ! rpm -q ferdi >/dev/null 2>&1; then
-        info Installing Ferdi
-        INSTALL_FERDI=true
-    else
-        CURRENT_FERDI_VERSION="$(rpm -q ferdi | sed 's/ferdi-//;s/\.x86_64//' | cut -d - -f 1 | xargs)"
-        if [[ "${CURRENT_FERDI_VERSION}" != "${RPM_VERSION}" ]]; then
-            info "Updating Ferdi to ${FERDI_VERSION} (from ${CURRENT_FERDI_VERSION})"
-            UPDATE_FERDI=true
-        fi
-    fi
-    if [[ -n "${UPDATE_FERDI}" ]] || [[ -n "${INSTALL_FERDI}" ]]; then
-        # TODO - needs a lot of TLC
-        FERDI_FILE=/tmp/ferdi-"${FERDI_VERSION}".rpm
-        FERDI_URL=https://github.com/getferdi/ferdi/releases/download/v"${FERDI_VERSION}"/ferdi-"${FERDI_VERSION}".x86_64.rpm
-        if ! wget -O "${FERDI_FILE}" "${FERDI_URL}"; then
-            FERDI_URL=https://github.com/getferdi/ferdi/releases/download/"${FERDI_VERSION}"/ferdi-"${FERDI_VERSION}".x86_64.rpm
-            wget -O "${FERDI_FILE}" "${FERDI_URL}" || fail Could not download Ferdi
-        fi
-        if [[ -n "${INSTALL_FERDI}" ]]; then
-            sudo rpm -i --nodeps "${FERDI_FILE}" || fail Could not install Ferdi
-        elif [[ -n "${UPDATE_FERDI}" ]]; then
-            sudo rpm -U --nodeps "${FERDI_FILE}" || fail Could not upgrade Ferdi
-        fi
-    fi
-    if [[ -f "${PWD}/ferdi-anylist.sh" ]]; then
-        "${PWD}/ferdi-anylist.sh"
-    elif [[ -f "${PWD}/os-bootstraps/ferdi-anylist.sh" ]]; then
-        "${PWD}/os-bootstraps/ferdi-anylist.sh"
-    fi
-}
-
 codecs() {
     if ! rpm -q vlc-codecs >/dev/null 2>&1; then
         info Installing Codecs
@@ -145,7 +108,7 @@ ssh_configuration() {
     SSH_FILE="${HOME}"/.config/autostart-scripts/ssh.sh
     # ${HOME/asdasda}
     if [[ ! -f "${SSH_FILE}" ]]; then
-        mkdir -p "${HOME}"/.config/autostart-scripts/ || fail Cannot create ssh dir
+        mkdir -p "${HOME}"/.config/autostart-scripts/ || error Cannot create ssh dir
         info Setting up ssh with ksshaskpass
         cat <<'EOF' | tee "${SSH_FILE}" >/dev/null
 #!/bin/bash
@@ -156,7 +119,7 @@ EOF
     fi
     SSH_FILE="${HOME}"/.config/plasma-workspace/env/ssh-agent-startup.sh
     if [[ ! -f "${SSH_FILE}" ]]; then
-        mkdir -p "${HOME}"/.config/plasma-workspace/env || fail Cannot create ssh dir
+        mkdir -p "${HOME}"/.config/plasma-workspace/env || error Cannot create ssh dir
         info Setting up ssh agent autostart
         cat <<'EOF' | tee "${SSH_FILE}" >/dev/null
 #!/bin/sh
@@ -182,7 +145,6 @@ main() {
         vs_code
         configure_fonts
         ssh_configuration
-        ferdi
         baloo_config
     )
     get_rpm_packages
