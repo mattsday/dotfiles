@@ -5,7 +5,7 @@
 # Where were dotfiles installed?
 if [ -z "${DOTFILES_ROOT}" ]; then
 	if command -v readlink >/dev/null 2>&1 && command -v dirname >/dev/null 2>&1; then
-		DOTFILES_ROOT="$(echo "$(dirname "$(readlink "$0")")" | sed 's|/dotfiles/home||')"
+		DOTFILES_ROOT="$(dirname "$(readlink "$0")" | sed 's|/dotfiles/home||')"
 	fi
 fi
 

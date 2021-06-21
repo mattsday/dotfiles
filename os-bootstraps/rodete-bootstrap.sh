@@ -43,7 +43,7 @@ install_brave() {
   if [[ -f "${OS_BOOTSTRAP_ROOT}"/brave.sh ]]; then
     "${OS_BOOTSTRAP_ROOT}"/brave.sh
   else
-    warn Could not find kubectx.sh
+    warn Could not find "${OS_BOOTSTRAP_ROOT}"/brave.sh
   fi
 }
 
@@ -63,7 +63,7 @@ install_spotify_flatpak() {
   if [[ "${NO_SUDO}" = 1 ]]; then
     return
   fi
-  if ! command -v flatpak >/dev/null 2>&1; then 
+  if ! command -v flatpak >/dev/null 2>&1; then
     return
   fi
   # Install spotify flatpak
