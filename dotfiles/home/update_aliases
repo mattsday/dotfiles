@@ -244,7 +244,6 @@ main() {
 			
 			# Sub in dotfiles home if available
 			if [ -n "${DOTFILES_ROOT}" ]; then
-				echo HERE - "${line}"
 				line="$(echo "${line}" | sed 's|%_DOTFILES_%|'"${DOTFILES_ROOT}"'|g')"
 			fi
 
