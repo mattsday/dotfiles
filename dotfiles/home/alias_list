@@ -74,19 +74,7 @@ alias ..='cd ..'
 export @/usr/local/bin/brew HOMEBREW_NO_ANALYTICS=1
 
 # ...not .NET ones
-export @dotnet DOTNET_CLI_TELEMETRY_OPTOUT=1
-
-# Give me readable times
-export TIME_STYLE="long-iso"
-
-# Colours too!
-export CLICOLOR="yes"
-export LSCOLORS="gxhxfxcxcxdxcxcxcxgxgx"
-export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
-export GREP_COLORS="ms=01;32:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36"
-
-# Use k (1024) as the default blocksize (not 512)
-export BLOCK_SIZE=k
+export @dotnet DOTNET_CLI_TELEMETRY_OPTOUT=1Installing 
 export BLOCKSIZE=k
 
 # Use vim instead of vi if it exists
@@ -132,3 +120,6 @@ update @/usr/bin/flatpak sudo /usr/bin/flatpak -y update && /usr/bin/flatpak -y 
 
 # Run fwupdmgr if available
 update @/usr/bin/fwupdmgr sudo /usr/bin/fwupdmgr refresh && sudo /usr/bin/fwupdmgr update
+
+# Update brave if installed manually
+update @/opt/brave/brave %_DOTFILES_%/os-bootstraps/brave.sh

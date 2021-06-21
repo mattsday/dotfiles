@@ -1,6 +1,14 @@
 #!/bin/sh
 # This parses the alias_list format and generates alias files for various
 # shell environments; currently supports (t)csh, fish and bourne shells.
+
+# Where were dotfiles installed?
+if [ -z "${DOTFILES_ROOT}" ]; then
+	if command -v readlink >/dev/null 2>&1 && command -v dirname >/dev/null 2>&1; then
+		DOTFILES_ROOT="$(echo "$(dirname "$(readlink "$0")")" | sed 's|/dotfiles/home||')"
+	fi
+fi
+
 msg() {
 	if [ "${VERBOSE}" = 1 ]; then
 		echo "$@"
@@ -183,7 +191,7 @@ EOT
 main() {
 
 	msg Updating aliases and environment variables
-	
+
 	create_files
 
 	aliases_count=0
@@ -233,6 +241,12 @@ main() {
 		'alias @'* | 'export @'* | 'update @'*)
 			# Get the list of command_list to test
 			command_list="$(echo "${line}" | cut -f 2 -d ' ' | sed 's/^@//')"
+			
+			# Sub in dotfiles home if available
+			if [ -n "${DOTFILES_ROOT}" ]; then
+				echo HERE - "${line}"
+				line="$(echo "${line}" | sed 's|%_DOTFILES_%|'"${DOTFILES_ROOT}"'|g')"
+			fi
 
 			IFS=,
 			execute=1

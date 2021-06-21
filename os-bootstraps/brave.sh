@@ -12,8 +12,13 @@ fi
 # Load common settings and functions
 . "${DOTFILES_ROOT}/common.sh"
 
-VERSION=1.25.70
-URL="https://github.com/brave/brave-browser/releases/download/v${VERSION}/brave-browser-${VERSION}-linux-amd64.zip"
+check_cmd jq
+
+# Get the latest version from github
+LATEST_VERSION="$(curl --silent https://api.github.com/repos/brave/brave-browser/releases | jq -r '[.[] | select(.name|startswith("Release")) | select(.prerelease==false)][0] | .name' | cut -d v -f 2)"
+
+FALLBACK_VERSION=1.25.70
+URL="https://github.com/brave/brave-browser/releases/download/v${LATEST_VERSION}/brave-browser-${LATEST_VERSION}-linux-amd64.zip"
 DEST=/opt/brave
 ZIP=/opt/brave/brave-browser.zip
 ICON_DIR="${HOME}"/.local/share/icons/hicolor
@@ -22,13 +27,13 @@ DESKTOP_DIR="${HOME}"/.local/share/applications
 # Check existing version to see if we need to run this
 if [ -x "${DEST}/brave" ]; then
     INSTALLED="$("${DEST}/brave" --version | cut -d " " -f 3 | cut -d '.' -f '2-')"
-    if [ "${INSTALLED}" = "${VERSION}" ] && [ -z "${FORCE}" ]; then
-        info Brave up to date
+    if [ "${INSTALLED}" = "${LATEST_VERSION}" ] && [ -z "${FORCE}" ]; then
+        info Brave up to date - version "${LATEST_VERSION}"
         exit 0
     fi
 fi
 
-info Installing or Upgrading Brave Browser
+info Installing or Upgrading Brave Browser to version "${LATEST_VERSION}"
 
 check_cmd curl
 check_cmd unzip
