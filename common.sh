@@ -38,7 +38,6 @@ check_cmd() {
 
 # Utility commands
 _sudo() {
-    echo _sudo
     if [ "${NO_SUDO}" = 1 ]; then
         return
     elif [ "${IS_ROOT}" = 1 ]; then
