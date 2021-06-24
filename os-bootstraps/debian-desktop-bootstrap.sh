@@ -19,7 +19,7 @@ load_debian_common
 get_apt_packages() {
   APT_PACKAGES+=(plasma-widgets-addons plasma-wallpapers-addons plasma-nm xdg-desktop-portal-kde)
   APT_PACKAGES+=(ffmpegthumbs ffmpegthumbnailer kamoso kdegraphics-thumbnailers ark skanlite)
-  APT_PACKAGES+=(kde-spectacle vlc kdegames ksshaskpass flatpak unrar wbritish libappindicator3-1)
+  APT_PACKAGES+=(kde-spectacle vlc kdegames ksshaskpass unrar wbritish libappindicator3-1)
 }
 
 # Install pipewire support on Linux
@@ -84,66 +84,6 @@ pipewire() {
   fi
 }
 
-get_flatpak_packages() {
-  #FLATPAK_PACKAGES+=(org.signal.Signal org.gtk.Gtk3theme.Breeze-Dark)
-  FLATPAK_PACKAGES+=(org.gtk.Gtk3theme.Breeze-Dark)
-}
-
-install_flatpak_packages() {
-  # Don't run this if we can't run as root
-  if [[ "${NO_SUDO}" = 1 ]]; then
-    return
-  fi
-  if ! command -v flatpak >/dev/null 2>&1; then
-    fail Flatpak not installed
-    return 1
-  fi
-  # Add flathub
-  _sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo >/dev/null
-  for package in "${FLATPAK_PACKAGES[@]}"; do
-    if ! flatpak info "${package}" >/dev/null 2>&1; then
-      info Installing Flatpak packages "${package}"
-      if ! _sudo flatpak -y install "${package}" >/dev/null; then
-        echo Flatpak installation failed for "${package}"
-        return
-      fi
-    fi
-  done
-}
-
-fix_signal_flatpak_desktop_entry() {
-  # Don't run this if we can't run as root
-  if [[ "${NO_SUDO}" = 1 ]]; then
-    return
-  fi
-  # if Snap is installed, remove the signal desktop snap and the desktop entry
-  if command -v snap >/dev/null 2>&1; then
-    if snap info signal-desktop | grep installed: >/dev/null 2>&1; then
-      _sudo snap remove signal-desktop >/dev/null
-    fi
-  fi
-  # Remove local file
-  if [[ -f "${HOME}"/.local/share/applications/signal-desktop_signal-desktop.desktop ]]; then
-    rm "${HOME}"/.local/share/applications/signal-desktop_signal-desktop.desktop
-  fi
-
-  FLATPAK_FILE=/var/lib/flatpak/exports/share/applications/org.signal.Signal.desktop
-  LOCAL_FILE="${HOME}"/.local/share/applications/org.signal.Signal.desktop
-  if [[ ! -d "${HOME}"/.local/share/applications ]]; then
-    mkdir -p "${HOME}"/.local/share/applications
-  fi
-  # if we exist just return
-  if [[ -f "${LOCAL_FILE}" ]]; then
-    return
-  fi
-  if [[ ! -f "${FLATPAK_FILE}" ]]; then
-    echo Warning "${FLATPAK_FILE}" does not exist
-    return
-  fi
-  cp "${FLATPAK_FILE}" "${LOCAL_FILE}"
-  sed -i 's|Exec=/usr/bin/flatpak|Exec=GTK_THEME="Breeze-Dark" /usr/bin/flatpak|g;' "${LOCAL_FILE}"
-}
-
 ssh_configuration() {
   SSH_FILE="${HOME}"/.config/autostart-scripts/ssh.sh
   if [[ ! -f "${SSH_FILE}" ]]; then
@@ -191,17 +131,13 @@ emoji() {
 main() {
   CALLBACKS+=(
     emoji
-    install_flatpak_packages
-    fix_signal_flatpak_desktop_entry
     configure_fonts
     ssh_configuration
     baloo_config
     pipewire
   )
   get_apt_packages
-  get_flatpak_packages
 
-  install_flatpak_packages
   # If we're not being sourced
   # shellcheck disable=SC2154
   if [[ -z "${_debian_bootstrap_mattsday}" ]]; then

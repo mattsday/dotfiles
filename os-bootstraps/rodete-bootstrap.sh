@@ -83,54 +83,6 @@ install_spotify_flatpak() {
   fi
 }
 
-install_chromium_flatpak() {
-  # Don't run this if we can't run as root
-  if [[ "${NO_SUDO}" = 1 ]]; then
-    return
-  fi
-  if ! command -v flatpak >/dev/null 2>&1; then
-    return
-  fi
-  # if Snap is installed, remove the Chromium snap and the desktop entry
-  if command -v snap >/dev/null 2>&1; then
-    if snap info chromium | grep installed: >/dev/null 2>&1; then
-      sudo snap remove chromium >/dev/null
-    fi
-  fi
-  # Remove local file
-  if [[ -f "${HOME}"/.local/share/applications/chromium_chromium.desktop ]]; then
-    rm "${HOME}"/.local/share/applications/chromium_chromium.desktop
-  fi
-
-  sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo >/dev/null
-  FLATPAK_PACKAGES+=(org.chromium.Chromium org.gtk.Gtk3theme.Breeze-Dark)
-  for package in "${FLATPAK_PACKAGES[@]}"; do
-    if ! flatpak info "${package}" >/dev/null 2>&1; then
-      info "Installing Chromium (flatpak) - ${package}"
-      if ! sudo flatpak -y install "${package}" >/dev/null; then
-        warn Flatpak installation failed for "${package}"
-        return
-      fi
-    fi
-  done
-
-  FLATPAK_FILE=/var/lib/flatpak/exports/share/applications/org.chromium.Chromium.desktop
-  LOCAL_FILE="${HOME}"/.local/share/applications/org.chromium.Chromium.desktop
-  if [[ ! -d "${HOME}"/.local/share/applications ]]; then
-    mkdir -p "${HOME}"/.local/share/applications
-  fi
-  # if we exist just return
-  if [[ -f "${LOCAL_FILE}" ]]; then
-    return
-  fi
-  if [[ ! -f "${FLATPAK_FILE}" ]]; then
-    warn Warning "${FLATPAK_FILE}" does not exist
-    return
-  fi
-  cp "${FLATPAK_FILE}" "${LOCAL_FILE}"
-  sed -i 's|Exec=/usr/bin/flatpak|Exec=GTK_THEME="Breeze-Dark" /usr/bin/flatpak|g;' "${LOCAL_FILE}"
-}
-
 install_vs_code() {
   # Don't run this if we can't run as root
   if [[ "${NO_SUDO}" = 1 ]]; then
@@ -167,15 +119,6 @@ install_sdk_man() {
       info Installing maven
       sdk install maven >/dev/null
     fi
-  fi
-}
-
-fix_ferdi_chat() {
-  CONFIG_FILE="${HOME}"/.config/Ferdi/recipes/hangoutschat/index.js
-  if [[ -f "${CONFIG_FILE}" ]]; then
-    info Fixing up Hangouts Chat Config
-    sed -i 's|https://chat.google.com|https://dynamite-preprod.sandbox.google.com|g' "${CONFIG_FILE}"
-    sed -i 's|Mozilla/5.0 (X11; Linux x86_64; rv:72.0) Gecko/20100101 Firefox/72.0|Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36|' "${CONFIG_FILE}"
   fi
 }
 
@@ -226,7 +169,6 @@ main() {
     #fix_ferdi_chat
     install_kubectx
     install_brave
-    install_chromium_flatpak
     install_spotify_flatpak
   )
   get_apt_packages
