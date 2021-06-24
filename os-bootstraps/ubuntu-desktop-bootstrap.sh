@@ -46,10 +46,22 @@ install_spotify() {
     fi
 }
 
+# Install pipewire PPA for older Ubuntu versions
+pipewire_ppa() {
+    UBUNTU_VERSION="$(grep UBUNTU_CODENAME /etc/os-release | cut -d = -f 2)"
+    if [ "${UBUNTU_VERSION}" = focal ]; then
+        if [ ! -f /etc/apt/sources.list.d/pipewire-debian-ubuntu-pipewire-upstream-"${UBUNTU_VERSION}".list ]; then
+            info Adding Pipewire PPA
+            sudo add-apt-repository -y ppa:pipewire-debian/pipewire-upstream >/dev/null
+        fi
+    fi
+}
+
 main() {
     CALLBACKS+=(
         install_apt_packages
         install_spotify
+        pipewire_ppa
     )
     get_apt_packages
     get_snap_packages
