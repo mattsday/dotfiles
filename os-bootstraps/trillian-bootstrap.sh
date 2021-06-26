@@ -1,22 +1,25 @@
 #!/bin/bash
 USERS=(
+    "media:Media files and folders:994:/sbin/nologin:/srv/media:media"
     "matt:Matt Day:1000:/bin/zsh:/home/matt:media,backups,sudo,docker"
     "nicky:Nicola Purves:1001:/bin/bash:/home/nicky:media,backups"
     "plex:Plex Media Server:997:/sbin/nologin:/opt/containerised-apps/plex/config:media"
     "sonarr:Sonarr:996:/sbin/nologin:/opt/containerised-apps/sonarr/config:media"
     "nzbget:NZBGet:995:/sbin/nologin:/opt/containerised-apps/nzbget/config:media"
-    "media:Media files and folders:994:/sbin/nologin:/srv/media:media"
     "transmission:Transmission:993:/sbin/nologin:/opt/containerised-apps/transmission/config:media"
     "unifi:Unifi Controller:992:/sbin/nologin:/opt/containerised-apps/unifi/config:unifi"
     "traffic-gen:Traffic Generator:991:/sbin/nologin:/opt/containerised-apps/traffic-gen:traffic-gen"
     "openvpn:OpenVPN Access Server:990:/sbin/nologin:/opt/containerised-apps/openvpn:openvpn"
+    "prometheus:Prometheus:989:/sbin/nologin:/opt/containerised-apps/prometheus/config:monitoring"
+    "grafana:Grafana:988:/sbin/nologin:/opt/containerised-apps/grafana/config:monitoring"
+    "unifi-poller:Unifi Poller:987:/sbin/nologin:/opt/containerised-apps/unifi-poller/config:monitoring"
 )
 
 APT_PACKAGES=(apt-transport-https ca-certificates curl gnupg avahi-daemon avahi-utils ethtool build-essential cmake lm-sensors fwupd)
 
 CONTAINER_HOME=/opt/containerised-apps
 
-CONTAINERS=(nzbget plex sonarr syncthing traffic-gen transmission unifi)
+CONTAINERS=(nzbget plex sonarr syncthing transmission unifi)
 
 fail() {
     echo >&2 '[Failure]' "$@"
@@ -30,16 +33,19 @@ warn() {
 info() {
     echo "$@"
 }
+
+add_group() {
+     if ! getent group "$1" >/dev/null 2>&1; then
+        info Adding group "$1" with GID "$2"
+        groupadd -g "$2" "$1"
+    fi
+}
+
 users() {
     # Create docker and backups groups
-    if ! getent group docker >/dev/null 2>&1; then
-        info Adding Docker group
-        groupadd -g 998 docker
-    fi
-    if ! getent group backups >/dev/null 2>&1; then
-        info Adding backups group
-        groupadd -g 901 backups
-    fi
+    add_group docker 998
+    add_group backups 901
+    add_group monitoring 902
     # Loop through users and create/update them
     for user in "${USERS[@]}"; do
         name="$(echo "${user}" | cut -d : -f 1)"
