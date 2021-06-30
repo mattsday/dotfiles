@@ -15,7 +15,10 @@ fi
 check_cmd jq
 
 # Get the latest version from github
-LATEST_VERSION="$(curl --silent https://api.github.com/repos/brave/brave-browser/releases | jq -r '[.[] | select(.name|startswith("Release")) | select(.prerelease==false)][0] | .name' | cut -d v -f 2)"
+#LATEST_VERSION="$(curl --silent https://api.github.com/repos/brave/brave-browser/releases | jq -r '[.[] | select(.name|startswith("Release")) | select(.prerelease==false)][0] | .name' | cut -d v -f 2)"
+
+# Super hacky, but effective (so far...)
+LATEST_VERSION="$(curl --silent https://api.github.com/repos/brave/brave-browser/releases | jq -r '[.[].assets[].name | select(.|contains("linux-amd64.zip")) | select(.|contains("nightly") | not) | select(.|contains("beta") | not) | select(.|contains("dev")|not)][0]' | cut -d - -f 3)"
 
 FALLBACK_VERSION=1.25.70
 URL="https://github.com/brave/brave-browser/releases/download/v${LATEST_VERSION}/brave-browser-${LATEST_VERSION}-linux-amd64.zip"
