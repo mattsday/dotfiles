@@ -58,8 +58,14 @@ configure_paths() {
     if [ -z "${DOTFILES_ROOT}" ]; then
         if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
             DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
+        elif command -v dirname >/dev/null 2>&1; then
+            DOTFILES_ROOT="$(
+                cd "$(dirname "$0")" || return
+                pwd
+            )"
         else
-            DOTFILES_ROOT="${PWD}"
+            echo >&2 '[Error] cannot determine root (try running from working directory)'
+            exit 1
         fi
     fi
 
@@ -69,7 +75,14 @@ configure_paths() {
         else
             # We're executing from os-bootstraps/
             OS_BOOTSTRAP_ROOT="${DOTFILES_ROOT}"
-            DOTFILES_ROOT="$(realpath "${DOTFILES_ROOT}"/..)"
+            if command -v realpath >/dev/null 2>&1; then
+                DOTFILES_ROOT="$(realpath "${DOTFILES_ROOT}"/..)"
+            elif command -v dirname >/dev/null 2>&1; then
+                DOTFILES_ROOT="$(
+                    cd "$(dirname "$DOTFILES_ROOT"/..)" || return
+                    pwd
+                )"
+            fi
         fi
     fi
 }
