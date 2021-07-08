@@ -1,6 +1,17 @@
 #!/bin/bash
 #shellcheck disable=SC1091
 
+if [ -z "${DOTFILES_ROOT}" ]; then
+    if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
+        DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
+    elif command -v dirname >/dev/null 2>&1; then
+        DOTFILES_ROOT="$(cd "$(dirname "$0")" || return; pwd)"
+	else
+        echo >&2 '[Error] cannot determine root (try running from working directory)'
+        exit 1
+    fi
+fi
+
 # Only run on SuSE and derivatives
 if [[ -f /etc/os-release ]]; then
 	RELEASE="$(grep '^ID=' /etc/os-release | cut -d '=' -f 2 | sed 's/"//g')"
@@ -31,9 +42,9 @@ if [[ ! -x /usr/bin/sudo ]]; then
 			echo "User is not root and sudo isn't installed. Install sudo first"
 			exit
 		fi
-    fi
+	fi
 elif sudo [ ! -f /etc/sudoers.d/nopasswd-"${USER}" ]; then
-    echo "${USER}"' ALL=(ALL:ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/nopasswd-"${USER}" >/dev/null
+	echo "${USER}"' ALL=(ALL:ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/nopasswd-"${USER}" >/dev/null
 fi
 
 # Check for mixins
@@ -81,18 +92,18 @@ if [ -n "${INSTALL_PACKAGES[*]}" ]; then
 fi
 
 if command -v flatpak >/dev/null 2>&1; then
-    # Add Flatpak repo
-    flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo >/dev/null
-    INSTALL_PACKAGES=()
-    for package in "${FLATPAK_PACKAGES[@]}"; do
-        if ! flatpak info "${package}" >/dev/null 2>&1; then
-            INSTALL_PACKAGES+=("${package}")
-        fi
-    done
-    if [ -n "${INSTALL_PACKAGES[*]}" ]; then
-        info Installing packages "${INSTALL_PACKAGES[@]}"
-        sudo flatpak -y install "${INSTALL_PACKAGES[@]}" >/dev/null || error "Failed installing packages"
-    fi
+	# Add Flatpak repo
+	flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo >/dev/null
+	INSTALL_PACKAGES=()
+	for package in "${FLATPAK_PACKAGES[@]}"; do
+		if ! flatpak info "${package}" >/dev/null 2>&1; then
+			INSTALL_PACKAGES+=("${package}")
+		fi
+	done
+	if [ -n "${INSTALL_PACKAGES[*]}" ]; then
+		info Installing packages "${INSTALL_PACKAGES[@]}"
+		sudo flatpak -y install "${INSTALL_PACKAGES[@]}" >/dev/null || error "Failed installing packages"
+	fi
 fi
 
 if [[ -x "${HOME}/.update_aliases" ]]; then
