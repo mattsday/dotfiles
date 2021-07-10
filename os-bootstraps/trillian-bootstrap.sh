@@ -13,9 +13,11 @@ USERS=(
     "prometheus:Prometheus:989:/sbin/nologin:/opt/containerised-apps/prometheus/config:monitoring"
     "grafana:Grafana:988:/sbin/nologin:/opt/containerised-apps/grafana/config:monitoring"
     "unifi-poller:Unifi Poller:987:/sbin/nologin:/opt/containerised-apps/unifi-poller/config:monitoring"
+    "samba:Samba Service:986:/sbin/nologin:/opt/containerised-apps/samba/config:backups,media"
+
 )
 
-APT_PACKAGES=(apt-transport-https ca-certificates curl gnupg avahi-daemon avahi-utils ethtool build-essential cmake lm-sensors fwupd)
+APT_PACKAGES=(apt-transport-https ca-certificates curl gnupg avahi-daemon avahi-utils ethtool build-essential cmake lm-sensors)
 
 CONTAINER_HOME=/opt/containerised-apps
 
