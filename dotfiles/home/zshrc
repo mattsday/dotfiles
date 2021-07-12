@@ -36,6 +36,8 @@ unsetopt BEEP
 # Initialise the autocompletion library
 zmodload zsh/complist
 autoload -U complist
+# Load some utilities such as zstyle and zformat
+autoload -U zutil
 
 
 # Check if autocomplete will work via -Uz
@@ -49,12 +51,9 @@ if (( comp_support == 0 )); then
 	compinit
     # Enable Kubernetes autocompletion if available
     if command -v kubectl >/dev/null 2>&1; then
-        . <(kubectl completion zsh)
+        source <(kubectl completion zsh)
     fi
 fi
-
-# Load some utilities such as zstyle and zformat
-autoload -U zutil
 
 # If a terminal is bold enough to claim XTERM let's assume it can do 256 colours!
 [[ "${TERM}" == "xterm" ]] && export TERM=xterm-256color

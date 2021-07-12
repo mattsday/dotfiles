@@ -79,7 +79,7 @@ configure_paths() {
                 DOTFILES_ROOT="$(realpath "${DOTFILES_ROOT}"/..)"
             elif command -v dirname >/dev/null 2>&1; then
                 DOTFILES_ROOT="$(
-                    cd "$(dirname "$DOTFILES_ROOT"/..)" || return
+                    cd "$(dirname "${DOTFILES_ROOT}"/..)" || return
                     pwd
                 )"
             fi

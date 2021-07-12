@@ -1,6 +1,8 @@
 #!/bin/bash
 # Install the brave browser manually
 
+FALLBACK_VERSION=1.26.74
+
 if [ -z "${DOTFILES_ROOT}" ]; then
     if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
         DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
@@ -17,13 +19,26 @@ fi
 
 check_cmd jq
 
-# Get the latest version from github
-#LATEST_VERSION="$(curl --silent https://api.github.com/repos/brave/brave-browser/releases | jq -r '[.[] | select(.name|startswith("Release")) | select(.prerelease==false)][0] | .name' | cut -d v -f 2)"
+get_version() {
+    LATEST_VERSION="$(curl --silent "$1" | jq -r '[.[].assets[].name | select(.|contains("linux-amd64.zip")) | select(.|contains("nightly") | not) | select(.|contains("beta") | not) | select(.|contains("dev")|not)][0]' | cut -d - -f 3)"
 
-# Super hacky, but effective (so far...)
-LATEST_VERSION="$(curl --silent https://api.github.com/repos/brave/brave-browser/releases | jq -r '[.[].assets[].name | select(.|contains("linux-amd64.zip")) | select(.|contains("nightly") | not) | select(.|contains("beta") | not) | select(.|contains("dev")|not)][0]' | cut -d - -f 3)"
+}
 
-FALLBACK_VERSION=1.25.70
+PAGE=1
+
+for i in {1..5}; do
+    get_version "https://api.github.com/repos/brave/brave-browser/releases?page=${i}"
+    if [[ "${LATEST_VERSION}" != null ]]; then
+        break
+    fi
+done
+
+if [[ "${LATEST_VERSION}" = null ]]; then
+    warn Cannot determine latest version of brave - falling back to "${FALLBACK_VERSION}"
+    LATEST_VERSION="${FALLBACK_VERSION}"
+fi
+
+
 URL="https://github.com/brave/brave-browser/releases/download/v${LATEST_VERSION}/brave-browser-${LATEST_VERSION}-linux-amd64.zip"
 DEST=/opt/brave
 ZIP=/opt/brave/brave-browser.zip
