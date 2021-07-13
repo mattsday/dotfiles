@@ -57,14 +57,12 @@ users() {
         home="$(echo "${user}" | cut -d : -f 5)"
         groups="$(echo "${user}" | cut -d : -f 6)"
         if getent group "${name}" >/dev/null 2>&1; then
-            info Updating group "${name}"
             sudo groupmod -g "${uid}" "${name}"
         else
             info Creating group "${name}"
             sudo groupadd -g "${uid}" "${name}"
         fi
         if id -u "${name}" >/dev/null 2>&1; then
-            info Updating user "${name}"
             sudo usermod -c "${fullname}" -u "${uid}" -g "${uid}" -d "${home}" -aG "${groups}" -s "${shell}" "${name}"
         else
             info Creating user "${name}"
@@ -105,12 +103,43 @@ EOF
     fi
 }
 
-containers() {
-    for container in "${CONTAINERS[@]}"; do
-        if [ "$(sudo docker container inspect -f '{{.State.Running}}' "${container}" 2>/dev/null)" != true ]; then
-            "${CONTAINER_HOME}/${container}/start.sh"
+install_docker_compose() {
+    # Get latest compose version
+    CURRENT_VERSION="$(curl --silent https://api.github.com/repos/docker/compose/releases | jq -r '[.[] | select(.prerelease == false)][0].tag_name')"
+    BACKUP_VERSION=1.29.2
+    if [[ "${CURRENT_VERSION}" = null ]]; then
+        CURRENT_VERSION="${BACKUP_VERSION}"
+    fi
+    UPGRADE=1
+    if [[ -x /usr/local/bin/docker-compose ]]; then
+        INSTALLED_VERSION="$(docker-compose --version | cut -f 3 -d ' ' | cut -f 1 -d ,)"
+        COMPARE_INSTALLED="${INSTALLED_VERSION//\./}"
+        COMPARE_CURRENT="${CURRENT_VERSION//\./}"
+        if [[ "${COMPARE_INSTALLED}" -lt "${COMPARE_CURRENT}" ]]; then
+            info "Updating Docker Compose (from ${INSTALLED_VERSION} to ${CURRENT_VERSION})"
+        else
+            info "Docker compose up to date (version ${CURRENT_VERSION})"
+            UPGRADE=0
         fi
-    done
+    fi
+    if [[ "${UPGRADE}" = 1 ]]; then
+        sudo curl -L "https://github.com/docker/compose/releases/download/${CURRENT_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    fi
+
+
+}
+
+containers() {
+    if [[ -x /usr/local/bin/docker-compose ]]; then
+        if [[ -f /opt/containerised-apps/docker-compose.yaml ]]; then
+            docker-compose -f /opt/containerised-apps/docker-compose.yaml up -d --quiet-pull
+        else
+            warn Docker compose not found in /opt/containerised-apps/docker-compose.yaml
+        fi
+    else
+        warn Docker compose not found
+    fi
+
 }
 
 install_apt_packages() {
@@ -138,8 +167,8 @@ hpe() {
 }
 
 sensors() {
-    info "Setting up sensors"
     if ! grep coretemp /etc/modules >/dev/null 2>&1; then
+        info "Setting up sensors"
         echo coretemp | sudo tee -a /etc/modules >/dev/null 2>&1
     fi
 }
@@ -148,6 +177,7 @@ main() {
     users
     install_apt_packages
     install_docker
+    install_docker_compose
     containers
     hpe
     sensors
