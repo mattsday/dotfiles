@@ -130,11 +130,12 @@ install_docker_compose() {
 }
 
 containers() {
+    START_FILE=/opt/containerised-apps/up.sh
     if [[ -x /usr/local/bin/docker-compose ]]; then
-        if [[ -f /opt/containerised-apps/docker-compose.yaml ]]; then
-            docker-compose -f /opt/containerised-apps/docker-compose.yaml up -d --quiet-pull
+        if [[ -f "${START_FILE}" ]]; then
+            "${START_FILE}"
         else
-            warn Docker compose not found in /opt/containerised-apps/docker-compose.yaml
+            warn Cannot find "${START_FILE}"
         fi
     else
         warn Docker compose not found
