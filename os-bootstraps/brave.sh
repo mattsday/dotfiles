@@ -59,7 +59,9 @@ info Installing or Upgrading Brave Browser to version "${LATEST_VERSION}"
 check_cmd curl
 check_cmd unzip
 
-if [ ! -d /opt/brave ]; then
+if [ ! -d "${DEST}" ]; then
+    # Delete existing installation
+    sudo rm -rf /opt/brave || error "Cannot delete "${DEST}"
     sudo mkdir "${DEST}" || error "Cannot create dir ${DEST}"
     sudo chown "${USER}" "${DEST}" || error "Cannot claim ownership of ${DEST}"
 fi
