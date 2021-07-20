@@ -2,13 +2,20 @@
 # Install the brave browser manually
 
 FALLBACK_VERSION=1.26.74
+DEST=/opt/brave
+ZIP=/opt/brave/brave-browser.zip
+ICON_DIR="${HOME}"/.local/share/icons/hicolor
+DESKTOP_DIR="${HOME}"/.local/share/applications
 
 if [ -z "${DOTFILES_ROOT}" ]; then
     if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
         DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
     elif command -v dirname >/dev/null 2>&1; then
-        DOTFILES_ROOT="$(cd "$(dirname "$0")" || return; pwd)"
-	else
+        DOTFILES_ROOT="$(
+            cd "$(dirname "$0")" || return
+            pwd
+        )"
+    else
         echo >&2 '[Error] cannot determine root (try running from working directory)'
         exit 1
     fi
@@ -18,16 +25,11 @@ fi
 . "${DOTFILES_ROOT}/common.sh"
 
 check_cmd jq
-
-get_version() {
-    LATEST_VERSION="$(curl --silent "$1" | jq -r '[.[].assets[].name | select(.|contains("linux-amd64.zip")) | select(.|contains("nightly") | not) | select(.|contains("beta") | not) | select(.|contains("dev")|not)][0]' | cut -d - -f 3)"
-
-}
-
-PAGE=1
+check_cmd curl
+check_cmd unzip
 
 for i in {1..5}; do
-    get_version "https://api.github.com/repos/brave/brave-browser/releases?page=${i}"
+    LATEST_VERSION="$(curl --silent "https://api.github.com/repos/brave/brave-browser/releases?page=${i}" | jq -r '[.[].assets[].name | select(.|contains("linux-amd64.zip")) | select(.|contains("nightly") | not) | select(.|contains("beta") | not) | select(.|contains("dev")|not)][0]' | cut -d - -f 3)"
     if [[ "${LATEST_VERSION}" != null ]]; then
         break
     fi
@@ -37,13 +39,6 @@ if [[ "${LATEST_VERSION}" = null ]]; then
     warn Cannot determine latest version of brave - falling back to "${FALLBACK_VERSION}"
     LATEST_VERSION="${FALLBACK_VERSION}"
 fi
-
-
-URL="https://github.com/brave/brave-browser/releases/download/v${LATEST_VERSION}/brave-browser-${LATEST_VERSION}-linux-amd64.zip"
-DEST=/opt/brave
-ZIP=/opt/brave/brave-browser.zip
-ICON_DIR="${HOME}"/.local/share/icons/hicolor
-DESKTOP_DIR="${HOME}"/.local/share/applications
 
 # Check existing version to see if we need to run this
 if [ -x "${DEST}/brave" ]; then
@@ -56,22 +51,20 @@ fi
 
 info Installing or Upgrading Brave Browser to version "${LATEST_VERSION}"
 
-check_cmd curl
-check_cmd unzip
-
-if [ ! -d "${DEST}" ]; then
+if [ -d "${DEST}" ]; then
     # Delete existing installation
-    sudo rm -rf /opt/brave || error "Cannot delete ${DEST}"
-    sudo mkdir "${DEST}" || error "Cannot create dir ${DEST}"
-    sudo chown "${USER}" "${DEST}" || error "Cannot claim ownership of ${DEST}"
+    sudo rm -rf "${DEST}" || error "Cannot delete ${DEST}"
 fi
 
 # Take ownership of the brave destination
+sudo mkdir -p "${DEST}" || error "Cannot create dir ${DEST}"
 sudo chown -R "${USER}" "${DEST}" || warn "Failed to take ownership of ${DEST} as ${USER}"
 
 if [ -f "${ZIP}" ]; then
     rm "${ZIP}" || error Cannot delete "${ZIP}"
 fi
+
+URL="https://github.com/brave/brave-browser/releases/download/v${LATEST_VERSION}/brave-browser-${LATEST_VERSION}-linux-amd64.zip"
 
 curl -s -L -o "${ZIP}" "${URL}" || error Could not download "${URL}"
 
@@ -102,7 +95,7 @@ if [ ! -f "${DESKTOP_DIR}/brave-browser.desktop" ]; then
 Version=1.0
 Name=Brave Web Browser
 Comment=Access the Internet
-Exec=/opt/brave/brave-browser %U
+Exec=${DEST}/brave-browser %U
 StartupNotify=true
 Terminal=false
 Icon=brave-browser
@@ -113,10 +106,12 @@ Actions=new-window;new-private-window;
 
 [Desktop Action new-window]
 Name=New Window
-Exec=/opt/brave/brave-browser
+Exec=${DEST}/brave-browser
 
 [Desktop Action new-private-window]
 Name=New Incognito Window
-Exec=/opt/brave/brave-browser --incognito
+Exec=${DEST}/brave-browser --incognito
 EOF
 fi
+
+info Done
