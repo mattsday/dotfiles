@@ -61,7 +61,7 @@ check_cmd unzip
 
 if [ ! -d "${DEST}" ]; then
     # Delete existing installation
-    sudo rm -rf /opt/brave || error "Cannot delete "${DEST}"
+    sudo rm -rf /opt/brave || error "Cannot delete ${DEST}"
     sudo mkdir "${DEST}" || error "Cannot create dir ${DEST}"
     sudo chown "${USER}" "${DEST}" || error "Cannot claim ownership of ${DEST}"
 fi
