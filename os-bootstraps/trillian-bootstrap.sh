@@ -14,7 +14,7 @@ USERS=(
     "grafana:Grafana:988:/sbin/nologin:/opt/containerised-apps/grafana/config:monitoring"
     "unifi-poller:Unifi Poller:987:/sbin/nologin:/opt/containerised-apps/unifi-poller/config:monitoring"
     "samba:Samba Service:986:/sbin/nologin:/opt/containerised-apps/samba/config:backups,media"
-
+    "gitlab:GitLab:985:/sbin/nologin:/opt/containerised-apps/gitlab/config:gitlab"
 )
 
 APT_PACKAGES=(apt-transport-https ca-certificates curl gnupg avahi-daemon avahi-utils ethtool build-essential cmake lm-sensors)
