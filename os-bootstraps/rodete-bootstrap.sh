@@ -2,14 +2,17 @@
 #shellcheck disable=SC1090
 
 if [ -z "${DOTFILES_ROOT}" ]; then
-    if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
-        DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
-    elif command -v dirname >/dev/null 2>&1; then
-        DOTFILES_ROOT="$(cd "$(dirname "$0")" || return; pwd)"
-	else
-        echo >&2 '[Error] cannot determine root (try running from working directory)'
-        exit 1
-    fi
+  if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
+    DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
+  elif command -v dirname >/dev/null 2>&1; then
+    DOTFILES_ROOT="$(
+      cd "$(dirname "$0")" || return
+      pwd
+    )"
+  else
+    echo >&2 '[Error] cannot determine root (try running from working directory)'
+    exit 1
+  fi
 fi
 
 # Load common settings and functions
@@ -132,8 +135,11 @@ docker_setup() {
   fi
   if ! dpkg-query -W -f='${Status}' docker-ce 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
     info Setting up Docker
-    sudo glinux-add-repo -b docker-ce-"$(lsb_release -cs)" >/dev/null || fail Failed to add Docker repo
-    _apt update >/dev/null || fail Failed to update
+    if ! sudo glinux-add-repo -b docker-ce-"$(lsb_release -cs)" >/dev/null; then
+      fail Failed to add Docker repo
+      return
+    fi
+    _apt update >/dev/null || warn Failed to update repo
     _apt -y install docker-ce >/dev/null || error Failed to install Docker
     sudo service docker stop
     sudo ip link set docker0 down
@@ -169,7 +175,6 @@ main() {
     docker_setup
     install_vs_code
     install_sdk_man
-    #fix_ferdi_chat
     install_kubectx
     install_brave
     install_spotify_flatpak
