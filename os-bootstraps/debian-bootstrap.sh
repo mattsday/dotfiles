@@ -109,6 +109,13 @@ get_apt_packages() {
 	)
 }
 
+# Make Python 3 default if installed
+if dpkg-query -W -f='${Status}' python3 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
+    if apt-cache show python-is-python3 >/dev/null 2>&1; then
+        APT_PACKAGES+=(python-is-python3)
+    fi
+fi
+
 install_apt_packages
 
 if [[ -n "${CALLBACKS}" ]]; then
