@@ -36,6 +36,7 @@ shopt -s checkwinsize
 
 shopt -s extglob  # Expanded globbing (i.e. allow 'ls -d ^*.jpg' to show non-jpg files)
 shopt -s cdspell  # Mispelled directory names
+shopt -s globstar # Enable globstar (i.e. **/* is recursive)
 set -o noclobber  # Require '>|' instead of '>' to overwrite a file
 set +o histexpand # Disable history expansion (i.e. make echo "Hello World!" work!)
 
