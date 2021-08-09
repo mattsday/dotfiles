@@ -65,7 +65,7 @@ write_export() {
 	echo "${export_name}"=\'"${export_data}"\' >>"${SH_ENV_FILE}"
 	echo export "${export_name}" >>"${SH_ENV_FILE}"
 	echo setenv "${export_name}" \'"${export_data}"\' >>"${CSH_ENV_FILE}"
-	echo set -u "${export_name}" \'"${export_data}"\' >>"${FISH_ENV_FILE}"
+	echo set -gx "${export_name}" \'"${export_data}"\' >>"${FISH_ENV_FILE}"
 	debug export "${export_name}='${export_data}'"
 }
 
