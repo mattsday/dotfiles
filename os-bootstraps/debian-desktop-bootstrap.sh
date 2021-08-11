@@ -21,7 +21,7 @@ load_debian_common
 
 get_apt_packages() {
   APT_PACKAGES+=(plasma-widgets-addons plasma-wallpapers-addons plasma-nm xdg-desktop-portal-kde)
-  APT_PACKAGES+=(ffmpegthumbs ffmpegthumbnailer kamoso kdegraphics-thumbnailers ark skanlite)
+  APT_PACKAGES+=(ffmpegthumbs ffmpegthumbnailer kamoso kdegraphics-thumbnailers ark skanlite dialog)
   APT_PACKAGES+=(kde-spectacle vlc kdegames ksshaskpass unrar wbritish libappindicator3-1)
 }
 
