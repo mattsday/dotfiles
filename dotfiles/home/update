@@ -15,7 +15,7 @@ fi
 
 # Debian-based
 if [ -x /usr/bin/apt ] && [ -x /usr/bin/dpkg ]; then
-	_sudo apt update && _sudo apt full-upgrade
+	DEBIAN_FRONTEND=noninteractive _sudo apt update && DEBIAN_FRONTEND=noninteractive _sudo apt full-upgrade
 # Arch-based
 elif [ -x /usr/bin/pacman ]; then
 	# Arch linux use yay if it's there
