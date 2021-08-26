@@ -14,11 +14,25 @@ fi
 # Load common settings and functions
 . "${DOTFILES_ROOT}/common.sh"
 
+install_ports() {
+	PORTS_URL="https://github.com/macports/macports-base/releases/download/v2.7.1/MacPorts-2.7.1-11-BigSur.pkg"
+	INSTALL_FILE="/tmp/macports.pkg"
+	if [ -f "$INSTALL_FILE" ]; then
+		rm "$INSTALL_FILE" || error Cannot delete "${INSTALL_FILE}"
+	fi
+	curl -s -L -o "${INSTALL_FILE}" "${PORTS_URL}" || error Could not download "${PORTS_URL}"
+	sudo installer -pkg "${INSTALL_FILE}" -target / || error Failed to install "${INSTALL_FILE}"
+	rm "${INSTALL_FILE}" || warn Could not delete "${INSTALL_FILE}"
+ }
+
 configure_ports() {
 	xcode-select --install 2>/dev/null
 	if [ ! -x /opt/local/bin/port ]; then
-		fail "Install MacPorts - https://www.macports.org/install.php"
-		return 1
+		install_ports
+		if [ ! -x /opt/local/bin/port ]; then
+			fail "Could not install MacPorts - do it manually - https://www.macports.org/install.php"
+			return 1
+		fi
 	fi
 	PORTS=(gawk grep shellcheck coreutils bash htop gsed gnutar multimarkdown jq findutils tmux wget ffmpeg youtube-dl watch)
 	for port in "${PORTS[@]}"; do
