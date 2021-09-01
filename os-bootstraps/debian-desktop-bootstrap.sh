@@ -3,14 +3,17 @@
 #shellcheck disable=SC1090
 
 if [ -z "${DOTFILES_ROOT}" ]; then
-    if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
-        DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
-    elif command -v dirname >/dev/null 2>&1; then
-        DOTFILES_ROOT="$(cd "$(dirname "$0")" || return; pwd)"
-	else
-        echo >&2 '[Error] cannot determine root (try running from working directory)'
-        exit 1
-    fi
+  if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
+    DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
+  elif command -v dirname >/dev/null 2>&1; then
+    DOTFILES_ROOT="$(
+      cd "$(dirname "$0")" || return
+      pwd
+    )"
+  else
+    echo >&2 '[Error] cannot determine root (try running from working directory)'
+    exit 1
+  fi
 fi
 
 # Load common settings and functions
@@ -47,13 +50,19 @@ pipewire() {
   install_apt_packages
   APT_PACKAGES=("${BACKUP_APT_PACKAGES[@]}")
 
+  if [ -d /usr/share/pipewire ]; then
+    PIPEWIRE_CONFIG_ROOT=/usr/share/pipewire
+  else
+    PIPEWIRE_CONFIG_ROOT=/etc/pipewire/media-session.d
+  fi
+
   if [[ -f /usr/share/doc/pipewire/examples/systemd/user/pipewire-pulse.service ]]; then
     # Enable pulseaudio via pipwire
-    if [[ ! -f /etc/pipewire/media-session.d/with-pulseaudio ]]; then
-      _sudo touch /etc/pipewire/media-session.d/with-pulseaudio
+    if [[ ! -f "${PIPEWIRE_CONFIG_ROOT}"/with-pulseaudio ]]; then
+      _sudo touch "${PIPEWIRE_CONFIG_ROOT}"/with-pulseaudio
     fi
-    if [[ ! -f /etc/pipewire/media-session.d/with-alsa ]]; then
-      _sudo touch /etc/pipewire/media-session.d/with-alsa
+    if [[ ! -f "${PIPEWIRE_CONFIG_ROOT}"/with-alsa ]]; then
+      _sudo touch "${PIPEWIRE_CONFIG_ROOT}"/with-alsa
     fi
     if [[ -f /usr/share/doc/pipewire/examples/systemd/user/pipewire-pulse.service ]]; then
       _sudo cp /usr/share/doc/pipewire/examples/systemd/user/pipewire-pulse.service /etc/systemd/user/ || warn Failed to copy pipewire-pulse service
@@ -65,8 +74,8 @@ pipewire() {
       _sudo cp /usr/share/doc/pipewire/examples/alsa.conf.d/99-pipewire-default.conf /etc/alsa/conf.d/ || warn Failed to copy alsa config
     fi
     # Use Pipewire for JACK
-    if [[ ! -f /etc/pipewire/media-session.d/with-jack ]]; then
-      _sudo touch /etc/pipewire/media-session.d/with-jack
+    if [[ ! -f "${PIPEWIRE_CONFIG_ROOT}"/with-jack ]]; then
+      _sudo touch "${PIPEWIRE_CONFIG_ROOT}"/with-jack
     fi
     if [[ -f /usr/share/doc/pipewire/examples/ld.so.conf.d/pipewire-jack-x86_64-linux-gnu.conf ]]; then
       _sudo cp /usr/share/doc/pipewire/examples/ld.so.conf.d/pipewire-jack-x86_64-linux-gnu.conf /etc/ld.so.conf.d/
