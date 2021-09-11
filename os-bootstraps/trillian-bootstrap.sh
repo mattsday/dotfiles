@@ -16,6 +16,8 @@ USERS=(
     "samba:Samba Service:986:/sbin/nologin:/opt/containerised-apps/samba/config:backups,media"
     "gitlab:GitLab:985:/sbin/nologin:/opt/containerised-apps/gitlab/config:gitlab"
     "nginx:Nginx:984:/sbin/nologin:/opt/containerised-apps/nginx/config:nginx"
+    "pi-hole:Nginx:983:/sbin/nologin:/opt/containerised-apps/pi-hole/config:pi-hole"
+
 )
 
 APT_PACKAGES=(apt-transport-https ca-certificates curl gnupg avahi-daemon avahi-utils ethtool build-essential cmake lm-sensors)
