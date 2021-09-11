@@ -74,7 +74,7 @@ alias ..='cd ..'
 export @/usr/local/bin/brew HOMEBREW_NO_ANALYTICS=1
 
 # ...not .NET ones
-export @dotnet DOTNET_CLI_TELEMETRY_OPTOUT=1Installing 
+export @dotnet DOTNET_CLI_TELEMETRY_OPTOUT=1
 export BLOCKSIZE=k
 
 # Use vim instead of vi if it exists
