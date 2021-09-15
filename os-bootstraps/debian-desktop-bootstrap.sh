@@ -91,7 +91,7 @@ pipewire() {
   fi
 
   # Protect against future pipewire-media-session.service changes
-  if [[ "$(systemctl list-unit-files pipewire-media-session.service | wc -l)" -gt 3 ]] && ! systemctl -q is-active --user pipewire-media-session.service; then
+  if [[ "$(systemctl list-unit-files --user pipewire-media-session.service | wc -l)" -gt 3 ]] && ! systemctl -q is-active --user pipewire-media-session.service; then
     systemctl --user --now enable pipewire-media-session.service
   fi
 }
