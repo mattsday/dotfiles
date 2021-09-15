@@ -17,8 +17,8 @@ fi
 install_ports() {
 	PORTS_URL="https://github.com/macports/macports-base/releases/download/v2.7.1/MacPorts-2.7.1-11-BigSur.pkg"
 	INSTALL_FILE="/tmp/macports.pkg"
-	if [ -f "$INSTALL_FILE" ]; then
-		rm "$INSTALL_FILE" || error Cannot delete "${INSTALL_FILE}"
+	if [ -f "${INSTALL_FILE}" ]; then
+		rm "${INSTALL_FILE}" || error Cannot delete "${INSTALL_FILE}"
 	fi
 	curl -s -L -o "${INSTALL_FILE}" "${PORTS_URL}" || error Could not download "${PORTS_URL}"
 	sudo installer -pkg "${INSTALL_FILE}" -target / || error Failed to install "${INSTALL_FILE}"

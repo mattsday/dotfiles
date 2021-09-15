@@ -5,8 +5,11 @@ if [ -z "${DOTFILES_ROOT}" ]; then
     if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
         DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
     elif command -v dirname >/dev/null 2>&1; then
-        DOTFILES_ROOT="$(cd "$(dirname "$0")" || return; pwd)"
-	else
+        DOTFILES_ROOT="$(
+            cd "$(dirname "$0")" || return
+            pwd
+        )"
+    else
         echo >&2 '[Error] cannot determine root (try running from working directory)'
         exit 1
     fi
@@ -42,9 +45,8 @@ install_spotify() {
         return
     fi
     if ! dpkg-query -W -f='${Status}' spotify-client 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
-        #curl -sS https://download.spotify.com/debian/pubkey.gpg | sudo apt-key add - >/dev/null
-        curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | _sudo apt-key add -
-        echo "deb http://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list >/dev/null
+        curl -fsSL https://download.spotify.com/debian/pubkey_0D811D58.gpg | sudo gpg --dearmor -o /usr/share/keyrings/spotify-archive-keyring.gpg
+        echo "deb [arch=amd64 signed-by=/usr/share/keyrings/spotify-archive-keyring.gpg] http://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list >/dev/null
         _apt update && _apt install -y spotify-client >/dev/null 2>&1
     fi
 }
