@@ -26,6 +26,7 @@ get_apt_packages() {
   APT_PACKAGES+=(plasma-widgets-addons plasma-wallpapers-addons plasma-nm xdg-desktop-portal-kde)
   APT_PACKAGES+=(ffmpegthumbs ffmpegthumbnailer kamoso kdegraphics-thumbnailers ark skanlite dialog)
   APT_PACKAGES+=(kde-spectacle vlc kdegames ksshaskpass unrar wbritish libappindicator3-1 kdialog)
+  APT_PACKAGES+=(konsole dolphin dolphin-plugins kate gwenview baloo-kf5)
 }
 
 # Install pipewire support on Linux
