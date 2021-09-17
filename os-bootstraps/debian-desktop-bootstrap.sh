@@ -26,7 +26,7 @@ get_apt_packages() {
   APT_PACKAGES+=(plasma-widgets-addons plasma-wallpapers-addons plasma-nm xdg-desktop-portal-kde)
   APT_PACKAGES+=(ffmpegthumbs ffmpegthumbnailer kamoso kdegraphics-thumbnailers ark skanlite dialog)
   APT_PACKAGES+=(kde-spectacle vlc kdegames ksshaskpass unrar wbritish libappindicator3-1 kdialog)
-  APT_PACKAGES+=(konsole dolphin dolphin-plugins kate gwenview baloo-kf5)
+  APT_PACKAGES+=(konsole dolphin dolphin-plugins kate gwenview baloo-kf5 libnss-mdns)
 }
 
 # Install pipewire support on Linux
@@ -39,7 +39,7 @@ pipewire() {
   # Back up current packages
   BACKUP_APT_PACKAGES=("${APT_PACKAGES[@]}")
   # Install build packages immediately
-  APT_PACKAGES=(libldacbt-abr2 libldacbt-enc2 pipewire-bin pipewire-audio-client-libraries libpipewire-0.3-0 dbus-user-session libspa-0.2-bluetooth libspa-0.2-jack gstreamer1.0-pipewire)
+  APT_PACKAGES=(libldacbt-abr2 libldacbt-enc2 pipewire-bin pipewire-audio-client-libraries libpipewire-0.3-0 dbus-user-session libspa-0.2-bluetooth libspa-0.2-jack gstreamer1.0-pipewire pipewire-pulse)
   # Check they exist (they won't in older Debian or Ubuntu versions)
   for package in "${APT_PACKAGES[@]}"; do
     if ! apt-cache show "${package}" >/dev/null 2>&1; then
