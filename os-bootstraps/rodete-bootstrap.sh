@@ -89,6 +89,13 @@ install_spotify_flatpak() {
   fi
 }
 
+configure_printing() {
+  if ! groups "${USER}" | grep -q '\blpadmin\b'; then
+    info Setting up cups user group
+    _sudo usermod -aG lpadmin "${USER}"
+  fi
+}
+
 install_vs_code() {
   # Don't run this if we can't run as root
   if [[ "${NO_SUDO}" = 1 ]]; then
@@ -178,6 +185,7 @@ main() {
     install_kubectx
     install_brave
     install_spotify_flatpak
+    configure_printing
   )
   get_apt_packages
 
