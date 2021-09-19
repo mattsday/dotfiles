@@ -10,7 +10,7 @@ if [ -z "${DOTFILES_ROOT}" ]; then
 fi
 
 _apt() {
-	DEBIAN_FRONTEND="noninteractive" _sudo apt-get "$@"
+	DEBIAN_FRONTEND="noninteractive" _sudo -E apt-get "$@"
 }
 
 install_apt_packages() {
