@@ -14,7 +14,7 @@ _apt() {
 }
 
 install_apt_packages() {
-	get_apt_packages
+	[[ $(type -t get_apt_packages) == function ]] && get_apt_packages
 	INSTALL_PACKAGES=()
 	for package in "${APT_PACKAGES[@]}"; do
 		if ! dpkg-query -W -f='${Status}' "${package}" 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then

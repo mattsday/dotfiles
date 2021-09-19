@@ -31,69 +31,8 @@ get_apt_packages() {
 
 # Install pipewire support on Linux
 pipewire() {
-  # Don't run this if we can't run as root
-  if [[ "${NO_SUDO}" = 1 ]]; then
-    return
-  fi
-  info Setting up Pipewire
-  # Back up current packages
-  BACKUP_APT_PACKAGES=("${APT_PACKAGES[@]}")
-  # Install build packages immediately
-  APT_PACKAGES=(libldacbt-abr2 libldacbt-enc2 pipewire-bin pipewire-audio-client-libraries libpipewire-0.3-0 dbus-user-session libspa-0.2-bluetooth libspa-0.2-jack gstreamer1.0-pipewire pipewire-pulse pipewire-media-session)
-  # Check they exist (they won't in older Debian or Ubuntu versions)
-  for package in "${APT_PACKAGES[@]}"; do
-    if ! apt-cache show "${package}" >/dev/null 2>&1; then
-      fail "Pipewire not supported on this OS ${package} not found"
-      APT_PACKAGES=("${BACKUP_APT_PACKAGES[@]}")
-      return 1
-    fi
-  done
-  install_apt_packages
-  APT_PACKAGES=("${BACKUP_APT_PACKAGES[@]}")
-
-  if [ -d /usr/share/pipewire ]; then
-    PIPEWIRE_CONFIG_ROOT=/usr/share/pipewire
-  else
-    PIPEWIRE_CONFIG_ROOT=/etc/pipewire/media-session.d
-  fi
-
-  if [[ -f /usr/share/doc/pipewire/examples/systemd/user/pipewire-pulse.service ]]; then
-    # Enable pulseaudio via pipwire
-    if [[ ! -f "${PIPEWIRE_CONFIG_ROOT}"/with-pulseaudio ]]; then
-      _sudo touch "${PIPEWIRE_CONFIG_ROOT}"/with-pulseaudio
-    fi
-    if [[ ! -f "${PIPEWIRE_CONFIG_ROOT}"/with-alsa ]]; then
-      _sudo touch "${PIPEWIRE_CONFIG_ROOT}"/with-alsa
-    fi
-    if [[ -f /usr/share/doc/pipewire/examples/systemd/user/pipewire-pulse.service ]]; then
-      _sudo cp /usr/share/doc/pipewire/examples/systemd/user/pipewire-pulse.service /etc/systemd/user/ || warn Failed to copy pipewire-pulse service
-    fi
-    if [[ -f /usr/share/doc/pipewire/examples/systemd/user/pipewire-pulse.socket ]]; then
-      _sudo cp /usr/share/doc/pipewire/examples/systemd/user/pipewire-pulse.socket /etc/systemd/user/ || warn Failed to copy pipewire-pulse socket
-    fi
-    if [[ -f /usr/share/doc/pipewire/examples/alsa.conf.d/99-pipewire-default.conf ]]; then
-      _sudo cp /usr/share/doc/pipewire/examples/alsa.conf.d/99-pipewire-default.conf /etc/alsa/conf.d/ || warn Failed to copy alsa config
-    fi
-    # Use Pipewire for JACK
-    if [[ ! -f "${PIPEWIRE_CONFIG_ROOT}"/with-jack ]]; then
-      _sudo touch "${PIPEWIRE_CONFIG_ROOT}"/with-jack
-    fi
-    if [[ -f /usr/share/doc/pipewire/examples/ld.so.conf.d/pipewire-jack-x86_64-linux-gnu.conf ]]; then
-      _sudo cp /usr/share/doc/pipewire/examples/ld.so.conf.d/pipewire-jack-x86_64-linux-gnu.conf /etc/ld.so.conf.d/
-      _sudo ldconfig
-    fi
-    if ! systemctl -q is-active --user pipewire || ! systemctl -q is-active --user pipewire-pulse; then
-      info Starting pipewire user service
-      systemctl --user daemon-reload
-      systemctl --user --now disable pulseaudio.service pulseaudio.socket
-      systemctl --user mask pulseaudio
-      systemctl --user --now enable pipewire pipewire-pulse
-    fi
-  fi
-
-  # Protect against future pipewire-media-session.service changes
-  if [[ "$(systemctl list-unit-files --user pipewire-media-session.service | wc -l)" -gt 3 ]] && ! systemctl -q is-active --user pipewire-media-session.service; then
-    systemctl --user --now enable pipewire-media-session.service
+  if [[ -f "${OS_BOOTSTRAP_ROOT}"/pipewire.sh ]]; then
+    "${OS_BOOTSTRAP_ROOT}"/pipewire.sh
   fi
 }
 
