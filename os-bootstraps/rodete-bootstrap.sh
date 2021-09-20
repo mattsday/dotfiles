@@ -99,7 +99,7 @@ configure_printing() {
 configure_rfkill() {
   if ! groups "${USER}" | grep -q '\bnetdev\b'; then
     info Adding "${USER}" to netdev to remove rfkill prompt
-    _sudo usermod -aG lpadmin "${USER}"
+    _sudo usermod -aG netdev "${USER}"
   fi
 }
 
@@ -193,6 +193,7 @@ main() {
     install_brave
     install_spotify_flatpak
     configure_printing
+    configure_rfkill
   )
   get_apt_packages
 
