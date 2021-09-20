@@ -96,6 +96,13 @@ configure_printing() {
   fi
 }
 
+configure_rfkill() {
+  if ! groups "${USER}" | grep -q '\bnetdev\b'; then
+    info Adding "${USER}" to netdev to remove rfkill prompt
+    _sudo usermod -aG lpadmin "${USER}"
+  fi
+}
+
 install_vs_code() {
   # Don't run this if we can't run as root
   if [[ "${NO_SUDO}" = 1 ]]; then
