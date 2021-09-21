@@ -32,7 +32,7 @@ else
 fi
 
 get_apt_packages() {
-  APT_PACKAGES+=(google-cloud-sdk google-cloud-sdk-anthos-auth flatpak)
+  APT_PACKAGES+=(google-cloud-sdk google-cloud-sdk-anthos-auth)
   APT_PACKAGES+=(google-cloud-sdk-kpt google-cloud-sdk-skaffold kubectl openjdk-8-jdk openjdk-11-jdk)
   APT_PACKAGES+=(print-manager avahi-discover avahi-utils okular sddm-theme-debian-breeze)
 }
@@ -64,6 +64,16 @@ install_kubectx() {
   fi
 }
 
+install_spotify() {
+    # Back up current packages
+    BACKUP_APT_PACKAGES=("${APT_PACKAGES[@]}")
+    # Install build packages immediately
+    APT_PACKAGES=(spotify-client)
+    install_apt_packages
+    APT_PACKAGES=("${BACKUP_APT_PACKAGES[@]}")
+}
+
+# Not doing this for now as it's broken
 install_spotify_flatpak() {
   # Don't run this if we can't run as root
   if [[ "${NO_SUDO}" = 1 ]]; then
@@ -191,7 +201,7 @@ main() {
     install_sdk_man
     install_kubectx
     install_brave
-    install_spotify_flatpak
+    install_spotify
     configure_printing
     configure_rfkill
   )
