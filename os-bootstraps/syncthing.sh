@@ -32,6 +32,15 @@ install_syncthing() {
 
 # Configure Systemd services for the local user
 configure_syncthing_service() {
+    # Only enable syncthing as a non-root user
+    if command -v id >/dev/null 2>&1; then
+        if [ "$(id -u)" = 0 ]; then
+            return
+        fi
+    else
+        warn Cannot determine if user is root - not enabling syncthing service
+        return
+    fi
     # Install systemd services
     if [[ "$(systemctl list-unit-files --user syncthing.service | wc -l)" -gt 3 ]] && ! systemctl -q is-active --user syncthing.service; then
         info Enabling syncthing service
