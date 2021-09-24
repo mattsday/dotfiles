@@ -20,11 +20,11 @@ fi
 # Only enable as a non-root user
 if command -v id >/dev/null 2>&1; then
     if [ "$(id -u)" = 0 ]; then
-        return
+        exit
     fi
 else
     warn Cannot determine if user is root
-    return
+    exit
 fi
 
 FONT_LOCATION="https://download.jetbrains.com/fonts/JetBrainsMono-1.0.3.zip"
