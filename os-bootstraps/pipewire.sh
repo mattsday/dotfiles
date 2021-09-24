@@ -39,6 +39,15 @@ install_pipewire_packages() {
 }
 
 disable_pulseaudio() {
+    # Only enable as a non-root user
+    if command -v id >/dev/null 2>&1; then
+        if [ "$(id -u)" = 0 ]; then
+            return
+        fi
+    else
+        warn Cannot determine if user is root
+        return
+    fi
     if systemctl -q is-active --user "pulseaudio.service"; then
         info Disabling pulseuadio
         systemctl --user --now disable pulseaudio.service pulseaudio.socket
@@ -48,6 +57,15 @@ disable_pulseaudio() {
 
 # Configure Systemd services for the local user
 configure_pipewire_services() {
+    # Only enable as a non-root user
+    if command -v id >/dev/null 2>&1; then
+        if [ "$(id -u)" = 0 ]; then
+            return
+        fi
+    else
+        warn Cannot determine if user is root
+        return
+    fi
     # Enable pulseaudio and JACK via pipwire
     if [[ ! -f "${PIPEWIRE_CONFIG_ROOT}"/with-pulseaudio ]]; then
         _sudo touch "${PIPEWIRE_CONFIG_ROOT}"/with-pulseaudio

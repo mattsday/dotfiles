@@ -38,6 +38,15 @@ get_apt_packages() {
 }
 
 passwordless_sudo() {
+  # Only enable as a non-root user
+  if command -v id >/dev/null 2>&1; then
+    if [ "$(id -u)" = 0 ]; then
+      return
+    fi
+  else
+    warn Cannot determine if user is root
+    return
+  fi
   if [[ ! -f /etc/sudoers.d/nopasswd-"${USER}" ]] && [[ "${NO_SUDO}" != 1 ]]; then
     info Setting up passwordless sudo
     echo "${USER}"' ALL=(ALL:ALL) NOPASSWD:ALL' | _sudo tee /etc/sudoers.d/nopasswd-"${USER}"
@@ -65,12 +74,12 @@ install_kubectx() {
 }
 
 install_spotify() {
-    # Back up current packages
-    BACKUP_APT_PACKAGES=("${APT_PACKAGES[@]}")
-    # Install build packages immediately
-    APT_PACKAGES=(spotify-client)
-    install_apt_packages
-    APT_PACKAGES=("${BACKUP_APT_PACKAGES[@]}")
+  # Back up current packages
+  BACKUP_APT_PACKAGES=("${APT_PACKAGES[@]}")
+  # Install build packages immediately
+  APT_PACKAGES=(spotify-client)
+  install_apt_packages
+  APT_PACKAGES=("${BACKUP_APT_PACKAGES[@]}")
 }
 
 # Not doing this for now as it's broken
@@ -79,6 +88,16 @@ install_spotify_flatpak() {
   if [[ "${NO_SUDO}" = 1 ]]; then
     return
   fi
+  # Only enable as a non-root user
+  if command -v id >/dev/null 2>&1; then
+    if [ "$(id -u)" = 0 ]; then
+      return
+    fi
+  else
+    warn Cannot determine if user is root
+    return
+  fi
+
   if ! command -v flatpak >/dev/null 2>&1; then
     return
   fi
@@ -134,6 +153,15 @@ install_vs_code() {
 }
 
 install_sdk_man() {
+  # Only enable as a non-root user
+  if command -v id >/dev/null 2>&1; then
+    if [ "$(id -u)" = 0 ]; then
+      return
+    fi
+  else
+    warn Cannot determine if user is root
+    return
+  fi
   if [[ ! -f "${HOME}/.sdkman/bin/sdkman-init.sh" ]]; then
     info Installing sdkman
     curl -s "https://get.sdkman.io?rcupdate=false" | bash >/dev/null
