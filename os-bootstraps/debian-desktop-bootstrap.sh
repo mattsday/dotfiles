@@ -36,6 +36,12 @@ pipewire() {
   fi
 }
 
+syncthing() {
+  if [[ -f "${OS_BOOTSTRAP_ROOT}"/syncthing.sh ]]; then
+    "${OS_BOOTSTRAP_ROOT}"/syncthing.sh
+  fi
+}
+
 ssh_configuration() {
   SSH_FILE="${HOME}"/.config/autostart-scripts/ssh.sh
   if [[ ! -f "${SSH_FILE}" ]]; then
@@ -87,6 +93,7 @@ main() {
     ssh_configuration
     baloo_config
     pipewire
+    syncthing
   )
   get_apt_packages
 

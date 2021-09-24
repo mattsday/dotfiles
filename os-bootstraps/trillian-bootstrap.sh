@@ -170,6 +170,12 @@ hpe() {
     install_apt_packages
 }
 
+syncthing() {
+  if [[ -f "${OS_BOOTSTRAP_ROOT}"/syncthing.sh ]]; then
+    "${OS_BOOTSTRAP_ROOT}"/syncthing.sh
+  fi
+}
+
 sensors() {
     if ! grep coretemp /etc/modules >/dev/null 2>&1; then
         info "Setting up sensors"
@@ -185,6 +191,7 @@ main() {
     containers
     hpe
     sensors
+    syncthing
 }
 
 main
