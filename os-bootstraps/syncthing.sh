@@ -21,6 +21,11 @@ fi
 # Load Debian common functions (from common.sh)
 load_debian_common
 
+if [ ! -x /usr/bin/systemctl ] || ! systemctl status --user >/dev/null 2>&1; then
+    error Cannot setup syncthing without systemd
+    exit
+fi
+
 install_syncthing() {
     # Back up current packages
     BACKUP_APT_PACKAGES=("${APT_PACKAGES[@]}")
