@@ -34,3 +34,8 @@ if ! git config --global user.email >/dev/null 2>&1; then
     info Setting git config --global user.email to "${GIT_EMAIL}"
     git config --global user.email "${GIT_EMAIL}"
 fi
+
+if ! git config --global init.defaultBranch >/dev/null 2>&1; then
+    info Setting default git branch to master
+    git config --global init.defaultBranch master
+fi
