@@ -30,7 +30,7 @@ install_pipewire_packages() {
     # Back up current packages
     BACKUP_APT_PACKAGES=("${APT_PACKAGES[@]}")
     # Install build packages immediately
-    APT_PACKAGES=(libldacbt-abr2 libldacbt-enc2 pipewire-bin pipewire-audio-client-libraries libpipewire-0.3-0 dbus-user-session libspa-0.2-bluetooth libspa-0.2-jack gstreamer1.0-pipewire pipewire-pulse pipewire-media-session)
+    APT_PACKAGES=(libldacbt-abr2 libldacbt-enc2 pipewire-bin pipewire-audio-client-libraries libpipewire-0.3-0 dbus-user-session libspa-0.2-bluetooth libspa-0.2-jack gstreamer1.0-pipewire pipewire-pulse)
     # Check they exist (they won't in older Debian or Ubuntu versions)
     for package in "${APT_PACKAGES[@]}"; do
         if ! apt-cache show "${package}" >/dev/null 2>&1; then
@@ -39,6 +39,16 @@ install_pipewire_packages() {
             return 1
         fi
     done
+    # Now check if wireplumber or media-session is available:
+    if apt-cache show wireplumber >/dev/null 2>&1; then
+        APT_PACKAGES+=(wireplumber)
+        # Remove pipewire-media-session if installed
+        systemctl --user --now disable pipewire-media-session.service >/dev/null 2>&1
+        systemctl --user --now mask pipewire-media-session.service >/dev/null 2>&1
+        _sudo apt-get -y remove pipewire-media-session >/dev/null 2>&1
+    elif ! apt-cache show pipewire-media-session >/dev/null 2>&1; then
+        APT_PACKAGES+=(pipewire-media-session)
+    fi
     install_apt_packages
     APT_PACKAGES=("${BACKUP_APT_PACKAGES[@]}")
 }
@@ -83,11 +93,15 @@ configure_pipewire_services() {
     fi
 
     # Install systemd services
-    for service in pipewire pipewire-media-session pipewire-pulse; do
+    for service in pipewire pipewire-pulse; do
         if [[ "$(systemctl list-unit-files --user "${service}.service" | wc -l)" -gt 3 ]] && ! systemctl -q is-active --user "${service}.service"; then
             systemctl enable --now --user "${service}.service" "${service}.socket"
         fi
     done
+    if [[ "$(systemctl list-unit-files --user "wireplumber.service" | wc -l)" -gt 3 ]] && ! systemctl -q is-active --user "wireplumber.service"; then
+        systemctl enable --now --user "wireplumber.service"
+    fi
+
 }
 
 main() {
