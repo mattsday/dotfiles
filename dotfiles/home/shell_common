@@ -114,12 +114,6 @@ elif [ -z "${colours}" ]; then
 	fi
 fi
 
-# Add "~/.bin" to path if it exists
-if [ -d "${HOME}/.bin" ]; then
-    PATH="${PATH}:${HOME}/.bin"
-    export PATH
-fi
-
 # Disable software flow control (XON/OFF) / AKA: why did ctrl-s pause my term?
 if command -v stty >/dev/null 2>&1; then
 	stty -ixon

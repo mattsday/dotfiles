@@ -20,22 +20,20 @@ if [ -f "${HOME}/.env_common_config" ]; then
 fi
 
 # Set some local utilities as default (this must be top of this file after local config)
-if [ -d /usr/local/bin ]; then
-	PATH=/usr/local/bin:"${PATH}"
-	export PATH
-fi
-if [ -d /usr/local/sbin ]; then
-	PATH=/usr/local/sbin:"${PATH}"
-	export PATH
-fi
-if [ -d /snap/bin ]; then
-	PATH="${PATH}":/snap/bin
-	export PATH
-fi
-if [ -d /opt/local/bin ]; then
-    PATH="${PATH}":/opt/local/bin
-	export PATH
-fi
+# These ones go in front...
+for p in /usr/local/bin /usr/local/sbin; do
+	if [ -d "${p}" ]; then
+		PATH="${p}:${PATH}"
+		export PATH
+	fi
+done
+# ...and these go last
+for p in /snap/bin /opt/local/bin "${HOME}/.bin" "${HOME}/bin"; do
+	if [ -d "${p}" ]; then
+		PATH="${PATH}:${p}"
+		export PATH
+	fi
+done
 
 # =====================
 # Environment variables

@@ -26,17 +26,18 @@ if ( -e "$HOME/.csh_aliases" ) then
 endif
 
 # Set some local utilities as default (this must be top of this file)
-
-if ( -d /usr/local/bin) then
-	set path = (/usr/local/bin $path)
-endif
-if ( -d /usr/local/sbin) then
-	set path = (/usr/local/sbin $path)
-endif
-if ( -d /snap/bin) then
-	set path = ($path /snap/bin)
-endif
-
+# These ones go in front...
+foreach p (/usr/local/bin /usr/local/sbin)
+	if ( -d "$p" ) then
+		set path = ($p $path)
+	endif
+end
+# ...and these go last
+foreach p (/snap/bin /opt/local/bin "${HOME}/.bin" "${HOME}/bin")
+	if ( -d "$p" ) then
+		set path = ($path $p)
+	endif
+end
 
 # =================
 # Alias definitions
