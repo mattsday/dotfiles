@@ -3,14 +3,17 @@
 # shellcheck disable=SC1091
 
 if [ -z "${DOTFILES_ROOT}" ]; then
-    if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
-        DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
-    elif command -v dirname >/dev/null 2>&1; then
-        DOTFILES_ROOT="$(cd "$(dirname "$0")" || return; pwd)"
+	if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
+		DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
+	elif command -v dirname >/dev/null 2>&1; then
+		DOTFILES_ROOT="$(
+			cd "$(dirname "$0")" || return
+			pwd
+		)"
 	else
-        echo >&2 '[Error] cannot determine root (try running from working directory)'
-        exit 1
-    fi
+		echo >&2 '[Error] cannot determine root (try running from working directory)'
+		exit 1
+	fi
 fi
 
 # Load dependencies
@@ -131,6 +134,22 @@ if command -v pipewire-pulse >/dev/null 2>&1; then
 	ln -fs "${DOTFILES_ROOT}/dotfiles/special/pipewire/${PIPEWIRE_CONFIG_ALSA}" "${PIPEWIRE_CONFIG_ALSA_PATH}"
 	info "${bluez_verb} ${PIPEWIRE_CONFIG_BLUEZ_PATH}"
 	ln -fs "${DOTFILES_ROOT}/dotfiles/special/pipewire/${PIPEWIRE_CONFIG_BLUEZ}" "${PIPEWIRE_CONFIG_BLUEZ_PATH}"
+
+	wireplumber_verb=Updating
+	if [ ! -d "${WIREPLUMBER_CONFIG_DIR}" ]; then
+		mkdir -p "${WIREPLUMBER_CONFIG_DIR}"
+	wireplumber_verb=Creating
+	elif [ -f "${WIREPLUMBER_CONFIG_ALSA_PATH}" ]; then
+		if [ ! -L "${WIREPLUMBER_CONFIG_ALSA_PATH}" ]; then
+			info Backing up local wireplumber config to "${DOTFILES_ROOT}/backup/local-${WIREPLUMBER_CONFIG_ALSA}"
+			mv -f "${WIREPLUMBER_CONFIG_ALSA_PATH}" "${DOTFILES_ROOT}/backup/local-${WIREPLUMBER_CONFIG_ALSA}"
+			wireplumber_verb=Creating
+		fi
+	else
+		wireplumber_verb=Creating
+	fi
+	info "${wireplumber_verb} ${WIREPLUMBER_CONFIG_ALSA_PATH}"
+	ln -fs "${DOTFILES_ROOT}/dotfiles/special/pipewire/${WIREPLUMBER_CONFIG_ALSA}" "${WIREPLUMBER_CONFIG_ALSA_PATH}"
 fi
 
 VS_SETTINGS="${VS_DIR}/settings.json"

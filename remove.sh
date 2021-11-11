@@ -77,4 +77,13 @@ if [ -L "${PIPEWIRE_CONFIG_BLUEZ_PATH}" ]; then
 	fi
 fi
 
+if [ -L "${WIREPLUMBER_CONFIG_ALSA_PATH}" ]; then
+	echo Removing "${WIREPLUMBER_CONFIG_ALSA_PATH}"
+	rm "${WIREPLUMBER_CONFIG_ALSA_PATH}"
+	if [ -f "${DOTFILES_ROOT}/backup/local-${WIREPLUMBER_CONFIG_ALSA}" ]; then
+		echo Restoring "${WIREPLUMBER_CONFIG_ALSA_PATH}" from backup
+		mv "${DOTFILES_ROOT}/backup/local-${WIREPLUMBER_CONFIG_ALSA}" "${WIREPLUMBER_CONFIG_ALSA_PATH}"
+	fi
+fi
+
 echo Done
