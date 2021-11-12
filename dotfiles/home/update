@@ -41,7 +41,24 @@ elif [ -x /usr/bin/zypper ]; then
 	_sudo zypper refresh && _sudo zypper dup
 # OS X
 elif [ -x /opt/local/bin/port ]; then
-	_sudo /opt/local/bin/port -q selfupdate
+	# Try reinstalling MacPorts
+	if ! _sudo /opt/local/bin/port -q selfupdate; then
+		# Hope that grealpath has been installed before
+		if command -v grealpath >/dev/null 2>&1; then
+			DOTFILES_ROOT="$(grealpath "$(dirname "$(grealpath "${0}")")"/../..)"
+			# Load dependencies
+			. "${DOTFILES_ROOT}"/dotfiles/dependencies
+			# Load common functions
+			. "${DOTFILES_ROOT}"/common.sh
+			echo "${OS_BOOTSTRAP_ROOT}"
+			info Attempting to update MacPorts
+			_UPDATE_MACPORTS=1
+			. "${OS_BOOTSTRAP_ROOT}/mac-bootstrap.sh"
+			install_ports
+		else
+			echo Failed to update MacPorts
+		fi
+	fi
 	_sudo /opt/local/bin/port -q upgrade outdated
 elif [ -x /usr/local/bin/brew ]; then
 	brew update

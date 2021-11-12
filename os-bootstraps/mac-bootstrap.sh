@@ -1,21 +1,33 @@
 #!/bin/bash
 
 if [ -z "${DOTFILES_ROOT}" ]; then
-    if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
-        DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
-    elif command -v dirname >/dev/null 2>&1; then
-        DOTFILES_ROOT="$(cd "$(dirname "$0")" || return; pwd)"
+	if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
+		DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
+	elif command -v dirname >/dev/null 2>&1; then
+		DOTFILES_ROOT="$(
+			cd "$(dirname "$0")" || return
+			pwd
+		)"
 	else
-        echo >&2 '[Error] cannot determine root (try running from working directory)'
-        exit 1
-    fi
+		echo >&2 '[Error] cannot determine root (try running from working directory)'
+		exit 1
+	fi
 fi
 
 # Load common settings and functions
 . "${DOTFILES_ROOT}/common.sh"
 
 install_ports() {
-	PORTS_URL="https://github.com/macports/macports-base/releases/download/v2.7.1/MacPorts-2.7.1-11-BigSur.pkg"
+	# Get version to download
+	OSX_RELEASE="$(sw_vers -productVersion | cut -f 1 -d .)"
+	if [ "${OSX_RELEASE}" = 11 ]; then
+		PORTS_URL="https://github.com/macports/macports-base/releases/download/v2.7.1/MacPorts-2.7.1-11-BigSur.pkg"
+	elif [ "${OSX_RELEASE}" = 12 ]; then
+		PORTS_URL="https://github.com/macports/macports-base/releases/download/v2.7.1/MacPorts-2.7.1-12-Monterey.pkg"
+	else
+		error Cannot determine OS X version
+		return
+	fi
 	INSTALL_FILE="/tmp/macports.pkg"
 	if [ -f "${INSTALL_FILE}" ]; then
 		rm "${INSTALL_FILE}" || error Cannot delete "${INSTALL_FILE}"
@@ -23,7 +35,7 @@ install_ports() {
 	curl -s -L -o "${INSTALL_FILE}" "${PORTS_URL}" || error Could not download "${PORTS_URL}"
 	sudo installer -pkg "${INSTALL_FILE}" -target / || error Failed to install "${INSTALL_FILE}"
 	rm "${INSTALL_FILE}" || warn Could not delete "${INSTALL_FILE}"
- }
+}
 
 configure_ports() {
 	xcode-select --install 2>/dev/null
@@ -72,6 +84,10 @@ configure_sudo() {
 }
 
 main() {
+	# If being called from update, don't autorun
+	if [ -n "${_UPDATE_MACPORTS}" ]; then
+		return
+	fi
 	# Only run on a mac
 	OS="$(uname)"
 	if [[ "${OS}" != "Darwin" ]]; then
