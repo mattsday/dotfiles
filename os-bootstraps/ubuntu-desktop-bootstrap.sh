@@ -44,9 +44,17 @@ install_spotify() {
     if [[ "${NO_SUDO}" = 1 ]]; then
         return
     fi
-    if ! dpkg-query -W -f='${Status}' spotify-client 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
-        curl -fsSL https://download.spotify.com/debian/pubkey_0D811D58.gpg | sudo gpg --dearmor -o /usr/share/keyrings/spotify-archive-keyring.gpg
-        echo "deb [arch=amd64 signed-by=/usr/share/keyrings/spotify-archive-keyring.gpg] http://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list >/dev/null
+    # Spotify changes its apt key from time to time; keep it up to date here
+    KEY_URL=https://download.spotify.com/debian/pubkey_5E3C45D7B312C643.gpg
+    KEY_NAME=/usr/share/keyrings/spotify-archive-keyring-5E3C45D7B312C643.gpg
+    APT_SOURCE_FILE=/etc/apt/sources.list.d/spotify.list
+
+    if [ ! -f "${KEY_NAME}" ]; then
+        curl -fsSL "${KEY_URL}" | sudo gpg --dearmor -o "${KEY_NAME}"
+        if [ -f "${APT_SOURCE_FILE}" ]; then
+            sudo rm "${APT_SOURCE_FILE}"
+        fi
+        echo "deb [arch=amd64 signed-by=${KEY_NAME}] http://repository.spotify.com stable non-free" | sudo tee "${APT_SOURCE_FILE}" >/dev/null
         _apt update >/dev/null 2>&1 && _apt install -y spotify-client >/dev/null 2>&1
     fi
 }
