@@ -40,7 +40,7 @@ install_pipewire_packages() {
         fi
     done
     # Now check if wireplumber or media-session is available:
-    if apt-cache show wireplumber >/dev/null 2>&1; then
+    if [ "$(apt-cache policy wireplumber | grep 'Candidate:' | cut -f 2 -d : | xargs)" != "(none)" ]; then
         APT_PACKAGES+=(wireplumber)
         # Remove pipewire-media-session if installed
         systemctl --user --now disable pipewire-media-session.service >/dev/null 2>&1
