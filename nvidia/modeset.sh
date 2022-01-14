@@ -1,6 +1,6 @@
 #!/bin/sh
-ROOT=/usr/lib/modprobe.d
-FILENAME=nvidia-modeset.conf
+ROOT=/etc/modprobe.d
+FILENAME=nvidia-kms.conf
 SH_ROOT=/etc/profile.d
 SH_FILENAME=nvidia-egl.sh
 
@@ -10,7 +10,7 @@ if [ ! -d "${ROOT}" ]; then
 fi
 
 if [ ! -f "${ROOT}/${FILENAME}" ]; then
-    echo 'options nvidia_drm modeset=1' | sudo tee "${ROOT}/${FILENAME}"
+    echo 'options nvidia-drm modeset=1' | sudo tee "${ROOT}/${FILENAME}"
 fi
 
 if [ ! -d "${SH_ROOT}" ]; then
@@ -21,3 +21,5 @@ fi
 if [ ! -f "${SH_ROOT}/${SH_FILENAME}" ]; then
     echo 'export KWIN_DRM_USE_EGL_STREAMS=1' | sudo tee "${SH_ROOT}/${SH_FILENAME}"
 fi
+
+sudo update-initramfs -u
