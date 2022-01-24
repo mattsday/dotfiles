@@ -81,15 +81,17 @@ configure_pipewire_services() {
         warn Cannot determine if user is root
         return
     fi
-    # Enable pulseaudio and JACK via pipwire
-    if [[ ! -f "${PIPEWIRE_CONFIG_ROOT}"/with-pulseaudio ]]; then
-        _sudo touch "${PIPEWIRE_CONFIG_ROOT}"/with-pulseaudio
-    fi
-    if [[ ! -f "${PIPEWIRE_CONFIG_ROOT}"/with-alsa ]]; then
-        _sudo touch "${PIPEWIRE_CONFIG_ROOT}"/with-alsa
-    fi
-    if [[ ! -f "${PIPEWIRE_CONFIG_ROOT}"/with-jack ]]; then
-        _sudo touch "${PIPEWIRE_CONFIG_ROOT}"/with-jack
+    if [ -d "${PIPEWIRE_CONFIG_ROOT}" ]; then
+        # Enable pulseaudio and JACK via pipwire
+        if [[ ! -f "${PIPEWIRE_CONFIG_ROOT}"/with-pulseaudio ]]; then
+            _sudo touch "${PIPEWIRE_CONFIG_ROOT}"/with-pulseaudio
+        fi
+        if [[ ! -f "${PIPEWIRE_CONFIG_ROOT}"/with-alsa ]]; then
+            _sudo touch "${PIPEWIRE_CONFIG_ROOT}"/with-alsa
+        fi
+        if [[ ! -f "${PIPEWIRE_CONFIG_ROOT}"/with-jack ]]; then
+            _sudo touch "${PIPEWIRE_CONFIG_ROOT}"/with-jack
+        fi
     fi
 
     # Install systemd services
