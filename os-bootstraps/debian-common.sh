@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Set DOTFILES_COMMON so this doesn't get called too much
-[ -n "${DOTFILES_DEBIAN_COMMON}" ] && return
+[[ -n "${DOTFILES_DEBIAN_COMMON}" ]] && return
 DOTFILES_DEBIAN_COMMON=1
 
-if [ -z "${DOTFILES_ROOT}" ]; then
+if [[ -z "${DOTFILES_ROOT}" ]]; then
 	echo >&2 '[Failure]' "Cannot find dotfiles root directory"
 	exit 1
 fi

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ -z "${DOTFILES_ROOT}" ]; then
+if [[ -z "${DOTFILES_ROOT}" ]]; then
 	if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
 		DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
 	elif command -v dirname >/dev/null 2>&1; then
@@ -20,16 +20,16 @@ fi
 install_ports() {
 	# Get version to download
 	OSX_RELEASE="$(sw_vers -productVersion | cut -f 1 -d .)"
-	if [ "${OSX_RELEASE}" = 11 ]; then
+	if [[ "${OSX_RELEASE}" = 11 ]]; then
 		PORTS_URL="https://github.com/macports/macports-base/releases/download/v2.7.1/MacPorts-2.7.1-11-BigSur.pkg"
-	elif [ "${OSX_RELEASE}" = 12 ]; then
+	elif [[ "${OSX_RELEASE}" = 12 ]]; then
 		PORTS_URL="https://github.com/macports/macports-base/releases/download/v2.7.1/MacPorts-2.7.1-12-Monterey.pkg"
 	else
 		error Cannot determine OS X version
 		return
 	fi
 	INSTALL_FILE="/tmp/macports.pkg"
-	if [ -f "${INSTALL_FILE}" ]; then
+	if [[ -f "${INSTALL_FILE}" ]]; then
 		rm "${INSTALL_FILE}" || error Cannot delete "${INSTALL_FILE}"
 	fi
 	curl -s -L -o "${INSTALL_FILE}" "${PORTS_URL}" || error Could not download "${PORTS_URL}"
@@ -39,16 +39,16 @@ install_ports() {
 
 configure_ports() {
 	xcode-select --install 2>/dev/null
-	if [ ! -x /opt/local/bin/port ]; then
+	if [[ ! -x /opt/local/bin/port ]]; then
 		install_ports
-		if [ ! -x /opt/local/bin/port ]; then
+		if [[ ! -x /opt/local/bin/port ]]; then
 			fail "Could not install MacPorts - do it manually - https://www.macports.org/install.php"
 			return 1
 		fi
 	fi
 	PORTS=(gawk grep shellcheck coreutils bash htop gsed gnutar multimarkdown jq findutils tmux wget ffmpeg youtube-dl watch)
 	for port in "${PORTS[@]}"; do
-		if [ ! "$(/opt/local/bin/port -q installed "${port}" | wc -l)" -gt 0 ]; then
+		if [[ ! "$(/opt/local/bin/port -q installed "${port}" | wc -l)" -gt 0 ]]; then
 			PORTS_INSTALL+=("${port}")
 		fi
 	done
@@ -60,7 +60,7 @@ configure_ports() {
 
 configure_git() {
 	# Store git passwords in keychain
-	if command -v git >/dev/null 2>&1 && [ "$(git config --global --get credential.helper)" != osxkeychain ]; then
+	if command -v git >/dev/null 2>&1 && [[ "$(git config --global --get credential.helper)" != osxkeychain ]]; then
 		info Configuring git to use keychain
 		git config --global credential.helper osxkeychain
 	fi
@@ -68,16 +68,16 @@ configure_git() {
 
 configure_fonts() {
 	# install jetbrains mono
-	if [ -f jetbrains-mono-font.sh ]; then
+	if [[ -f jetbrains-mono-font.sh ]]; then
 		./jetbrains-mono-font.sh
-	elif [ -f ./os-bootstraps/jetbrains-mono-font.sh ]; then
+	elif [[ -f ./os-bootstraps/jetbrains-mono-font.sh ]]; then
 		./os-bootstraps/jetbrains-mono-font.sh
 	fi
 }
 
 configure_sudo() {
 	# passwordless sudo
-	if [ ! -f /etc/sudoers.d/nopasswd-"${USER}" ]; then
+	if [[ ! -f /etc/sudoers.d/nopasswd-"${USER}" ]]; then
 		info Configuring passwordless sudo
 		echo "${USER}"' ALL=(ALL:ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/nopasswd-"${USER}"
 	fi
@@ -85,7 +85,7 @@ configure_sudo() {
 
 main() {
 	# If being called from update, don't autorun
-	if [ -n "${_UPDATE_MACPORTS}" ]; then
+	if [[ -n "${_UPDATE_MACPORTS}" ]]; then
 		return
 	fi
 	# Only run on a mac

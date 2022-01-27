@@ -1,7 +1,8 @@
 #!/bin/bash
 # Sets up syncthing - currently Debian-based systems only, but could work for others in the future
+# shellcheck disable=SC2312
 
-if [ -z "${DOTFILES_ROOT}" ]; then
+if [[ -z "${DOTFILES_ROOT}" ]]; then
     if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
         DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
     elif command -v dirname >/dev/null 2>&1; then
@@ -21,7 +22,7 @@ fi
 # Load Debian common functions (from common.sh)
 load_debian_common
 
-if [ ! -x /usr/bin/systemctl ] || ! systemctl status --user >/dev/null 2>&1; then
+if [[ ! -x /usr/bin/systemctl ]] || ! systemctl status --user >/dev/null 2>&1; then
     error Cannot setup syncthing without systemd
     exit
 fi
@@ -39,7 +40,7 @@ install_syncthing() {
 configure_syncthing_service() {
     # Only enable syncthing as a non-root user
     if command -v id >/dev/null 2>&1; then
-        if [ "$(id -u)" = 0 ]; then
+        if [[ "$(id -u)" = 0 ]]; then
             return
         fi
     else

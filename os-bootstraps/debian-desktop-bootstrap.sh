@@ -2,7 +2,7 @@
 # Generic bootstrapping for any debian-derived desktop (e.g. Ubuntu, Neon, Rodete, ...)
 #shellcheck disable=SC1090
 
-if [ -z "${DOTFILES_ROOT}" ]; then
+if [[ -z "${DOTFILES_ROOT}" ]]; then
   if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
     DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
   elif command -v dirname >/dev/null 2>&1; then

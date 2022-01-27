@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ -z "${DOTFILES_ROOT}" ]; then
+if [[ -z "${DOTFILES_ROOT}" ]]; then
     if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
         DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
     elif command -v dirname >/dev/null 2>&1; then
@@ -52,7 +52,7 @@ fi
 # Check if sudo is installed
 if [[ ! -x /usr/bin/sudo ]]; then
 	if command -v id >/dev/null 2>&1; then
-		if [ "$(id -u)" = 0 ]; then
+		if [[ "$(id -u)" = 0 ]]; then
 			info Installing sudo
 			${package_mgr} install -y sudo >/dev/null
 		else

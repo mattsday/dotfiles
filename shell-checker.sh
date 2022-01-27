@@ -3,7 +3,7 @@
 
 do_shellcheck() {
     echo Shellchecking "$1"
-    shellcheck -o all -e SC2154,SC2034,SC1090,SC1091 "$1"
+    shellcheck -o all -e SC2154,SC2034,SC1090,SC1091,SC2312 "$1"
 }
 
 if ! command -v shellcheck >/dev/null 2>&1; then

@@ -1,7 +1,7 @@
 #!/bin/bash
-#shellcheck disable=SC1090
+#shellcheck disable=SC1090,SC2312
 
-if [ -z "${DOTFILES_ROOT}" ]; then
+if [[ -z "${DOTFILES_ROOT}" ]]; then
     if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
         DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
     elif command -v dirname >/dev/null 2>&1; then
@@ -49,9 +49,9 @@ install_spotify() {
     KEY_NAME=/usr/share/keyrings/spotify-archive-keyring-5E3C45D7B312C643.gpg
     APT_SOURCE_FILE=/etc/apt/sources.list.d/spotify.list
 
-    if [ ! -f "${KEY_NAME}" ]; then
+    if [[ ! -f "${KEY_NAME}" ]]; then
         curl -fsSL "${KEY_URL}" | sudo gpg --dearmor -o "${KEY_NAME}"
-        if [ -f "${APT_SOURCE_FILE}" ]; then
+        if [[ -f "${APT_SOURCE_FILE}" ]]; then
             sudo rm "${APT_SOURCE_FILE}"
         fi
         echo "deb [arch=amd64 signed-by=${KEY_NAME}] http://repository.spotify.com stable non-free" | sudo tee "${APT_SOURCE_FILE}" >/dev/null
@@ -62,8 +62,8 @@ install_spotify() {
 # Install pipewire PPA for older Ubuntu versions
 pipewire_ppa() {
     UBUNTU_VERSION="$(grep UBUNTU_CODENAME /etc/os-release | cut -d = -f 2)"
-    if [ "${UBUNTU_VERSION}" = focal ]; then
-        if [ ! -f /etc/apt/sources.list.d/pipewire-debian-ubuntu-pipewire-upstream-"${UBUNTU_VERSION}".list ]; then
+    if [[ "${UBUNTU_VERSION}" = focal ]]; then
+        if [[ ! -f /etc/apt/sources.list.d/pipewire-debian-ubuntu-pipewire-upstream-"${UBUNTU_VERSION}".list ]]; then
             info Adding Pipewire PPA
             sudo add-apt-repository -y ppa:pipewire-debian/pipewire-upstream >/dev/null
         fi

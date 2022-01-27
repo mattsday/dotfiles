@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC2312
 USERS=(
     "media:Media files and folders:994:/sbin/nologin:/srv/media:media"
     "matt:Matt Day:1000:/bin/zsh:/home/matt:media,backups,sudo,docker"
@@ -76,14 +77,14 @@ users() {
 
 install_docker() {
     # Install upstream Docker
-    if [ ! -f /usr/share/keyrings/docker-archive-keyring.gpg ]; then
+    if [[ ! -f /usr/share/keyrings/docker-archive-keyring.gpg ]]; then
         curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
         echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(grep VERSION_CODENAME /etc/os-release | cut -f 2 -d =) stable" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
         DEBIAN_FRONTEND="noninteractive" sudo apt-get update
     fi
     # Set up Docker IPv6 support
-    if [ ! -f /etc/docker/daemon.json ]; then
-        if [ ! -d /etc/docker ]; then
+    if [[ ! -f /etc/docker/daemon.json ]]; then
+        if [[ ! -d /etc/docker ]]; then
             mkdir /etc/docker
         fi
         cat <<'EOF' | sudo tee /etc/docker/daemon.json >/dev/null
@@ -161,7 +162,7 @@ install_apt_packages() {
 
 # Set up HPE bundled software
 hpe() {
-    if [ ! -f /usr/share/keyrings/hpe-mcp-archive-keyring.gpg ]; then
+    if [[ ! -f /usr/share/keyrings/hpe-mcp-archive-keyring.gpg ]]; then
         curl -fsSL https://downloads.linux.hpe.com/SDR/hpePublicKey2048_key1.pub | sudo gpg --dearmor -o /usr/share/keyrings/hpe-mcp-archive-keyring.gpg
         echo "deb [arch=amd64 signed-by=/usr/share/keyrings/hpe-mcp-archive-keyring.gpg] http://downloads.linux.hpe.com/SDR/repo/mcp stable/current non-free" | sudo tee /etc/apt/sources.list.d/hpe-mcp.list >/dev/null
         DEBIAN_FRONTEND="noninteractive" sudo apt-get update

@@ -7,7 +7,7 @@ ZIP=/opt/brave/brave-browser.zip
 ICON_DIR="${HOME}"/.local/share/icons/hicolor
 DESKTOP_DIR="${HOME}"/.local/share/applications
 
-if [ -z "${DOTFILES_ROOT}" ]; then
+if [[ -z "${DOTFILES_ROOT}" ]]; then
     if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
         DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
     elif command -v dirname >/dev/null 2>&1; then
@@ -41,9 +41,9 @@ if [[ "${LATEST_VERSION}" = null ]]; then
 fi
 
 # Check existing version to see if we need to run this
-if [ -x "${DEST}/brave" ]; then
+if [[ -x "${DEST}/brave" ]]; then
     INSTALLED="$("${DEST}/brave" --version | cut -d " " -f 3 | cut -d '.' -f '2-')"
-    if [ "${INSTALLED}" = "${LATEST_VERSION}" ] && [ -z "${FORCE}" ]; then
+    if [[ "${INSTALLED}" = "${LATEST_VERSION}" ]] && [[ -z "${FORCE}" ]]; then
         info Brave up to date - version "${LATEST_VERSION}"
         exit 0
     fi
@@ -51,7 +51,7 @@ fi
 
 info Installing or Upgrading Brave Browser to version "${LATEST_VERSION}"
 
-if [ -d "${DEST}" ]; then
+if [[ -d "${DEST}" ]]; then
     # Delete existing installation
     sudo rm -rf "${DEST}" || error "Cannot delete ${DEST}"
 fi
@@ -60,7 +60,7 @@ fi
 sudo mkdir -p "${DEST}" || error "Cannot create dir ${DEST}"
 sudo chown -R "${USER}" "${DEST}" || warn "Failed to take ownership of ${DEST} as ${USER}"
 
-if [ -f "${ZIP}" ]; then
+if [[ -f "${ZIP}" ]]; then
     rm "${ZIP}" || error Cannot delete "${ZIP}"
 fi
 
@@ -70,26 +70,26 @@ curl -s -L -o "${ZIP}" "${URL}" || error Could not download "${URL}"
 
 unzip -qq -od "${DEST}" "${ZIP}" || error Could not extract "${ZIP}"
 
-if [ ! -d "${ICON_DIR}" ]; then
+if [[ ! -d "${ICON_DIR}" ]]; then
     mkdir -p "${ICON_DIR}" || warn "Could not create ${ICON_DIR}"
 fi
 
 for i in "${DEST}"/product_logo_*.png; do
     size="$(echo "${i}" | cut -d . -f 1 | cut -d _ -f 3)"
     icon_dest="${ICON_DIR}/${size}x${size}/apps"
-    if [ ! -d "${icon_dest}" ]; then
+    if [[ ! -d "${icon_dest}" ]]; then
         mkdir -p "${icon_dest}" || warn "Could not create ${icon_dest}"
     fi
-    if [ ! -f "${icon_dest}/brave-browser.png" ]; then
+    if [[ ! -f "${icon_dest}/brave-browser.png" ]]; then
         cp "${i}" "${icon_dest}/brave-browser.png" || warn "Could not move ${i} to ${icon_dest}"
     fi
 done
 
-if [ ! -d "${DESKTOP_DIR}" ]; then
+if [[ ! -d "${DESKTOP_DIR}" ]]; then
     mkdir -p "${DESKTOP_DIR}" || warn "Could not create ${DESKTOP_DIR}"
 fi
 
-if [ ! -f "${DESKTOP_DIR}/brave-browser.desktop" ]; then
+if [[ ! -f "${DESKTOP_DIR}/brave-browser.desktop" ]]; then
     cat <<EOF | tee "${DESKTOP_DIR}/brave-browser.desktop" >/dev/null
 [Desktop Entry]
 Version=1.0

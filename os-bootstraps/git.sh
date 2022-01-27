@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ -z "${DOTFILES_ROOT}" ]; then
+if [[ -z "${DOTFILES_ROOT}" ]]; then
     if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
         DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
     elif command -v dirname >/dev/null 2>&1; then
@@ -14,13 +14,13 @@ fi
 # Load common settings and functions
 . "${DOTFILES_ROOT}/common.sh"
 
-[ -z "${GIT_USER}" ] && GIT_USER="Matt Day"
-[ -z "${GIT_EMAIL}" ] && GIT_EMAIL="mattsday@gmail.com"
+[[ -z "${GIT_USER}" ]] && GIT_USER="Matt Day"
+[[ -z "${GIT_EMAIL}" ]] && GIT_EMAIL="mattsday@gmail.com"
 
 if ! command -v git >/dev/null 2>&1; then
     error Git not installed
 fi
-if [ "$(git config --global --get 'pull.rebase')" != true ]; then
+if [[ "$(git config --global --get 'pull.rebase')" != true ]]; then
     info Setting git config --global pull.rebase to merge
     git config --global 'pull.rebase' true
 fi

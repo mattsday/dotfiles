@@ -1,7 +1,7 @@
 #!/bin/bash
 #shellcheck disable=SC1091
 
-if [ -z "${DOTFILES_ROOT}" ]; then
+if [[ -z "${DOTFILES_ROOT}" ]]; then
     if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
         DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
     elif command -v dirname >/dev/null 2>&1; then
@@ -35,7 +35,7 @@ fi
 # Check if sudo is installed
 if [[ ! -x /usr/bin/sudo ]]; then
 	if command -v id >/dev/null 2>&1; then
-		if [ "$(id -u)" = 0 ]; then
+		if [[ "$(id -u)" = 0 ]]; then
 			echo Installing sudo
 			zypper --non-interactive install sudo >/dev/null
 		else
@@ -43,7 +43,7 @@ if [[ ! -x /usr/bin/sudo ]]; then
 			exit
 		fi
 	fi
-elif sudo [ ! -f /etc/sudoers.d/nopasswd-"${USER}" ]; then
+elif sudo [[ ! -f /etc/sudoers.d/nopasswd-"${USER}" ]]; then
 	echo "${USER}"' ALL=(ALL:ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/nopasswd-"${USER}" >/dev/null
 fi
 
@@ -51,7 +51,7 @@ fi
 export _suse_bootstrap_mattsday=1
 # Are we running a desktop?
 if rpm -q plasma5-desktop >/dev/null 2>&1 || rpm -q plasma6-desktop >/dev/null 2>&1; then
-	if [ -f ./os-bootstraps/suse-desktop-bootstrap.sh ]; then
+	if [[ -f ./os-bootstraps/suse-desktop-bootstrap.sh ]]; then
 		echo Detected Desktop
 		. ./os-bootstraps/suse-desktop-bootstrap.sh
 	fi
@@ -86,7 +86,7 @@ for package in "${RPM_PACKAGES[@]}"; do
 		INSTALL_PACKAGES+=("${package}")
 	fi
 done
-if [ -n "${INSTALL_PACKAGES[*]}" ]; then
+if [[ -n "${INSTALL_PACKAGES[*]}" ]]; then
 	info Installing packages "${INSTALL_PACKAGES[@]}"
 	sudo zypper -n install "${INSTALL_PACKAGES[@]}" >/dev/null || error "Failed installing packages"
 fi
@@ -100,7 +100,7 @@ if command -v flatpak >/dev/null 2>&1; then
 			INSTALL_PACKAGES+=("${package}")
 		fi
 	done
-	if [ -n "${INSTALL_PACKAGES[*]}" ]; then
+	if [[ -n "${INSTALL_PACKAGES[*]}" ]]; then
 		info Installing packages "${INSTALL_PACKAGES[@]}"
 		sudo flatpak -y install "${INSTALL_PACKAGES[@]}" >/dev/null || error "Failed installing packages"
 	fi
@@ -110,7 +110,7 @@ if [[ -x "${HOME}/.update_aliases" ]]; then
 	"${HOME}/.update_aliases" force
 fi
 
-if [ -n "${CALLBACKS}" ]; then
+if [[ -n "${CALLBACKS}" ]]; then
 	echo Running platform specific callbacks
 	for callback in "${CALLBACKS[@]}"; do
 		"${callback}"
