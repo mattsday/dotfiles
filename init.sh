@@ -136,8 +136,8 @@ if command -v pipewire-pulse >/dev/null 2>&1; then
 	ln -fs "${DOTFILES_ROOT}/dotfiles/special/pipewire/${PIPEWIRE_CONFIG_BLUEZ}" "${PIPEWIRE_CONFIG_BLUEZ_PATH}"
 
 	wireplumber_verb=Updating
-	if [ ! -d "${WIREPLUMBER_CONFIG_DIR}" ]; then
-		mkdir -p "${WIREPLUMBER_CONFIG_DIR}"
+	if [ ! -d "${WIREPLUMBER_CONFIG_ALSA_DIR}" ]; then
+		mkdir -p "${WIREPLUMBER_CONFIG_ALSA_DIR}"
 		wireplumber_verb=Creating
 	elif [ -f "${WIREPLUMBER_CONFIG_ALSA_PATH}" ]; then
 		if [ ! -L "${WIREPLUMBER_CONFIG_ALSA_PATH}" ]; then
@@ -150,6 +150,22 @@ if command -v pipewire-pulse >/dev/null 2>&1; then
 	fi
 	info "${wireplumber_verb} ${WIREPLUMBER_CONFIG_ALSA_PATH}"
 	ln -fs "${DOTFILES_ROOT}/dotfiles/special/pipewire/${WIREPLUMBER_CONFIG_ALSA}" "${WIREPLUMBER_CONFIG_ALSA_PATH}"
+
+	wireplumber_verb=Updating
+	if [ ! -d "${WIREPLUMBER_CONFIG_BLUETOOTH_DIR}" ]; then
+		mkdir -p "${WIREPLUMBER_CONFIG_BLUETOOTH_DIR}"
+		wireplumber_verb=Creating
+	elif [ -f "${WIREPLUMBER_CONFIG_BLUETOOTH_PATH}" ]; then
+		if [ ! -L "${WIREPLUMBER_CONFIG_BLUETOOTH_PATH}" ]; then
+			info Backing up local wireplumber config to "${DOTFILES_ROOT}/backup/local-${WIREPLUMBER_CONFIG_BLUETOOTH}"
+			mv -f "${WIREPLUMBER_CONFIG_BLUETOOTH_PATH}" "${DOTFILES_ROOT}/backup/local-${WIREPLUMBER_CONFIG_BLUETOOTH}"
+			wireplumber_verb=Creating
+		fi
+	else
+		wireplumber_verb=Creating
+	fi
+	info "${wireplumber_verb} ${WIREPLUMBER_CONFIG_BLUETOOTH_PATH}"
+	ln -fs "${DOTFILES_ROOT}/dotfiles/special/pipewire/${WIREPLUMBER_CONFIG_BLUETOOTH}" "${WIREPLUMBER_CONFIG_BLUETOOTH_PATH}"
 fi
 
 VS_SETTINGS="${VS_DIR}/settings.json"
