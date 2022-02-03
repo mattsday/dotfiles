@@ -90,8 +90,25 @@ configure_baloo() {
     fi
 }
 
+# Disable discover notifications - it's super annoying
+configure_discover() {
+    DISCOVER_NOTIFIER="${HOME}/.config/autostart/org.kde.discover.notifier.desktop"
+    if [[ ! -f "${DISCOVER_NOTIFIER}" ]]; then
+        if [[ ! -d "${HOME}/.config/autostart" ]]; then
+            mkdir -p "${HOME}/.config/autostart" || fail Could not create "${HOME}/.config/autostart"
+            return
+        fi
+        if [[ -f /etc/xdg/autostart/org.kde.discover.notifier.desktop ]]; then
+            info Disabling Discover notifications
+            cp /etc/xdg/autostart/org.kde.discover.notifier.desktop "${DISCOVER_NOTIFIER}" || fail Could not create "${DISCOVER_NOTIFIER}"
+            echo 'Hidden=true' | tee -a "${DISCOVER_NOTIFIER}" >/dev/null
+        fi
+    fi
+}
+
 main() {
     configure_baloo
+    configure_discover
 }
 
 main
