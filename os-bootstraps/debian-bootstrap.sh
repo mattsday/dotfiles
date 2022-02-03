@@ -125,6 +125,18 @@ if [[ -n "${CALLBACKS}" ]]; then
 	done
 fi
 
+# Setup the keyboard
+if [[ "${NO_SUDO}" != 1 ]]; then
+	if [[ -f /etc/default/keyboard ]]; then
+		# Check if the layout is UK
+		if ! grep XKBLAYOUT=\"gb\" /etc/default/keyboard >/dev/null; then
+			info Updating keyboard layout to UK Layout
+			_sudo sed -i 's/XKBLAYOUT=.*/XKBLAYOUT=\"gb\"/' /etc/default/keyboard
+			_sudo service keyboard-setup restart
+		fi
+	fi
+fi
+
 #shellcheck disable=SC2154
 if [[ -z "${_bootstrap_mattsday}" ]] && [[ -x "${HOME}/.update_aliases" ]]; then
 	"${HOME}/.update_aliases" force
