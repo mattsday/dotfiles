@@ -83,6 +83,12 @@ configure_sudo() {
 	fi
 }
 
+zsh() {
+  if [[ -x /bin/zsh ]] && [[ -f "${OS_BOOTSTRAP_ROOT}/zsh.sh" ]]; then
+    "${OS_BOOTSTRAP_ROOT}/zsh.sh"
+  fi
+}
+
 main() {
 	# If being called from update, don't autorun
 	if [[ -n "${_UPDATE_MACPORTS}" ]]; then
@@ -100,6 +106,7 @@ main() {
 	configure_git
 	configure_fonts
 	configure_sudo
+	zsh
 }
 
 main

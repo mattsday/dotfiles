@@ -87,6 +87,12 @@ emoji() {
   fi
 }
 
+zsh() {
+  if [[ -x /bin/zsh ]] && [[ -f "${OS_BOOTSTRAP_ROOT}/zsh.sh" ]]; then
+    "${OS_BOOTSTRAP_ROOT}/zsh.sh"
+  fi
+}
+
 main() {
   CALLBACKS+=(
     emoji
@@ -95,6 +101,7 @@ main() {
     baloo_config
     pipewire
     syncthing
+    zsh
   )
   get_apt_packages
 

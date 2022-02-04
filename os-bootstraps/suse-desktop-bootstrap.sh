@@ -141,6 +141,12 @@ baloo_config() {
     fi
 }
 
+zsh() {
+  if [[ -x /bin/zsh ]] && [[ -f "${OS_BOOTSTRAP_ROOT}/zsh.sh" ]]; then
+    "${OS_BOOTSTRAP_ROOT}/zsh.sh"
+  fi
+}
+
 main() {
     CALLBACKS+=(
         install_chrome
@@ -149,6 +155,7 @@ main() {
         configure_fonts
         ssh_configuration
         baloo_config
+        zsh
     )
     get_rpm_packages
     get_flatpak_packages
