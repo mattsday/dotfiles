@@ -62,7 +62,7 @@ install_spotify() {
 # Install pipewire PPA for older Ubuntu versions
 pipewire_ppa() {
     UBUNTU_VERSION="$(grep UBUNTU_CODENAME /etc/os-release | cut -d = -f 2)"
-    if [[ "${UBUNTU_VERSION}" = focal ]]; then
+    if [[ "${UBUNTU_VERSION}" = focal ]] || [[ "${UBUNTU_VERSION}" = impish ]]; then
         if [[ ! -f /etc/apt/sources.list.d/pipewire-debian-ubuntu-pipewire-upstream-"${UBUNTU_VERSION}".list ]]; then
             info Adding Pipewire PPA
             sudo add-apt-repository -y ppa:pipewire-debian/pipewire-upstream >/dev/null
@@ -70,11 +70,31 @@ pipewire_ppa() {
     fi
 }
 
+vs_code() {
+    if ! command -v code >/dev/null 2>&1; then
+        info Setting up VS Code
+        wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor >packages.microsoft.gpg
+        sudo install -o root -g root -m 644 packages.microsoft.gpg /etc/apt/trusted.gpg.d/
+        sudo sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
+        rm -f packages.microsoft.gpg
+        _apt update >/dev/null
+        APT_PACKAGES+=(code)
+    fi
+}
+
+docker() {
+    if [[ -f "${OS_BOOTSTRAP_ROOT}/docker.sh" ]]; then
+        "${OS_BOOTSTRAP_ROOT}/docker.sh"
+    fi
+}
+
 main() {
     CALLBACKS+=(
+        vs_code
         install_apt_packages
         install_spotify
         pipewire_ppa
+        docker
     )
     get_apt_packages
     get_snap_packages

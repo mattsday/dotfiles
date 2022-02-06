@@ -1,5 +1,23 @@
 #!/bin/bash
 # shellcheck disable=SC2312
+
+if [[ -z "${DOTFILES_ROOT}" ]]; then
+    if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
+        DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
+    elif command -v dirname >/dev/null 2>&1; then
+        DOTFILES_ROOT="$(
+            cd "$(dirname "$0")" || return
+            pwd
+        )"
+    else
+        echo >&2 '[Error] cannot determine root (try running from working directory)'
+        exit 1
+    fi
+fi
+
+# Load common settings and functions
+. "${DOTFILES_ROOT}/common.sh"
+
 USERS=(
     "media:Media files and folders:994:/sbin/nologin:/srv/media:media"
     "matt:Matt Day:1000:/bin/zsh:/home/matt:media,backups,sudo,docker"
@@ -27,21 +45,8 @@ CONTAINER_HOME=/opt/containerised-apps
 
 CONTAINERS=(nzbget plex sonarr syncthing transmission unifi)
 
-fail() {
-    echo >&2 '[Failure]' "$@"
-    return 1
-}
-
-warn() {
-    echo >&2 '[Warning]' "$@"
-}
-
-info() {
-    echo "$@"
-}
-
 add_group() {
-     if ! getent group "$1" >/dev/null 2>&1; then
+    if ! getent group "$1" >/dev/null 2>&1; then
         info Adding group "$1" with GID "$2"
         groupadd -g "$2" "$1"
     fi
@@ -76,11 +81,8 @@ users() {
 }
 
 install_docker() {
-    # Install upstream Docker
-    if [[ ! -f /usr/share/keyrings/docker-archive-keyring.gpg ]]; then
-        curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-        echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(grep VERSION_CODENAME /etc/os-release | cut -f 2 -d =) stable" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
-        DEBIAN_FRONTEND="noninteractive" sudo apt-get update
+    if [[ -f "${OS_BOOTSTRAP_ROOT}/docker.sh" ]]; then
+        "${OS_BOOTSTRAP_ROOT}/docker.sh"
     fi
     # Set up Docker IPv6 support
     if [[ ! -f /etc/docker/daemon.json ]]; then
@@ -95,13 +97,8 @@ install_docker() {
   "ip6tables": true
 }
 EOF
-    # Restart Docker
-    systemctl restart docker
-    fi
-
-    if ! dpkg-query -W -f='${Status}' "docker-ce" 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
-        APT_PACKAGES=(docker-ce docker-ce-cli containerd.io)
-        install_apt_packages
+        # Restart Docker
+        systemctl restart docker
         info Sleeping 30 seconds to allow Docker Daemon to start
         sleep 30
     fi
@@ -130,7 +127,6 @@ install_docker_compose() {
         sudo curl -L "https://github.com/docker/compose/releases/download/${CURRENT_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     fi
 
-
 }
 
 containers() {
@@ -147,19 +143,6 @@ containers() {
 
 }
 
-install_apt_packages() {
-    INSTALL_PACKAGES=()
-    for package in "${APT_PACKAGES[@]}"; do
-        if ! dpkg-query -W -f='${Status}' "${package}" 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
-            INSTALL_PACKAGES+=("${package}")
-        fi
-    done
-    if [[ -n "${INSTALL_PACKAGES[*]}" ]]; then
-        info Installing packages "${INSTALL_PACKAGES[@]}"
-        DEBIAN_FRONTEND="noninteractive" sudo apt-get -y install "${INSTALL_PACKAGES[@]}" >/dev/null || fail "Failed installing packages"
-    fi
-}
-
 # Set up HPE bundled software
 hpe() {
     if [[ ! -f /usr/share/keyrings/hpe-mcp-archive-keyring.gpg ]]; then
@@ -172,9 +155,9 @@ hpe() {
 }
 
 syncthing() {
-  if [[ -f "${OS_BOOTSTRAP_ROOT}"/syncthing.sh ]]; then
-    "${OS_BOOTSTRAP_ROOT}"/syncthing.sh
-  fi
+    if [[ -f "${OS_BOOTSTRAP_ROOT}"/syncthing.sh ]]; then
+        "${OS_BOOTSTRAP_ROOT}"/syncthing.sh
+    fi
 }
 
 sensors() {
