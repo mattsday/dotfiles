@@ -2,8 +2,8 @@
 # Attempts to fast-forward pipewire fixes in case the current distribution's is broken (as was the case for 0.3.42)
 
 # Desired versions to bump to
-PW_VERSION=0.3.44-1
-WP_VERSION=0.4.7-1
+PW_VERSION=0.3.45-1
+WP_VERSION=0.4.8-2
 
 # What to upgrade
 PW_UPGRADE=1
@@ -64,6 +64,9 @@ main() {
         done
     fi
 
-    sudo dpkg -i "${FILES[@]}"
+    if sudo dpkg -i "${FILES[@]}"; then
+        systemctl --user daemon-reload
+        systemctl --user restart pipewire pipewire-pulse wireplumber
+    fi
 }
 main
