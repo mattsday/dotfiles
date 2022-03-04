@@ -108,5 +108,5 @@ for url in ${KUBECTX_FISH_COMPLETION}; do
     if [ -f "${filename}" ]; then
         rm "${filename}" || warn Cannot remove "${filename}"
     fi
-    curl -sL --fail "${url}" | sudo tee "${filename}" >/dev/null || error Download failed for "${url}"
+    curl -sL --fail "${url}" | tee "${filename}" >/dev/null || error Download failed for "${url}"
 done
