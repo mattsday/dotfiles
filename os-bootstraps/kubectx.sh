@@ -14,7 +14,7 @@ fi
 # Load common settings and functions
 . "${DOTFILES_ROOT}/common.sh"
 
-[ -z "${KUBECTX_VERSION}" ] && KUBECTX_VERSION=v0.9.3
+[ -z "${KUBECTX_VERSION}" ] && KUBECTX_VERSION=v0.9.4
 [ -z "${KUBECTX_ARCH}" ] && KUBECTX_ARCH=linux_x86_64
 [ -z "${TMP_DIR}" ] && TMP_DIR=/tmp
 [ -z "${KUBECTX_PREFIX}" ] && KUBECTX_PREFIX=/usr/local/bin
