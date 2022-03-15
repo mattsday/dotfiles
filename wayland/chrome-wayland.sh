@@ -26,5 +26,3 @@ for shortcut in "${CHROME_SHORTCUTS[@]}"; do
         sed -i -E 's|Exec=(.*?)|Exec=\1 --ozone-platform=wayland|g' "${DESTINATION_LOCATION}/${shortcut}"
     fi
 done
-
-#--ozone-platform=wayland
