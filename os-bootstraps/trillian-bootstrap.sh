@@ -24,6 +24,8 @@ USERS=(
     "nicky:Nicola Purves:1001:/bin/bash:/home/nicky:media,backups"
     "plex:Plex Media Server:997:/sbin/nologin:/opt/containerised-apps/plex/config:media"
     "sonarr:Sonarr:996:/sbin/nologin:/opt/containerised-apps/sonarr/config:media"
+    "bazarr:Bonarr:982:/sbin/nologin:/opt/containerised-apps/bazarr/config:media"
+    "radarr:Ronarr:981:/sbin/nologin:/opt/containerised-apps/ronarr/config:media"
     "nzbget:NZBGet:995:/sbin/nologin:/opt/containerised-apps/nzbget/config:media"
     "transmission:Transmission:993:/sbin/nologin:/opt/containerised-apps/transmission/config:media"
     "unifi:Unifi Controller:992:/sbin/nologin:/opt/containerised-apps/unifi/config:unifi"
@@ -36,7 +38,6 @@ USERS=(
     "gitlab:GitLab:985:/sbin/nologin:/opt/containerised-apps/gitlab/config:gitlab"
     "nginx:Nginx:984:/sbin/nologin:/opt/containerised-apps/nginx/config:nginx"
     "pi-hole:Nginx:983:/sbin/nologin:/opt/containerised-apps/pi-hole/config:pi-hole"
-
 )
 
 APT_PACKAGES=(apt-transport-https ca-certificates curl gnupg avahi-daemon avahi-utils ethtool build-essential cmake lm-sensors)
