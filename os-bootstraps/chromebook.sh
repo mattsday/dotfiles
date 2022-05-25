@@ -68,10 +68,34 @@ EOF
 }
 
 install_gcp_sdk() {
-  info Installing GCP SDK
+  # Don't run this if we can't run as root
+  if [[ "${NO_SUDO}" = 1 ]]; then
+    return
+  fi
+  if ! command -v gcloud >/dev/null 2>&1; then
+    info Setting up GCP SDK
+    # Install apt pre-reqs
+    APT_PACKAGES_BACKUP="${APT_PACKAGES}"
+    _apt update >/dev/null
+    APT_PACKAGES=(apt-transport-https ca-certificates gnupg)
+    install_apt_packages
+    APT_PACKAGES="${APT_PACKAGES_BACKUP}"
+    curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | _sudo tee /usr/share/keyrings/cloud.google.gpg >/dev/null
+    echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | _sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list >/dev/null
+    _apt update >/dev/null
+    APT_PACKAGES_BACKUP="${APT_PACKAGES}"
+    APT_PACKAGES=(google-cloud-sdk google-cloud-sdk-anthos-auth google-cloud-sdk-gke-gcloud-auth-plugin google-cloud-cli)
+    APT_PACKAGES+=(google-cloud-sdk-kpt google-cloud-sdk-skaffold kubectl)
+    install_apt_packages
+    APT_PACKAGES="${APT_PACKAGES_BACKUP}"
+  fi
 }
 
 install_vs_code() {
+  # Don't run this if we can't run as root
+  if [[ "${NO_SUDO}" = 1 ]]; then
+    return
+  fi
   if ! command -v code >/dev/null 2>&1; then
     info Setting up VS Code
     wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor >packages.microsoft.gpg
@@ -80,6 +104,27 @@ install_vs_code() {
     rm -f packages.microsoft.gpg
     _apt update >/dev/null
     APT_PACKAGES+=(code)
+
+  fi
+}
+
+install_spotify() {
+  # Don't run this if we can't run as root
+  if [[ "${NO_SUDO}" = 1 ]]; then
+    return
+  fi
+  # Spotify changes its apt key from time to time; keep it up to date here
+  KEY_URL=https://download.spotify.com/debian/pubkey_5E3C45D7B312C643.gpg
+  KEY_NAME=/usr/share/keyrings/spotify-archive-keyring-5E3C45D7B312C643.gpg
+  APT_SOURCE_FILE=/etc/apt/sources.list.d/spotify.list
+
+  if [[ ! -f "${KEY_NAME}" ]]; then
+    curl -fsSL "${KEY_URL}" | sudo gpg --dearmor -o "${KEY_NAME}"
+    if [[ -f "${APT_SOURCE_FILE}" ]]; then
+      sudo rm "${APT_SOURCE_FILE}"
+    fi
+    echo "deb [arch=amd64 signed-by=${KEY_NAME}] http://repository.spotify.com stable non-free" | sudo tee "${APT_SOURCE_FILE}" >/dev/null
+    _apt update >/dev/null 2>&1 && _apt install -y spotify-client >/dev/null 2>&1
   fi
 }
 
@@ -87,6 +132,7 @@ main() {
   CALLBACKS+=(
     install_vs_code
     install_gcp_sdk
+    install_spotify
     install_kubectx
     setup_ssh_agent
     #install_brave
