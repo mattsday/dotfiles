@@ -81,6 +81,9 @@ export BLOCKSIZE=k
 alias @vim vi=!vim
 export @vim VISUAL='!vim'@EDITOR='!vim'@USE_EDITOR='!vim'
 
+# SSH Agent Plumbing for Chromebooks
+texport @[ -f /dev/.cros_milestone ]@ SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/ssh-agent.socket
+
 # Use less as a pager
 export @less PAGER=less
 

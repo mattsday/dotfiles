@@ -44,6 +44,11 @@ elif [[ "${RELEASE}" = ubuntu ]]; then
 	fi
 fi
 
+if [[ -f /dev/.cros_milestone ]]; then
+    info Detected Chromebook
+    . "${OS_BOOTSTRAP_ROOT}"/chromebook.sh
+fi
+
 # Only run on Debian and derivatives
 if [[ ! -f "/etc/debian_version" ]]; then
 	error Not Debian, stopping
