@@ -222,6 +222,13 @@ EOF
   fi
 }
 
+# Do this or lightdm/sddm will get automatically uninstalled!
+configure_display_manager() {
+  if [[ "$(glinux-config get display_manager)" != manual ]]; then
+    _sudo AUTOMATIC_UPDATE=yes glinux-config set display_manager manual >/dev/null 2>&1
+  fi
+}
+
 main() {
   CALLBACKS+=(
     passwordless_sudo
@@ -233,6 +240,7 @@ main() {
     install_spotify
     configure_printing
     configure_rfkill
+    configure_display_manager
   )
   get_apt_packages
 

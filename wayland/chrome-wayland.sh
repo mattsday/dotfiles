@@ -14,8 +14,8 @@ DESTINATION_LOCATION="${HOME}/.local/share/applications"
 
 for shortcut in "${CHROME_SHORTCUTS[@]}"; do
     for location in "${APP_LOCATIONS[@]}"; do
-        if [ -f "${location}/${shortcut}" ]; then
-            if [ ! -f "${DESTINATION_LOCATION}/${shortcut}" ]; then
+        if [[ -f "${location}/${shortcut}" ]]; then
+            if [[ ! -f "${DESTINATION_LOCATION}/${shortcut}" ]]; then
                 cp "${location}/${shortcut}" "${DESTINATION_LOCATION}/${shortcut}" || exit
                 echo Local missing
             fi
