@@ -25,10 +25,10 @@ get_apt_packages() {
   APT_PACKAGES+=(golang)
 }
 
-install_gcp_sdk() {
-  # TODO
-  APT_PACKAGES+=(google-cloud-sdk google-cloud-sdk-anthos-auth google-cloud-sdk-gke-gcloud-auth-plugin)
-  APT_PACKAGES+=(google-cloud-sdk-kpt google-cloud-sdk-skaffold kubectl openjdk-8-jdk openjdk-11-jdk)
+syncthing() {
+  if [[ -f "${OS_BOOTSTRAP_ROOT}"/syncthing.sh ]]; then
+    "${OS_BOOTSTRAP_ROOT}"/syncthing.sh
+  fi
 }
 
 install_kubectx() {
@@ -135,6 +135,7 @@ main() {
     install_spotify
     install_kubectx
     setup_ssh_agent
+    syncthing
     #install_brave
   )
   get_apt_packages
