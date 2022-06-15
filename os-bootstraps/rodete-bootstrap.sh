@@ -225,6 +225,7 @@ EOF
 # Do this or lightdm/sddm will get automatically uninstalled!
 configure_display_manager() {
   if [[ "$(glinux-config get display_manager)" != manual ]]; then
+    info Updating Rodete display manager configuration
     _sudo AUTOMATIC_UPDATE=yes glinux-config set display_manager manual >/dev/null 2>&1
   fi
 }
