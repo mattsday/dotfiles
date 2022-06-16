@@ -75,19 +75,17 @@ install_gcp_sdk() {
   if ! command -v gcloud >/dev/null 2>&1; then
     info Setting up GCP SDK
     # Install apt pre-reqs
-    APT_PACKAGES_BACKUP=("${APT_PACKAGES[%]}")
+    APT_PACKAGES_BACKUP=("${APT_PACKAGES[@]}")
     _apt update >/dev/null
     APT_PACKAGES=(apt-transport-https ca-certificates gnupg)
     install_apt_packages
-    APT_PACKAGES=("${APT_PACKAGES_BACKUP[%]}")
     curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | _sudo tee /usr/share/keyrings/cloud.google.gpg >/dev/null
     echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | _sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list >/dev/null
     _apt update >/dev/null
-    APT_PACKAGES_BACKUP=("${APT_PACKAGES[%]}")
     APT_PACKAGES=(google-cloud-sdk google-cloud-sdk-anthos-auth google-cloud-sdk-gke-gcloud-auth-plugin google-cloud-cli)
     APT_PACKAGES+=(google-cloud-sdk-kpt google-cloud-sdk-skaffold kubectl)
     install_apt_packages
-    APT_PACKAGES=("${APT_PACKAGES_BACKUP[%]}")
+    APT_PACKAGES=("${APT_PACKAGES_BACKUP[@]}")
   fi
 }
 
@@ -100,10 +98,13 @@ install_vs_code() {
     info Setting up VS Code
     wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor >packages.microsoft.gpg
     _sudo install -o root -g root -m 644 packages.microsoft.gpg /etc/apt/trusted.gpg.d/
-    _sudo sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
+    echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" | _sudo tee '/etc/apt/sources.list.d/vscode.list' >/dev/null
     rm -f packages.microsoft.gpg
     _apt update >/dev/null
-    APT_PACKAGES+=(code)
+    APT_PACKAGES_BACKUP=("${APT_PACKAGES[@]}")
+    APT_PACKAGES=(code)
+    install_apt_packages
+    APT_PACKAGES=("${APT_PACKAGES_BACKUP[@]}")
 
   fi
 }
