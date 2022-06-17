@@ -130,6 +130,10 @@ install_spotify() {
 }
 
 dark_theme_linux() {
+  APT_PACKAGES_BACKUP=("${APT_PACKAGES[@]}")
+  APT_PACKAGES=(adwaita-qt gnome-themes-extra)
+  install_apt_packages
+  APT_PACKAGES=("${APT_PACKAGES_BACKUP[@]}")
   DEST_DIR="${HOME}/.config/systemd/user/sommelier-x@0.service.d"
   DEST_FILE="${DEST_DIR}/cros-sommelier-x-override.conf"
   SOURCE_FILE="${DOTFILES_ROOT}"/dotfiles/special/cros/cros-sommelier-x-override.conf

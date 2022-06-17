@@ -77,6 +77,9 @@ export @/usr/local/bin/brew HOMEBREW_NO_ANALYTICS=1
 export @dotnet DOTNET_CLI_TELEMETRY_OPTOUT=1
 export BLOCKSIZE=k
 
+# Use dark theme on a Chromebook
+texport @[ -f /dev/.cros_milestone ]@ GTK_THEME=Adwaita:dark@QT_STYLE_OVERRIDE=Adwaita-Dark
+
 # Use vim instead of vi if it exists
 alias @vim vi=!vim
 export @vim VISUAL='!vim'@EDITOR='!vim'@USE_EDITOR='!vim'
