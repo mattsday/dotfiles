@@ -129,8 +129,35 @@ install_spotify() {
   fi
 }
 
+dark_theme_linux() {
+  DEST_DIR="${HOME}/.config/systemd/user/sommelier-x@0.service.d"
+  DEST_FILE="${DEST_DIR}/cros-sommelier-x-override.conf"
+  SOURCE_FILE="${DOTFILES_ROOT}"/dotfiles/special/cros/cros-sommelier-x-override.conf
+  if [ ! -f "${SOURCE_FILE}" ]; then
+    BASE="$(dirname "${PWD}" | xargs)"
+    SOURCE_FILE="${BASE}"/dotfiles/special/cros/cros-sommelier-x-override.conf
+    if [ ! -f "${SOURCE_FILE}" ]; then
+      error Cannot locate "${SOURCE_FILE}"
+      return
+    fi
+  fi
+
+  if [[ ! -d "${DEST_DIR}" ]]; then
+    mkdir -p "${DEST_DIR}" || error "Cannot create directory ${DEST_DIR}"
+  fi
+
+  # Check if the file is already symlinked, if so we can exit
+  if [[ ! -L "${DEST_FILE}" ]]; then
+    info Setting dark mode for Linux Apps
+    ln -s "${SOURCE_FILE}" "${DEST_FILE}"
+    systemctl --user daemon-reload
+    systemctl --user restart sommelier-x@0.service
+  fi
+}
+
 main() {
   CALLBACKS+=(
+    dark_theme_linux
     install_vs_code
     install_gcp_sdk
     install_spotify
