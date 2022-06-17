@@ -157,6 +157,29 @@ dark_theme_linux() {
     systemctl --user daemon-reload
     systemctl --user restart sommelier-x@0.service
   fi
+
+  DEST_DIR="${HOME}/.config/gtk-3.0"
+  DEST_FILE="${DEST_DIR}/settings.ini"
+  SOURCE_FILE="${DOTFILES_ROOT}"/dotfiles/special/cros/settings.ini
+  if [ ! -f "${SOURCE_FILE}" ]; then
+    BASE="$(dirname "${PWD}" | xargs)"
+    SOURCE_FILE="${BASE}"/dotfiles/special/cros/settings.ini
+    if [ ! -f "${SOURCE_FILE}" ]; then
+      error Cannot locate "${SOURCE_FILE}"
+      return
+    fi
+  fi
+
+  if [[ ! -d "${DEST_DIR}" ]]; then
+    mkdir -p "${DEST_DIR}" || error "Cannot create directory ${DEST_DIR}"
+  fi
+
+  # Check if the file is already symlinked, if so we can exit
+  if [[ ! -L "${DEST_FILE}" ]]; then
+    info Setting up dark GTK theme
+    ln -s "${SOURCE_FILE}" "${DEST_FILE}"
+  fi
+
 }
 
 main() {
