@@ -75,12 +75,7 @@ install_kubectx() {
 }
 
 install_spotify() {
-  # Back up current packages
-  BACKUP_APT_PACKAGES=("${APT_PACKAGES[@]}")
-  # Install build packages immediately
-  APT_PACKAGES=(spotify-client)
-  install_apt_packages
-  APT_PACKAGES=("${BACKUP_APT_PACKAGES[@]}")
+  instant_install_apt_packages spotify-client
 }
 
 # Not doing this for now as it's broken
@@ -141,12 +136,7 @@ install_vs_code() {
   if ! dpkg-query -W -f='${Status}' code 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
     sudo glinux-add-repo -b typescript stable >/dev/null || error Failed to add Typescript repo
     _apt update >/dev/null 2>&1
-    # Back up current packages
-    BACKUP_APT_PACKAGES=("${APT_PACKAGES[@]}")
-    # Install build packages immediately
-    APT_PACKAGES=(code)
-    install_apt_packages
-    APT_PACKAGES=("${BACKUP_APT_PACKAGES[@]}")
+    instant_install_apt_packages code
   fi
   if [[ -f /etc/apt/sources.list.d/vscode.list ]]; then
     sudo rm /etc/apt/sources.list.d/vscode.list

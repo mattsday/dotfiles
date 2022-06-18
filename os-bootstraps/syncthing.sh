@@ -28,12 +28,7 @@ if [[ ! -x /usr/bin/systemctl ]] || ! systemctl status --user >/dev/null 2>&1; t
 fi
 
 install_syncthing() {
-    # Back up current packages
-    BACKUP_APT_PACKAGES=("${APT_PACKAGES[@]}")
-    # Install build packages immediately
-    APT_PACKAGES=(syncthing)
-    install_apt_packages
-    APT_PACKAGES=("${BACKUP_APT_PACKAGES[@]}")
+    instant_install_apt_packages syncthing
 }
 
 # Configure Systemd services for the local user
@@ -55,7 +50,6 @@ configure_syncthing_service() {
 }
 
 main() {
-    info Setting up syncthing
     install_syncthing
     configure_syncthing_service
 }

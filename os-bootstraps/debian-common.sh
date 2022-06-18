@@ -26,3 +26,10 @@ install_apt_packages() {
 		_apt -y install "${INSTALL_PACKAGES[@]}" >/dev/null || fail "Failed installing packages"
 	fi
 }
+
+instant_install_apt_packages() {
+  APT_PACKAGES_BACKUP=("${APT_PACKAGES[@]}")
+  APT_PACKAGES=("${@}")
+  install_apt_packages
+  APT_PACKAGES=("${APT_PACKAGES_BACKUP[@]}")
+}

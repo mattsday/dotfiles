@@ -75,17 +75,13 @@ install_gcp_sdk() {
   if ! command -v gcloud >/dev/null 2>&1; then
     info Setting up GCP SDK
     # Install apt pre-reqs
-    APT_PACKAGES_BACKUP=("${APT_PACKAGES[@]}")
     _apt update >/dev/null
-    APT_PACKAGES=(apt-transport-https ca-certificates gnupg)
-    install_apt_packages
+    instant_install_apt_packages apt-transport-https ca-certificates gnupg
     curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | _sudo tee /usr/share/keyrings/cloud.google.gpg >/dev/null
     echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | _sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list >/dev/null
     _apt update >/dev/null
-    APT_PACKAGES=(google-cloud-sdk google-cloud-sdk-anthos-auth google-cloud-sdk-gke-gcloud-auth-plugin google-cloud-cli)
-    APT_PACKAGES+=(google-cloud-sdk-kpt google-cloud-sdk-skaffold kubectl)
-    install_apt_packages
-    APT_PACKAGES=("${APT_PACKAGES_BACKUP[@]}")
+    instant_install_apt_packages google-cloud-sdk google-cloud-sdk-anthos-auth google-cloud-sdk-gke-gcloud-auth-plugin google-cloud-cli google-cloud-sdk-kpt \
+    google-cloud-sdk-skaffold kubectl
   fi
 }
 
@@ -101,10 +97,7 @@ install_vs_code() {
     echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" | _sudo tee '/etc/apt/sources.list.d/vscode.list' >/dev/null
     rm -f packages.microsoft.gpg
     _apt update >/dev/null
-    APT_PACKAGES_BACKUP=("${APT_PACKAGES[@]}")
-    APT_PACKAGES=(code)
-    install_apt_packages
-    APT_PACKAGES=("${APT_PACKAGES_BACKUP[@]}")
+    instant_install_apt_packages code
 
   fi
 }
@@ -130,20 +123,15 @@ install_spotify() {
 }
 
 dark_theme_linux() {
-  APT_PACKAGES_BACKUP=("${APT_PACKAGES[@]}")
-  APT_PACKAGES=(adwaita-qt gnome-themes-extra)
-  install_apt_packages
-  APT_PACKAGES=("${APT_PACKAGES_BACKUP[@]}")
+  instant_install_apt_packages adwaita-qt gnome-themes-extra
+
   DEST_DIR="${HOME}/.config/systemd/user/sommelier-x@0.service.d"
   DEST_FILE="${DEST_DIR}/cros-sommelier-x-override.conf"
   SOURCE_FILE="${DOTFILES_ROOT}"/dotfiles/special/cros/cros-sommelier-x-override.conf
+
   if [ ! -f "${SOURCE_FILE}" ]; then
-    BASE="$(dirname "${PWD}" | xargs)"
-    SOURCE_FILE="${BASE}"/dotfiles/special/cros/cros-sommelier-x-override.conf
-    if [ ! -f "${SOURCE_FILE}" ]; then
-      error Cannot locate "${SOURCE_FILE}"
-      return
-    fi
+    error Cannot locate "${SOURCE_FILE}"
+    return
   fi
 
   if [[ ! -d "${DEST_DIR}" ]]; then
@@ -161,13 +149,10 @@ dark_theme_linux() {
   DEST_DIR="${HOME}/.config/gtk-3.0"
   DEST_FILE="${DEST_DIR}/settings.ini"
   SOURCE_FILE="${DOTFILES_ROOT}"/dotfiles/special/cros/settings.ini
+
   if [ ! -f "${SOURCE_FILE}" ]; then
-    BASE="$(dirname "${PWD}" | xargs)"
-    SOURCE_FILE="${BASE}"/dotfiles/special/cros/settings.ini
-    if [ ! -f "${SOURCE_FILE}" ]; then
-      error Cannot locate "${SOURCE_FILE}"
-      return
-    fi
+    error Cannot locate "${SOURCE_FILE}"
+    return
   fi
 
   if [[ ! -d "${DEST_DIR}" ]]; then
@@ -179,7 +164,6 @@ dark_theme_linux() {
     info Setting up dark GTK theme
     ln -s "${SOURCE_FILE}" "${DEST_FILE}"
   fi
-
 }
 
 main() {
