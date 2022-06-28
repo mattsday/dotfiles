@@ -5,18 +5,19 @@ if [[ -z "${DOTFILES_ROOT}" ]]; then
     if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
         DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
     elif command -v dirname >/dev/null 2>&1; then
-        DOTFILES_ROOT="$(
-            cd "$(dirname "$0")" || return
-            pwd
-        )"
-    else
+        DOTFILES_ROOT="$(cd "$(dirname "$0")" || return; pwd)"
+	else
         echo >&2 '[Error] cannot determine root (try running from working directory)'
         exit 1
     fi
 fi
 
+
 # Load common settings and functions
 . "${DOTFILES_ROOT}/common.sh"
+
+# Always assume trillian is running debian
+load_debian_common
 
 USERS=(
     "media:Media files and folders:994:/sbin/nologin:/srv/media:media"
@@ -39,13 +40,11 @@ USERS=(
     "nginx:Nginx:984:/sbin/nologin:/opt/containerised-apps/nginx/config:nginx"
     "pi-hole:Pi Hole:983:/sbin/nologin:/opt/containerised-apps/pi-hole/config:pi-hole"
     "weechat:Weechat:980:/sbin/nologin:/opt/containerised-apps/weechat/config:weechat"
+    "harmony:Harmony API:979:/sbin/nologin:/opt/containerised-apps/harmony-api/config:harmony"
+    "wireguard:Wireguard VPN:978:/sbin/nologin:/opt/containerised-apps/wireguard/config:wireguard"
 )
 
 APT_PACKAGES=(apt-transport-https ca-certificates curl gnupg avahi-daemon avahi-utils ethtool build-essential cmake lm-sensors)
-
-CONTAINER_HOME=/opt/containerised-apps
-
-CONTAINERS=(nzbget plex sonarr syncthing transmission unifi)
 
 add_group() {
     if ! getent group "$1" >/dev/null 2>&1; then
@@ -131,20 +130,6 @@ install_docker_compose() {
 
 }
 
-containers() {
-    START_FILE=/opt/containerised-apps/up.sh
-    if [[ -x /usr/local/bin/docker-compose ]]; then
-        if [[ -f "${START_FILE}" ]]; then
-            "${START_FILE}"
-        else
-            warn Cannot find "${START_FILE}"
-        fi
-    else
-        warn Docker compose not found
-    fi
-
-}
-
 # Set up HPE bundled software
 hpe() {
     if [[ ! -f /usr/share/keyrings/hpe-mcp-archive-keyring.gpg ]]; then
@@ -154,12 +139,6 @@ hpe() {
     fi
     APT_PACKAGES=(amsd)
     install_apt_packages
-}
-
-syncthing() {
-    if [[ -f "${OS_BOOTSTRAP_ROOT}"/syncthing.sh ]]; then
-        "${OS_BOOTSTRAP_ROOT}"/syncthing.sh
-    fi
 }
 
 sensors() {
@@ -174,10 +153,8 @@ main() {
     install_apt_packages
     install_docker
     install_docker_compose
-    containers
     hpe
     sensors
-    syncthing
 }
 
 main
