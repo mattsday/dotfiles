@@ -33,8 +33,8 @@ info Setting up linux emoji
 
 # Check if the correct fonts are installed and install them on debian-based distros
 if [ -x /usr/bin/apt-get ] && [ -x /usr/bin/dpkg ]; then
-    if ! dpkg-query -W -f='${Status}' fonts-noto 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
-        DEBIAN_FRONTEND="noninteractive" sudo apt-get "$@" -y install fonts-noto fonts-noto'*' >/dev/null
+    if ! dpkg-query -W -f='${Status}' fonts-noto-extra 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
+        DEBIAN_FRONTEND="noninteractive" sudo apt-get "$@" -y install fonts-noto'*' >/dev/null
     fi
 elif ! fc-list 2>/dev/null | grep NotoColorEmoji >/dev/null 2>&1; then
     info Note - install fonts-noto-'*' after this
