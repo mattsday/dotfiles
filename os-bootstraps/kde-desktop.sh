@@ -106,9 +106,23 @@ configure_discover() {
     fi
 }
 
+configure_dolphin() {
+    if ! command -v xdg-mime >/dev/null 2>&1; then
+        info Install xdg-mime to set dolphin as default
+        return
+    fi
+    current="$(xdg-mime query default inode/directory)"
+    if [[ "$current" != org.kde.dolphin.desktopa ]]; then
+        info Setting dolphin as default file browser
+        xdg-mime default org.kde.dolphin.desktop inode/directory
+    fi
+
+}
+
 main() {
     configure_baloo
     configure_discover
+    configure_dolphin
 }
 
 main
