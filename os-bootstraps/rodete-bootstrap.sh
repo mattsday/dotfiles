@@ -171,6 +171,16 @@ install_sdk_man() {
   fi
 }
 
+# If webstorm is installed, set up npm etc
+npm_setup() {
+  if [[ -d "${HOME}/.local/share/JetBrains/Toolbox/apps/WebStorm" ]]; then
+    info Setting up npm
+    instant_install_apt_packages npm
+    _sudo npm install -g npm
+    _sudo npm -g install create-react-app
+  fi
+}
+
 docker_setup() {
   # Don't run this if we can't run as root
   if [[ "${NO_SUDO}" = 1 ]]; then
@@ -232,6 +242,7 @@ main() {
     configure_printing
     configure_rfkill
     configure_display_manager
+    npm_setup
   )
   get_apt_packages
 
