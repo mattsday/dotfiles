@@ -129,3 +129,6 @@ update @/usr/bin/fwupdmgr sudo /usr/bin/fwupdmgr refresh && sudo /usr/bin/fwupdm
 
 # Update brave if installed manually
 update @/opt/brave/brave %_DOTFILES_%/os-bootstraps/brave.sh
+
+# npm
+update @npm sudo npm -g update
