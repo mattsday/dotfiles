@@ -112,7 +112,7 @@ configure_dolphin() {
         return
     fi
     current="$(xdg-mime query default inode/directory)"
-    if [[ "$current" != org.kde.dolphin.desktop ]]; then
+    if [[ "${current}" != org.kde.dolphin.desktop ]]; then
         info Setting dolphin as default file browser
         xdg-mime default org.kde.dolphin.desktop inode/directory
     fi

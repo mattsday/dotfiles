@@ -23,7 +23,7 @@ fi
 load_debian_common
 
 if [[ ! -x /usr/bin/systemctl ]] || ! systemctl status --user >/dev/null 2>&1; then
-    if [ "$(id -u)" != 0 ]; then
+    if [[ "$(id -u)" != 0 ]]; then
         error Cannot setup syncthing without systemd
         exit
     fi

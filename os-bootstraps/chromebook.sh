@@ -129,7 +129,7 @@ dark_theme_linux() {
   DEST_FILE="${DEST_DIR}/cros-sommelier-x-override.conf"
   SOURCE_FILE="${DOTFILES_ROOT}"/dotfiles/special/cros/cros-sommelier-x-override.conf
 
-  if [ ! -f "${SOURCE_FILE}" ]; then
+  if [[ ! -f "${SOURCE_FILE}" ]]; then
     error Cannot locate "${SOURCE_FILE}"
     return
   fi
@@ -150,7 +150,7 @@ dark_theme_linux() {
   DEST_FILE="${DEST_DIR}/settings.ini"
   SOURCE_FILE="${DOTFILES_ROOT}"/dotfiles/special/cros/settings.ini
 
-  if [ ! -f "${SOURCE_FILE}" ]; then
+  if [[ ! -f "${SOURCE_FILE}" ]]; then
     error Cannot locate "${SOURCE_FILE}"
     return
   fi
