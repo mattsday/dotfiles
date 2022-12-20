@@ -31,6 +31,12 @@ syncthing() {
   fi
 }
 
+configure_fonts() {
+  if [[ -f "${OS_BOOTSTRAP_ROOT}"/jetbrains-mono-font.sh ]]; then
+    "${OS_BOOTSTRAP_ROOT}"/jetbrains-mono-font.sh
+  fi
+}
+
 install_kubectx() {
   if ! command -v kubectx >/dev/null 2>&1 || ! command -v kubens >/dev/null 2>&1; then
     info Installing Kubectx
@@ -81,7 +87,7 @@ install_gcp_sdk() {
     echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | _sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list >/dev/null
     _apt update >/dev/null
     instant_install_apt_packages google-cloud-sdk google-cloud-sdk-anthos-auth google-cloud-sdk-gke-gcloud-auth-plugin google-cloud-cli google-cloud-sdk-kpt \
-    google-cloud-sdk-skaffold kubectl
+      google-cloud-sdk-skaffold kubectl
   fi
 }
 
@@ -175,6 +181,7 @@ main() {
     install_kubectx
     setup_ssh_agent
     syncthing
+    configure_fonts
     #install_brave
   )
   get_apt_packages
