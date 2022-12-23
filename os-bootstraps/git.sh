@@ -36,6 +36,6 @@ if ! git config --global user.email >/dev/null 2>&1; then
 fi
 
 if ! git config --global init.defaultBranch >/dev/null 2>&1; then
-    info Setting default git branch to master
-    git config --global init.defaultBranch master
+    info Setting default git branch to main
+    git config --global init.defaultBranch main
 fi
