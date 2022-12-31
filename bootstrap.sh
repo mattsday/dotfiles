@@ -64,6 +64,13 @@ else
 		fi
 	fi
 fi
+# Check if we're running Windows Subsystem for Linux
+if uname -r | grep WSL >/dev/null 2>&1; then
+	info "Detected Windows Subsystem for Linux"
+	if [ -f "${DOTFILES_ROOT}/os-bootstraps/wsl.sh" ]; then
+		"${DOTFILES_ROOT}/os-bootstraps/wsl.sh"
+	fi
+fi
 
 if command -v git >/dev/null 2>&1; then
     if [ -x "${DOTFILES_ROOT}/os-bootstraps/git.sh" ]; then
