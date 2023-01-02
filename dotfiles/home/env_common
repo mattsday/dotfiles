@@ -4,7 +4,7 @@
 # can load this (e.g. zshrc, kshrc, bashrc) for consistency across
 # environments
 #
-# This load environment variables only - shell_common loads aliases
+# This loads environment variables only - shell_common loads aliases
 # and functions
 #
 # Latest copy always here: https://github.com/mattsday/dotfiles/
