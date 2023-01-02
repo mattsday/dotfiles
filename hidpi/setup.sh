@@ -15,7 +15,7 @@ EOF
     fi
     # Spotify client doesn't respect external scale factors, do so here
     if [ -f /usr/share/spotify/spotify.desktop ] && [ ! -f "${HOME}/.local/share/applications/spotify.desktop" ]; then
-        if [[ ! -d "${HOME}/.local/share/applications/" ]]; then
+        if [ ! -d "${HOME}/.local/share/applications/" ]; then
             mkdir -p "${HOME}/.local/share/applications/" || error "Could not create ${HOME}/.local/share/applications/"
         fi
         cp /usr/share/spotify/spotify.desktop "${HOME}/.local/share/applications/" || error "Cannot move spotify config"

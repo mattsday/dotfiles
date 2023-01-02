@@ -24,14 +24,13 @@ symlinks() {
     users=("Matt" "Matt Day")
     for u in "${users[@]}"; do
       if [[ -d "/mnt/c/Users/${u}" ]]; then
-        user="$u"
+        user="${u}"
         home="/mnt/c/Users/${u}"
       fi
     done
     if [[ -z "${home}" ]]; then
       error "Cannot locate home directory in" "${users[@]}"
     fi
-    ln -s "$"
     ln -fs "${home}" "${HOME}/winhome"
   fi
 }
