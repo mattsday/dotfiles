@@ -33,7 +33,7 @@ foreach p (/usr/local/bin /usr/local/sbin)
 	endif
 end
 # ...and these go last
-foreach p (/snap/bin /opt/local/bin "${HOME}/.bin" "${HOME}/bin")
+foreach p (/snap/bin /opt/local/bin "${HOME}/.bin" "${HOME}/bin" "${HOME}/.local/bin")
 	if ( -d "$p" ) then
 		set path = ($path $p)
 	endif
