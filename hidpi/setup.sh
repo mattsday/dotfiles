@@ -13,9 +13,11 @@ main() {
 export GDK_DPI_SCALE=1.5
 EOF
     fi
-
     # Spotify client doesn't respect external scale factors, do so here
     if [ -f /usr/share/spotify/spotify.desktop ] && [ ! -f "${HOME}/.local/share/applications/spotify.desktop" ]; then
+        if [[ ! -d "${HOME}/.local/share/applications/" ]]; then
+            mkdir -p "${HOME}/.local/share/applications/" || error "Could not create ${HOME}/.local/share/applications/"
+        fi
         cp /usr/share/spotify/spotify.desktop "${HOME}/.local/share/applications/" || error "Cannot move spotify config"
         sed -i 's/Exec=spotify %U/Exec=spotify --force-device-scale-factor=1.5 %U/' "${HOME}/.local/share/applications/spotify.desktop"
     fi
