@@ -69,6 +69,7 @@ env_variables() {
 
     # Enable ChromeOS ssh agent plumbing and dark mode
     if [ -f /dev/.cros_milestone ]; then
+        #shellcheck disable=SC2016
         add_env SSH_AUTH_SOCK '${XDG_RUNTIME_DIR}/ssh-agent.socket'
         add_env GTK_THEME Adwaita:dark
         add_env QT_STYLE_OVERRIDE Adwaita-Dark
@@ -198,7 +199,6 @@ aliases() {
 }
 
 update_callbacks() {
-    UPDATE_CALLBACKS="${update}":"${UPDATE_CALLBACKS}"
     sudo_cmd=""
     if check_cmd sudo && [ "${IS_ROOT}" != 1 ]; then
         sudo_cmd="sudo "
@@ -216,7 +216,9 @@ update_callbacks() {
     if check_cmd npm; then
         UPDATE_CALLBACKS="${sudo_cmd} npm -g update:${UPDATE_CALLBACKS}"
     fi
-    add_env _UPDATE_CALLBACKS "${UPDATE_CALLBACKS}"
+    if [ -n "${UPDATE_CALLBACKS}" ]; then
+        add_env _UPDATE_CALLBACKS "${UPDATE_CALLBACKS}"
+    fi
 
 }
 
@@ -270,10 +272,11 @@ append_file() {
 # Usage:
 # clear_files FILE1 FILE2 FILE3...
 clear_files() {
+    updated="$(date)"
     for i in "$@"; do
-        if [ -f "$i" ]; then
+        if [ -f "${i}" ]; then
             debug "Clearing ${i}"
-            rm "$i" || warn "Could not delete ${i}"
+            rm "${i}" || warn "Could not delete ${i}"
         fi
         cat <<EOF >"${i}"
 # This file is auto generated and replaced every day.
