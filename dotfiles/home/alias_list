@@ -1,3 +1,6 @@
+# Deprecated!
+# This is no longer used. Instead edit the update_aliases file directly.
+#
 # =================
 # Alias definitions
 # =================
@@ -28,8 +31,6 @@ alias ll='ls -lahF'
 # ...but prefer SI units if using GNU ls
 talias @ls --si -laF@ ll='ls --si -laF'
 alias l='ls -aCF'
-alias l.='ls -d .*'
-alias j='jobs -l'
 
 # Colour linux ip command
 talias @ip --color=auto -V@ ip='ip --color=auto'
@@ -65,7 +66,6 @@ talias @df --si -x tmpfs -x devtmpfs -x squashfs@ df='df --si -x tmpfs -x devtmp
 alias 'cd..=cd ..'
 alias 'cd~=cd ~'
 alias 'tmuxa=tmux a'
-alias @tmux-next tmux='tmux-next'
 
 # If autocd doesn't work then at least give me this!
 alias ..='cd ..'
