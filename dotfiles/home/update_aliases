@@ -1,45 +1,11 @@
 #!/bin/sh
-# This parses the alias_list format and generates alias files for various
-# shell environments; currently supports (t)csh, fish and bourne shells.
+# Generates aliases in a shell-agnostic fashion.
 
 # Where were dotfiles installed?
 if [ -z "${DOTFILES_ROOT}" ]; then
-	if command -v readlink >/dev/null 2>&1 && command -v dirname >/dev/null 2>&1; then
-		DOTFILES_ROOT="$(dirname "$(readlink "$0")" | sed 's|/dotfiles/home||')"
-	fi
-fi
-
-msg() {
-	if [ "${VERBOSE}" = 1 ]; then
-		echo "$@"
-	fi
-}
-debug() {
-	if [ "${DEBUG}" = 1 ]; then
-		echo "$@"
-	fi
-}
-
-week=604800
-# Get the date
-date="$(date +%s 2>/dev/null | xargs)"
-if [ "${date}" = "%s" ]; then
-	# Horrible Solaris workaround
-	date="$(truss /usr/bin/date 2>&1 | grep ^time | cut -d = -f 2 | xargs)"
-fi
-[ -z "${VERBOSE}" ] && VERBOSE=0
-[ -z "${DEBUG}" ] && DEBUG=0
-
-# If no argument is passed then check the last-updated time
-if [ -f "${HOME}/.alias_update_time" ] && [ -z "$1" ]; then
-	lastdate="$(cat "${HOME}/.alias_update_time")"
-	diff="$((date - lastdate))"
-	if [ "${week}" -gt "${diff}" ]; then
-		exit
-	fi
-else
-	# If an argument is passed, go verbose
-	VERBOSE=1
+    if command -v readlink >/dev/null 2>&1 && command -v dirname >/dev/null 2>&1; then
+        DOTFILES_ROOT="$(dirname "$(readlink "$0")" | sed 's|/dotfiles/home||')"
+    fi
 fi
 
 SH_ALIAS_FILE="${HOME}/.sh_aliases"
@@ -50,264 +16,337 @@ SH_ENV_FILE="${HOME}/.sh_env-vars"
 CSH_ENV_FILE="${HOME}/.csh_env-vars"
 FISH_ENV_FILE="${HOME}/.fish_env-vars"
 
-write_alias() {
-	alias_name="$1"
-	alias_data="$2"
-	echo alias "${alias_name}"=\'"${alias_data}"\' >>"${SH_ALIAS_FILE}"
-	echo alias "${alias_name}" \'"${alias_data}"\' >>"${CSH_ALIAS_FILE}"
-	echo alias "${alias_name}" \'"${alias_data}"\' >>"${FISH_ALIAS_FILE}"
-	debug alias "${alias_name}"=\'"${alias_data}"\'
+msg() {
+    if [ "${VERBOSE}" = 1 ]; then
+        echo "$@"
+    fi
+}
+debug() {
+    if [ "${DEBUG}" = 1 ]; then
+        echo "$@"
+    fi
+}
+error() {
+    echo >&2 '[Error]' "$@"
+    exit 1
+}
+warn() {
+    echo >&2 '[Warning]' "$@"
 }
 
-write_export() {
-	export_name="$1"
-	export_data="$2"
-	echo "${export_name}"=\'"${export_data}"\' >>"${SH_ENV_FILE}"
-	echo export "${export_name}" >>"${SH_ENV_FILE}"
-	echo setenv "${export_name}" \'"${export_data}"\' >>"${CSH_ENV_FILE}"
-	echo set -gx "${export_name}" \'"${export_data}"\' >>"${FISH_ENV_FILE}"
-	debug export "${export_name}='${export_data}'"
+check_cmd() {
+    command -v "${1}" >/dev/null 2>&1
+    return "$?"
 }
 
+test_cmd() {
+    eval "${*}" >/dev/null 2>&1
+    return "$?"
+}
+
+env_variables() {
+    # Show the blocksieze in a human-readable format
+    add_env BLOCKSIZE k
+
+    # Don't enable analytics for things
+    if check_cmd /usr/local/bin/brew; then
+        add_env HOMEBREW_NO_ANALYTICS 1
+    fi
+    if check_cmd dotnet; then
+        add_env DOTNET_CLI_TELEMETRY_OPTOUT 1
+    fi
+
+    # Use vim as the default editor
+    if check_cmd vim; then
+        add_env VISUAL vim
+        add_env EDITOR vim
+        add_env USE_EDITOR vim
+    fi
+    # Use less as the default pager
+    if check_cmd less; then
+        add_env PAGER less
+    fi
+
+    # Enable ChromeOS ssh agent plumbing and dark mode
+    if [ -f /dev/.cros_milestone ]; then
+        #shellcheck disable=SC2016
+        add_env SSH_AUTH_SOCK '${XDG_RUNTIME_DIR}/ssh-agent.socket'
+        add_env GTK_THEME Adwaita:dark
+        add_env QT_STYLE_OVERRIDE Adwaita-Dark
+    fi
+
+    # Use portals for GTK if available
+    if [ -f /usr/libexec/xdg-desktop-portal ] && [ -f /usr/share/xdg-desktop-portal/portals/kde.portal ]; then
+        add_env GTK_USE_PORTAL 1
+    fi
+
+    # Use ksshaskpass for git passwords if present
+    if check_cmd /usr/bin/ksshaskpass; then
+        add_env GIT_ASKPASS /usr/bin/ksshaskpass
+    fi
+}
+
+aliases() {
+    # If not root and we have sudo alias it to allow expansion
+    if [ "${IS_ROOT}" != 1 ] && check_cmd sudo; then
+        add_alias sudo 'sudo '
+    fi
+
+    ls_cmd="ls"
+    if check_cmd gls && test_cmd gls --si; then
+        ls_cmd="gls"
+    fi
+
+    # Attempt to colour ls
+    if test_cmd "${ls_cmd}" --color=auto; then
+        if test_cmd ls --si; then
+            add_alias ls "${ls_cmd} --si --color=auto"
+        else
+            add_alias ls "${ls_cmd} --color=auto"
+        fi
+    fi
+    add_alias ll "${ls_cmd} --si -laF"
+    add_alias l "${ls_cmd} -aCF"
+
+    # Colour the `ip` command
+    if test_cmd "ip --color=auto"; then
+        add_alias ip "ip --color=auto"
+    fi
+
+    # Use GNU coreutils if possible
+    gtools="find sed tar awk du df"
+    for tool in ${gtools}; do
+        if check_cmd "g${tool}"; then
+            add_alias "${tool}" "g${tool}"
+        fi
+    done
+
+    # Nifty rsync shortcut
+    if check_cmd rsync; then
+        add_alias rsy 'rsync --progress --partial --append-verify -a'
+    fi
+
+    # Use GNU grep if possible
+    grep_cmd="grep"
+    if check_cmd ggrep && test_cmd "echo a | ggrep --color=auto"; then
+        grep_cmd="ggrep"
+    fi
+    # Colour grep if possible
+    if test_cmd "echo a | ${grep_cmd} a --color=auto"; then
+        add_alias grep "${grep_cmd} --color=auto"
+    fi
+
+    # Use SI units for du and df
+    if test_cmd "ls --si"; then
+        add_alias du "du --si"
+    fi
+    # Tidy up df's output
+    if test_cmd "df --si -x tmpfs -x devtmpfs -x squashfs"; then
+        add_alias df 'df --si -x tmpfs -x devtmpfs -x squashfs'
+    fi
+
+    # Navigation shortcuts
+    add_alias '..' 'cd ..'
+    add_alias 'cd..' 'cd ..'
+    add_alias 'cd~' 'cd ~'
+    add_alias 'tmuxa' 'tmux a'
+
+    # Use vim not vi
+    if check_cmd vim; then
+        add_alias vi vim
+    fi
+
+    # Use system tools as root
+    if check_cmd sudo && [ "${IS_ROOT}" != 1 ]; then
+        # apt for debian
+        if check_cmd /usr/bin/apt && check_cmd /usr/bin/dpkg; then
+            add_alias apt 'sudo apt '
+            add_alias apt-get 'sudo apt-get '
+        fi
+        # Pacman
+        if check_cmd /usr/bin/pkg_add; then
+            add_alias pkg_add 'sudo pkg_add '
+        fi
+        # Yum
+        if check_cmd /usr/bin/yum; then
+            add_alias yum 'sudo yum '
+        fi
+        # OpenBSD
+        if check_cmd /usr/bin/pacman; then
+            add_alias pacman 'sudo pacman '
+        fi
+        # FreeBSD
+        if check_cmd /usr/sbin/pkg; then
+            add_alias pkg 'sudo pkg '
+        fi
+        if check_cmd /usr/sbin/freebsd-update; then
+            add_alias freebsd-update 'sudo freebsd-update '
+        fi
+        # Fedora
+        if check_cmd /usr/bin/dnf; then
+            add_alias dnf 'sudo dnf '
+            add_alias yum 'sudo yum '
+        fi
+        # MacPorts
+        if check_cmd /opt/local/bin/port; then
+            add_alias port 'sudo /opt/local/bin/port '
+        fi
+        # SuSE
+        if check_cmd /usr/bin/zypper; then
+            add_alias zypper 'sudo zypper '
+        fi
+    fi
+}
+
+update_callbacks() {
+    sudo_cmd=""
+    if check_cmd sudo && [ "${IS_ROOT}" != 1 ]; then
+        sudo_cmd="sudo "
+    fi
+
+    if check_cmd /usr/bin/flatpak; then
+        UPDATE_CALLBACKS="${sudo_cmd} /usr/bin/flatpak -y update && /usr/bin/flatpak -y update:${UPDATE_CALLBACKS}"
+    fi
+    if check_cmd /usr/bin/fwupdmgr; then
+        UPDATE_CALLBACKS="${sudo_cmd} /usr/bin/fwupdmgr refresh && ${sudo_cmd} /usr/bin/fwupdmgr update:${UPDATE_CALLBACKS}"
+    fi
+    if check_cmd /opt/brave/brave; then
+        UPDATE_CALLBACKS="${DOTFILES_ROOT}/os-bootstraps/brave.sh:${UPDATE_CALLBACKS}"
+    fi
+    if check_cmd npm; then
+        UPDATE_CALLBACKS="${sudo_cmd} npm -g update:${UPDATE_CALLBACKS}"
+    fi
+    if [ -n "${UPDATE_CALLBACKS}" ]; then
+        add_env _UPDATE_CALLBACKS "${UPDATE_CALLBACKS}"
+    fi
+
+}
+
+# Write an environment variable.
+# Usage:
+# write_env ENV_NAME ENV_VALUE
+add_env() {
+    export_name="${1}"
+    export_data="${2}"
+    variables_count="$((variables_count + 1))"
+
+    # bourne shells
+    append_file "${export_name}='${export_data}'" "${SH_ENV_FILE}"
+    append_file "export ${export_name}" "${SH_ENV_FILE}"
+    # csh shells
+    append_file "setenv ${export_name} '${export_data}'" "${CSH_ENV_FILE}"
+    # fish
+    append_file "set -gx ${export_name} '${export_data}'" "${FISH_ENV_FILE}"
+    debug export "${export_name}='${export_data}'"
+}
+
+# Write an alias.
+# Usage:
+# add_alias ALIAS_NAME ALIAS_VALUE
 add_alias() {
-	IFS='@'
-	for alias in $1; do
-		alias_name="$(echo "${alias}" | cut -f 1 -d = | xargs)"
-		alias_data="$(echo "${alias}" | cut -f 2- -d =)"
-		first_command="$(echo "${alias_data}" | cut -f 1 -d ' ' | sed 's/^!//')"
+    alias_name="${1}"
+    alias_data="${2}"
 
-		# If it's a sudo alias don't do it as root
-		if [ "${IS_ROOT}" = 1 ] && [ "${first_command}" = "sudo" ]; then
-			continue
-		fi
-		aliases_count="$((aliases_count + 1))"
-		# Check if the command needs to be expanded
-		if echo "${alias_data}" | grep -E '^!.*' >/dev/null 2>&1; then
-			if wcmd="$(command -v "${first_command}" 2>/dev/null)"; then
-				alias_data="$(echo "${wcmd}" "${alias_data}" | sed 's|!'"${first_command}"'||' | xargs)"
-			fi
-			unset wcmd first_command
-		fi
-		write_alias "${alias_name}" "${alias_data}"
-	done
+    aliases_count="$((aliases_count + 1))"
+
+    # bourne shells
+    append_file "alias ${alias_name}='${alias_data}'" "${SH_ALIAS_FILE}"
+    # csh shells
+    append_file "alias ${alias_name} '${alias_data}'" "${CSH_ALIAS_FILE}"
+    # fish
+    append_file "alias ${alias_name} '${alias_data}'" "${FISH_ALIAS_FILE}"
+
+    debug alias "${alias_name}='${alias_data}'"
 }
 
-add_update() {
-	IFS='@'
-	for update in $1; do
-		UPDATE_CALLBACKS="${update}":"${UPDATE_CALLBACKS}"
-	done
+# Append to a file
+# Usage:
+# append_file CONTENT FILENAME
+append_file() {
+    content="${1}"
+    filename="${2}"
+    echo "${content}" >>"${filename}"
 }
 
-add_export() {
-	IFS='@'
-	for export in $1; do
-		variables_count="$((variables_count + 1))"
-		export_name="$(echo "${export}" | cut -f 1 -d = | xargs)"
-		export_data="$(echo "${export}" | cut -f 2- -d = | xargs)"
-		# Check if the command needs to be expanded
-		if echo "${export_data}" | grep -E '^!.*' >/dev/null 2>&1; then
-			ocmd="$(echo "${export_data}" | cut -f 1 -d ' ' | sed 's/^!//')"
-			if wcmd="$(command -v "${ocmd}" 2>/dev/null)"; then
-				export_data="$(echo "${wcmd}" "${export_data}" | sed 's|!'"${ocmd}"'||' | xargs)"
-			fi
-			unset wcmd ocmd
-		fi
-		write_export "${export_name}" "${export_data}"
-	done
+# Clear a file's contents
+# Usage:
+# clear_files FILE1 FILE2 FILE3...
+clear_files() {
+    updated="$(date)"
+    for i in "$@"; do
+        if [ -f "${i}" ]; then
+            debug "Clearing ${i}"
+            rm "${i}" || warn "Could not delete ${i}"
+        fi
+        cat <<EOF >"${i}"
+# This file is auto generated and replaced every day.
+# Last updated: ${updated}
+EOF
+    done
 }
-create_files() {
 
-	rm "${SH_ALIAS_FILE}" >/dev/null 2>&1
-	rm "${CSH_ALIAS_FILE}" >/dev/null 2>&1
-	rm "${FISH_ALIAS_FILE}" >/dev/null 2>&1
-	rm "${SH_ENV_FILE}" >/dev/null 2>&1
-	rm "${CSH_ENV_FILE}" >/dev/null 2>&1
-	rm "${FISH_ENV_FILE}" >/dev/null 2>&1
-
-	updated="$(date)"
-
-	cat <<EOT >"${SH_ALIAS_FILE}"
-# Bourne shell alias file
-#
-# This file is auto generated and replaced every 7 days.
-# Edit '${HOME}/.alias_list' to change them and then run
-# \`${HOME}/.update_aliases force\` to update this file.
-# Last updated: ${updated}
-
-EOT
-
-	cat <<EOT >"${CSH_ALIAS_FILE}"
-# csh and tcsh alias file
-#
-# This file is auto generated and replaced every 7 days.
-# Edit '${HOME}/.alias_list' to change them and then run
-# \`${HOME}/.update_aliases force\` to update this file.
-# Last updated: ${updated}
-
-EOT
-
-	cat <<EOT >"${FISH_ALIAS_FILE}"
-# Fish shell alias file
-#
-# This file is auto generated and replaced every 7 days.
-# Edit '${HOME}/.alias_list' to change them and then run
-# \`${HOME}/.update_aliases force\` to update this file.
-# Last updated: ${updated}
-
-EOT
-
-	cat <<EOT >"${SH_ENV_FILE}"
-# Bourne shell env file
-#
-# This file is auto generated and replaced every 7 days.
-# Edit '${HOME}/.alias_list' to change them and then run
-# \`${HOME}/.update_aliases force\` to update this file.
-# Last updated: ${updated}
-
-EOT
-
-	cat <<EOT >"${CSH_ENV_FILE}"
-# csh and tcsh env file
-#
-# This file is auto generated and replaced every 7 days.
-# Edit '${HOME}/.alias_list' to change them and then run
-# \`${HOME}/.update_aliases force\` to update this file.
-# Last updated: ${updated}
-
-EOT
-
-	cat <<EOT >"${FISH_ENV_FILE}"
-# Fish shell env file
-#
-# This file is auto generated and replaced every 7 days.
-# Edit '${HOME}/.alias_list' to change them and then run
-# \`${HOME}/.update_aliases force\` to update this file.
-# Last updated: ${updated}
-
-EOT
+# Checks when this was last run and if it needs to run now
+# Usage:
+# check_date
+check_date() {
+    day=86400
+    # Get the date
+    date="$(date +%s 2>/dev/null | xargs)"
+    if [ "${date}" = "%s" ]; then
+        # Horrible Solaris workaround
+        date="$(truss /usr/bin/date 2>&1 | grep ^time | cut -d = -f 2 | xargs)"
+    fi
+    [ -z "${VERBOSE}" ] && VERBOSE=0
+    [ -z "${DEBUG}" ] && DEBUG=0
+    # If no argument is passed then check the last-updated time
+    if [ -f "${HOME}/.alias_update_time" ] && [ -z "$1" ]; then
+        lastdate="$(cat "${HOME}/.alias_update_time")"
+        diff="$((date - lastdate))"
+        if [ "${day}" -gt "${diff}" ]; then
+            exit
+        fi
+    else
+        # If an argument is passed, go verbose
+        VERBOSE=1
+    fi
 }
 
 main() {
+    # Check if we need to run. Will exit the script if we don't
+    check_date "${@}"
 
-	msg Updating aliases and environment variables
+    # Assume we're all systems go!
+    msg Updating aliases and environment variables
 
-	create_files
+    aliases_count=0
+    variables_count=0
+    IS_ROOT=0
+    if command -v id >/dev/null 2>&1; then
+        if [ "$(id -u)" = 0 ]; then
+            msg "Updating as root (ignoring sudo aliases)"
+            IS_ROOT=1
+        fi
+    fi
+    if [ -f "${HOME}/.disable_dotfiles_sudo" ]; then
+        # By "being root" no sudo aliases get created
+        IS_ROOT=1
+    fi
 
-	aliases_count=0
-	variables_count=0
+    clear_files "${SH_ENV_FILE}" "${CSH_ENV_FILE}" "${FISH_ENV_FILE}" "${FISH_ALIAS_FILE}" "${CSH_ALIAS_FILE}" "${SH_ALIAS_FILE}"
 
-	IS_ROOT=0
-	if command -v id >/dev/null 2>&1; then
-		if [ "$(id -u)" = 0 ]; then
-			msg "Updating as root (ignoring sudo aliases)"
-			IS_ROOT=1
-		fi
-	fi
-	if [ -f "${HOME}/.disable_dotfiles_sudo" ]; then
-		# By "being root" no sudo aliases get created
-		IS_ROOT=1
-	fi
+    # Generate aliases first
+    aliases "${@}"
+    # Now environment variables
+    env_variables "${@}"
+    # Finally update callbacks
+    update_callbacks "${@}"
 
-	while IFS='' read -r line || [ -n "${line}" ]; do
-		case ${line} in
-		# Ignore comments
-		'#'*) ;;
-			# Check for tests
-		'talias @'*)
-			IFS=''
-			# Get the list of command_list to test
-			test="$(echo "${line}" | cut -d @ -f 2 | sed 's/^@//' | xargs)"
-			execute=1
-			if ! eval "${test}" >/dev/null 2>&1; then
-				execute=0
-			fi
-			if [ "${execute}" = 1 ]; then
-				add_alias "$(echo "${line}" | cut -f 3- -d @ | xargs)"
-			fi
-			;;
-		'texport @'*)
-			IFS=''
-			# Get the list of command_list to test
-			test="$(echo "${line}" | cut -d @ -f 2 | sed 's/^@//' | xargs)"
-			execute=1
-			if ! eval "${test}" >/dev/null 2>&1; then
-				execute=0
-			fi
-			if [ "${execute}" = 1 ]; then
-				add_export "$(echo "${line}" | cut -f 3- -d @ | xargs)"
-			fi
-			;;
-		'alias @'* | 'export @'* | 'update @'*)
-			# Get the list of command_list to test
-			command_list="$(echo "${line}" | cut -f 2 -d ' ' | sed 's/^@//')"
-			
-			# Sub in dotfiles home if available
-			if [ -n "${DOTFILES_ROOT}" ]; then
-				line="$(echo "${line}" | sed 's|%_DOTFILES_%|'"${DOTFILES_ROOT}"'|g')"
-			fi
+    # Write out last update time:
+    if [ -f "${HOME}/.alias_update_time" ]; then
+        rm "${HOME}/.alias_update_time"
+    fi
+    echo "${date}" >"${HOME}/.alias_update_time"
 
-			IFS=,
-			execute=1
-			for command in ${command_list}; do
-				case ${command} in
-				# If it's an absolute path just test if it is executable
-				*/*)
-					if [ ! -x "${command}" ]; then
-						execute=0
-						break
-					fi
-					;;
-				# Otherwise search the path for it
-				*)
-					if ! command -v "${command}" >/dev/null 2>&1; then
-						execute=0
-						break
-					fi
-					;;
-				esac
-			done
-			IFS=''
-			if [ "${execute}" = 1 ]; then
-				type="$(echo "${line}" | cut -f 1 -d ' ' | xargs)"
-				if [ "${type}" = alias ]; then
-					add_alias "$(echo "${line}" | sed 's/^alias//' | sed 's|@'"${command_list}"'||' | xargs)"
-				elif [ "${type}" = export ]; then
-					add_export "$(echo "${line}" | sed 's/^export//' | sed 's|@'"${command_list}"'||' | xargs)"
-				elif [ "${type}" = update ]; then
-					add_update "$(echo "${line}" | sed 's/^update//' | sed 's|@'"${command_list}"'||' | xargs)"
-				fi
-			fi
-			;;
-		export*)
-			add_export "$(echo "${line}" | sed 's/^export//' | xargs)"
-			;;
-		alias*)
-			if [ -n "${line}" ]; then
-				add_alias "$(echo "${line}" | sed 's/^alias//' | xargs)"
-			fi
-			;;
-		update*)
-			add_update "$(echo "${line}" | sed 's/^update//' | xargs)"
-			;;
-		*) ;;
-		esac
-	done <"${HOME}/.alias_list"
-
-	if [ -n "${UPDATE_CALLBACKS}" ]; then
-		write_export _UPDATE_CALLBACKS "${UPDATE_CALLBACKS}"
-	fi
-
-	# Write out last update time:
-	if [ -f "${HOME}/.alias_update_time" ]; then
-		rm "${HOME}/.alias_update_time"
-	fi
-	echo "${date}" >"${HOME}/.alias_update_time"
-
-	msg Created "${aliases_count}" aliases and "${variables_count}" environment variables
-
+    msg Created "${aliases_count}" aliases and "${variables_count}" environment variables
 }
-
-main
-
-# vim: syntax=sh
+main "${@}"
