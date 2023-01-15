@@ -109,7 +109,7 @@ aliases() {
     add_alias l "${ls_cmd} -aCF"
 
     # Colour the `ip` command
-    if test_cmd "ip --color=auto"; then
+    if test_cmd "ip --color=auto a"; then
         add_alias ip "ip --color=auto"
     fi
 
