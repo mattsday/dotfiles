@@ -66,7 +66,6 @@ list=(
 	coreutils
 	git
 	htop
-	tcsh
 	wget
 	jq
 	zip

@@ -71,7 +71,6 @@ RPM_PACKAGES+=(
 	findutils
 	coreutils
 	git
-	tcsh
 	wget
 	xz
 	zip

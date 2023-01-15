@@ -101,7 +101,6 @@ get_apt_packages() {
 		coreutils
 		git
 		htop
-		tcsh
 		openssh-client
 		wget
 		jq

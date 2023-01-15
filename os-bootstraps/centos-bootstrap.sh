@@ -72,7 +72,6 @@ zsh
 vim-enhanced
 findutils
 git
-tcsh
 wget
 xz
 zip
