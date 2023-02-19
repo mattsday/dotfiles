@@ -144,6 +144,8 @@ install_vs_code() {
 }
 
 install_sdk_man() {
+  # Disable sdkman for now
+  return
   # Only enable as a non-root user
   if command -v id >/dev/null 2>&1; then
     if [[ "$(id -u)" = 0 ]]; then
