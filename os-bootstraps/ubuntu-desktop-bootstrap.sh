@@ -32,7 +32,7 @@ else
 fi
 
 get_apt_packages() {
-    APT_PACKAGES+=(openjdk-8-jdk openjdk-11-jdk python-is-python3 zenity)
+    APT_PACKAGES+=(openjdk-11-jdk openjdk-17-jdk python-is-python3 zenity)
 }
 
 get_snap_packages() {
