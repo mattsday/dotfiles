@@ -1,0 +1,39 @@
+# This file contains globbing patterns that will be excluded from the nightly,
+# automated backups. Patterns should be relative to $HOME listed one per line.
+#
+# These patterns can contain *, **, ?, and [...] (character ranges). As in
+# a normal shell, * can be expanded to any string of characters not containing
+# "/", ?  expands to any character except "/", and [...]  expands to a single
+# character of those characters specified (ranges are acceptable).  The new
+# special pattern, **, expands to any string of characters whether or not it
+# contains "/".  Furthermore, if the pattern starts with "ignorecase:" (case
+# insensitive), then this prefix will be removed and any character in the string
+# can be replaced with an upper- or lowercase version of itself.
+#
+# The exclude pattern option matches a file if:
+#
+# 1.  pattern can be expanded into the file's filename, or
+# 2.  the file is inside a directory matched by the option.
+#
+# For example,
+#
+#   /usr/local
+#
+# matches e.g. /usr/local, /usr/local/lib, and /usr/local/lib/netscape.
+#
+# See also the FILE SELECTION section in `man 1 duplicity` for patterns that
+# can be used in a file pointed to by the argument of the
+# --exclude-filelist flag.
+
+# Exclude application caches.
+.cache
+
+# Exclude potentially large error logs.
+.xsession-errors*
+
+# Personal stuff
+Pictures
+Documents/Payslips
+Projects
+Downloads
+Videos
