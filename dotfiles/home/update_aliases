@@ -296,8 +296,6 @@ check_date() {
         # Horrible Solaris workaround
         date="$(truss /usr/bin/date 2>&1 | grep ^time | cut -d = -f 2 | xargs)"
     fi
-    [ -z "${VERBOSE}" ] && VERBOSE=0
-    [ -z "${DEBUG}" ] && DEBUG=0
     # If no argument is passed then check the last-updated time
     if [ -f "${HOME}/.alias_update_time" ] && [ -z "$1" ]; then
         lastdate="$(cat "${HOME}/.alias_update_time")"
@@ -312,6 +310,9 @@ check_date() {
 }
 
 main() {
+    # Check if we can go verbose or not
+    [ -z "${VERBOSE}" ] && VERBOSE=0
+    [ -z "${DEBUG}" ] && DEBUG=0
     # Check if we need to run. Will exit the script if we don't
     check_date "${@}"
 
