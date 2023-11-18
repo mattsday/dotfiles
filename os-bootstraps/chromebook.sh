@@ -117,6 +117,15 @@ install_brave() {
   fi
 }
 
+install_chrome() {
+  if ! command -v google-chrome >/dev/null 2>&1; then
+    info Installing Chrome for Linux
+    curl -fsSLo /tmp/chrome.deb "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
+    _sudo dpkg -i /tmp/chrome.deb
+    _sudo rm /tmp/chrome.deb
+  fi
+}
+
 dark_theme_linux() {
   instant_install_apt_packages adwaita-qt gnome-themes-extra
 
