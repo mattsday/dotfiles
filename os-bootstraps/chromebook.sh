@@ -108,12 +108,6 @@ install_vs_code() {
   fi
 }
 
-install_spotify() {
-  if [[ -f "${OS_BOOTSTRAP_ROOT}/spotify.sh" ]]; then
-    "${OS_BOOTSTRAP_ROOT}/spotify.sh"
-  fi
-}
-
 install_brave() {
   if [[ ! -f /etc/apt/sources.list.d/brave-browser-release.list ]]; then
     info Installing Brave
@@ -172,7 +166,6 @@ main() {
     dark_theme_linux
     install_vs_code
     install_gcp_sdk
-    install_spotify
     install_kubectx
     setup_ssh_agent
     syncthing
