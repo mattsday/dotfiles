@@ -114,6 +114,15 @@ install_spotify() {
   fi
 }
 
+install_brave() {
+  if [[ ! -f /etc/apt/sources.list.d/brave-browser-release.list ]]; then
+    info Installing Brave
+    _sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
+    echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main" | _sudo tee /etc/apt/sources.list.d/brave-browser-release.list >/dev/null
+    instant_install_apt_packages brave_browser
+  fi
+}
+
 dark_theme_linux() {
   instant_install_apt_packages adwaita-qt gnome-themes-extra
 
@@ -168,7 +177,7 @@ main() {
     setup_ssh_agent
     syncthing
     configure_fonts
-    #install_brave
+    install_brave
   )
   get_apt_packages
 
