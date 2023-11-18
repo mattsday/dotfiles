@@ -22,7 +22,7 @@ fi
 load_debian_common
 
 get_apt_packages() {
-  APT_PACKAGES+=(golang)
+  APT_PACKAGES+=(golang vlc vlc-plugin-qt)
 }
 
 syncthing() {
