@@ -31,6 +31,13 @@ syncthing() {
   fi
 }
 
+configure_chromebook_git() {
+  if [[ "$(git config --global --get 'credential.helper')" != "store" ]]; then
+    info Configuring git credential store
+    git config --global credential.helper store
+  fi
+}
+
 configure_fonts() {
   if [[ -f "${OS_BOOTSTRAP_ROOT}"/jetbrains-mono-font.sh ]]; then
     "${OS_BOOTSTRAP_ROOT}"/jetbrains-mono-font.sh
@@ -181,6 +188,7 @@ main() {
     syncthing
     configure_fonts
     install_brave
+    configure_chromebook_git
   )
   get_apt_packages
 
