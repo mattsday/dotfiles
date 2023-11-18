@@ -84,7 +84,7 @@ install_gcp_sdk() {
     _apt update >/dev/null
     instant_install_apt_packages apt-transport-https ca-certificates gnupg
     curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | _sudo tee /usr/share/keyrings/cloud.google.asc >/dev/null
-    echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | _sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list >/dev/null
+    echo "deb [signed-by=/usr/share/keyrings/cloud.google.asc] https://packages.cloud.google.com/apt cloud-sdk main" | _sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list >/dev/null
     _apt update >/dev/null
     instant_install_apt_packages google-cloud-sdk google-cloud-sdk-anthos-auth google-cloud-sdk-gke-gcloud-auth-plugin google-cloud-cli google-cloud-sdk-kpt \
       google-cloud-sdk-skaffold kubectl
