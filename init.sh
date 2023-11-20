@@ -2,6 +2,7 @@
 # This should execute on pretty much any bourne shell in case the plan is to jump to zsh or tcsh asap...
 # shellcheck disable=SC1091
 
+# Determine the working directory
 if [ -z "${DOTFILES_ROOT}" ]; then
 	if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
 		DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
@@ -10,8 +11,11 @@ if [ -z "${DOTFILES_ROOT}" ]; then
 			cd "$(dirname "$0")" || return
 			pwd
 		)"
-	else
+	fi
+	# Root was not set above. Error out.
+	if [ -z "${DOTFILES_ROOT}" ]; then
 		echo >&2 '[Error] cannot determine root (try running from working directory)'
+		echo >&2 '[Error] workaround: set DOTFILES_ROOT and re-run'
 		exit 1
 	fi
 fi
