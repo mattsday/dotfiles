@@ -32,10 +32,11 @@ else
 fi
 
 get_apt_packages() {
+  # APT_PACKAGES+=(libreoffice-qt5 okular sddm-theme-debian-breeze lightdm)
   APT_PACKAGES+=(google-cloud-sdk google-cloud-sdk-anthos-auth google-cloud-sdk-gke-gcloud-auth-plugin)
   APT_PACKAGES+=(google-cloud-sdk-kpt google-cloud-sdk-skaffold kubectl)
-  APT_PACKAGES+=(print-manager avahi-discover avahi-utils okular sddm-theme-debian-breeze lightdm)
-  APT_PACKAGES+=(libreoffice-qt5 libreoffice-calc golang openjdk-17-jdk)
+  APT_PACKAGES+=(print-manager avahi-discover avahi-utils)
+  APT_PACKAGES+=(libreoffice-calc golang openjdk-17-jdk)
 }
 
 passwordless_sudo() {
