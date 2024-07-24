@@ -25,8 +25,8 @@ load_debian_common
 get_apt_packages() {
   # Don't install KDE for now
   #APT_PACKAGES+=(plasma-widgets-addons plasma-wallpapers-addons plasma-nm xdg-desktop-portal-kde xdg-desktop-portal-gtk kde-spectacle ksshaskpass kdialog)
-  #APT_PACKAGES+=(konsole dolphin dolphin-plugins kate gwenview baloo-kf5 kdegames plasma-workspace-wayland kate)
-  APT_PACKAGES+=(ffmpegthumbs ffmpegthumbnailer kamoso kdegraphics-thumbnailers ark skanlite dialog)
+  #APT_PACKAGES+=(konsole dolphin dolphin-plugins kate gwenview baloo-kf5 kdegames plasma-workspace-wayland kate kdegraphics-thumbnailers ark skanlite kamoso)
+  APT_PACKAGES+=(ffmpegthumbs ffmpegthumbnailer dialog)
   APT_PACKAGES+=(vlc unrar wbritish libnss-mdns)
 }
 
