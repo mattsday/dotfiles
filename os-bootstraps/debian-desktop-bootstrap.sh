@@ -23,11 +23,11 @@ fi
 load_debian_common
 
 get_apt_packages() {
-  APT_PACKAGES+=(plasma-widgets-addons plasma-wallpapers-addons plasma-nm xdg-desktop-portal-kde xdg-desktop-portal-gtk)
+  # Don't install KDE for now
+  #APT_PACKAGES+=(plasma-widgets-addons plasma-wallpapers-addons plasma-nm xdg-desktop-portal-kde xdg-desktop-portal-gtk kde-spectacle ksshaskpass kdialog)
+  #APT_PACKAGES+=(konsole dolphin dolphin-plugins kate gwenview baloo-kf5 kdegames plasma-workspace-wayland kate)
   APT_PACKAGES+=(ffmpegthumbs ffmpegthumbnailer kamoso kdegraphics-thumbnailers ark skanlite dialog)
-  APT_PACKAGES+=(kde-spectacle vlc kdegames ksshaskpass unrar wbritish kdialog)
-  APT_PACKAGES+=(konsole dolphin dolphin-plugins kate gwenview baloo-kf5 libnss-mdns)
-  APT_PACKAGES+=(plasma-workspace-wayland kate)
+  APT_PACKAGES+=(vlc unrar wbritish libnss-mdns)
 }
 
 # Install pipewire support on Linux

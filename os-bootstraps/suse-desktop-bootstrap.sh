@@ -6,8 +6,11 @@ if [[ -z "${DOTFILES_ROOT}" ]]; then
     if command -v dirname >/dev/null 2>&1 && command -v realpath >/dev/null 2>&1; then
         DOTFILES_ROOT="$(realpath "$(dirname "$0")")"
     elif command -v dirname >/dev/null 2>&1; then
-        DOTFILES_ROOT="$(cd "$(dirname "$0")" || return; pwd)"
-	else
+        DOTFILES_ROOT="$(
+            cd "$(dirname "$0")" || return
+            pwd
+        )"
+    else
         echo >&2 '[Error] cannot determine root (try running from working directory)'
         exit 1
     fi
@@ -108,28 +111,30 @@ vs_code() {
 }
 
 ssh_configuration() {
-    SSH_FILE="${HOME}"/.config/autostart-scripts/ssh.sh
-    # ${HOME/asdasda}
-    if [[ ! -f "${SSH_FILE}" ]]; then
-        mkdir -p "${HOME}"/.config/autostart-scripts/ || error Cannot create ssh dir
-        info Setting up ssh with ksshaskpass
-        cat <<'EOF' | tee "${SSH_FILE}" >/dev/null
+    if [ -x /usr/libexec/ssh/ksshaskpass ]; then
+        SSH_FILE="${HOME}"/.config/autostart-scripts/ssh.sh
+        # ${HOME/asdasda}
+        if [[ ! -f "${SSH_FILE}" ]]; then
+            mkdir -p "${HOME}"/.config/autostart-scripts/ || error Cannot create ssh dir
+            info Setting up ssh with ksshaskpass
+            cat <<'EOF' | tee "${SSH_FILE}" >/dev/null
 #!/bin/bash
 sleep 5
 SSH_ASKPASS=/usr/libexec/ssh/ksshaskpass ssh-add "${HOME}/.ssh/id_rsa" </dev/null
 EOF
-        chmod +x "${SSH_FILE}"
-    fi
-    SSH_FILE="${HOME}"/.config/plasma-workspace/env/ssh-agent-startup.sh
-    if [[ ! -f "${SSH_FILE}" ]]; then
-        mkdir -p "${HOME}"/.config/plasma-workspace/env || error Cannot create ssh dir
-        info Setting up ssh agent autostart
-        cat <<'EOF' | tee "${SSH_FILE}" >/dev/null
+            chmod +x "${SSH_FILE}"
+        fi
+        SSH_FILE="${HOME}"/.config/plasma-workspace/env/ssh-agent-startup.sh
+        if [[ ! -f "${SSH_FILE}" ]]; then
+            mkdir -p "${HOME}"/.config/plasma-workspace/env || error Cannot create ssh dir
+            info Setting up ssh agent autostart
+            cat <<'EOF' | tee "${SSH_FILE}" >/dev/null
 #!/bin/sh
 [ -n "${SSH_AGENT_PID}" ]] || eval "$(ssh-agent -s)"
 export SSH_ASKPASS=/usr/libexec/ssh/ksshaskpass
 EOF
-        chmod +x "${SSH_FILE}"
+            chmod +x "${SSH_FILE}"
+        fi
     fi
 }
 
@@ -142,9 +147,9 @@ baloo_config() {
 }
 
 zsh() {
-  if [[ -x /bin/zsh ]] && [[ -f "${OS_BOOTSTRAP_ROOT}/zsh.sh" ]]; then
-    "${OS_BOOTSTRAP_ROOT}/zsh.sh"
-  fi
+    if [[ -x /bin/zsh ]] && [[ -f "${OS_BOOTSTRAP_ROOT}/zsh.sh" ]]; then
+        "${OS_BOOTSTRAP_ROOT}/zsh.sh"
+    fi
 }
 
 main() {
