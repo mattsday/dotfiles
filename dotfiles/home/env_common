@@ -28,7 +28,7 @@ for p in /usr/local/bin /usr/local/sbin; do
 	fi
 done
 # ...and these go last
-for p in /snap/bin /opt/local/bin "${HOME}/.bin" "${HOME}/bin" "${HOME}/.local/bin"; do
+for p in /snap/bin /opt/local/bin "${HOME}/.bin" "${HOME}/bin" "${HOME}/.local/bin" "/opt/flutter/bin"; do
 	if [ -d "${p}" ]; then
 		PATH="${PATH}:${p}"
 		export PATH
