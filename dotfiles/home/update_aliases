@@ -145,6 +145,12 @@ aliases() {
         add_alias df 'df --si -x tmpfs -x devtmpfs -x squashfs'
     fi
 
+    # Some npx shortcuts for various tools
+    if check_cmd "npx"; then
+        add_alias ng 'npx @angular/cli@latest'
+        add_alias genkit 'npx genkit-cli'
+    fi
+
     # Navigation shortcuts
     add_alias '..' 'cd ..'
     add_alias 'cd..' 'cd ..'
