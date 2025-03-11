@@ -20,10 +20,6 @@ fi
 if ! command -v git >/dev/null 2>&1; then
     error Git not installed
 fi
-if [[ "$(git config --global --get 'pull.rebase')" != true ]]; then
-    info Setting git config --global pull.rebase to merge
-    git config --global 'pull.rebase' true
-fi
 
 if ! git config --global user.name >/dev/null 2>&1; then
     info Setting git config --global user.name to "${GIT_USER}"
