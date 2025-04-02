@@ -148,7 +148,8 @@ aliases() {
     # Some npx shortcuts for various tools
     if check_cmd "npx"; then
         add_alias ng 'npx @angular/cli@latest'
-        add_alias genkit 'npx genkit-cli'
+        add_alias genkit 'npx genkit-cli@latest'
+        add_alias firebase 'npx firebase-tools@latest'
     fi
 
     # Navigation shortcuts
