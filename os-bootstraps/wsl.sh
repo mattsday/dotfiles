@@ -35,9 +35,21 @@ symlinks() {
   fi
 }
 
+# Install Powershell files
+powershell() {
+  if [[ ! -d "${HOME}/winhome" ]]; then
+    echo No windows home dir found
+    return
+  fi
+  info Setting up Powershell
+  mkdir -p "${HOME}/winhome/Documents/Powershell"
+  cp "${DOTFILES_ROOT}/dotfiles/special/powershell/profile.ps1" "${HOME}/winhome/Documents/Powershell/profile.ps1"
+}
+
 main() {
   CALLBACKS+=(
     symlinks
+    powershell
   )
 
   # If we're not being sourced
