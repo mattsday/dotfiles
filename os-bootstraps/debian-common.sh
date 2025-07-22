@@ -10,7 +10,11 @@ if [[ -z "${DOTFILES_ROOT}" ]]; then
 fi
 
 _apt() {
-	DEBIAN_FRONTEND="noninteractive" _sudo -E apt-get "$@"
+    if [[ -n "$NO_ENV_PRESERVE" ]]; then
+        _sudo apt-get "$@"
+    else
+	    DEBIAN_FRONTEND="noninteractive" _sudo -E apt-get "$@"
+    fi
 }
 
 install_apt_packages() {

@@ -24,8 +24,13 @@ NO_SUDO_CONFIG=0
 # Check for mixins
 export _debian_bootstrap_mattsday=1
 RELEASE="$(grep '^VERSION_CODENAME=' /etc/os-release | cut -d = -f 2 | sed 's/"//g')"
-if [[ "${RELEASE}" = rodete ]]; then
-	if [[ -f "${OS_BOOTSTRAP_ROOT}"/rodete-bootstrap.sh ]]; then
+if [[ "${RELEASE}" = rodete ]] ; then
+    NO_ENV_PRESERVE=true
+    if [[ -f /etc/glinux/bruschetta/uuid ]]; then
+        NO_SUDO_CONFIG=1
+        info Detected Bruschetta
+        . "${OS_BOOTSTRAP_ROOT}/bruschetta-bootstrap.sh"
+    elif [[ -f "${OS_BOOTSTRAP_ROOT}"/rodete-bootstrap.sh ]]; then
 		NO_SUDO_CONFIG=1
 		info Detected Rodete
 		. "${OS_BOOTSTRAP_ROOT}"/rodete-bootstrap.sh
@@ -44,7 +49,7 @@ elif [[ "${RELEASE}" = ubuntu ]]; then
 	fi
 fi
 
-if [[ -f /dev/.cros_milestone ]]; then
+if [[ -f /dev/.cros_milestone ]] && [[ "${RELEASE}" != rodete ]]; then
     info Detected Chromebook
     . "${OS_BOOTSTRAP_ROOT}"/chromebook.sh
 fi
