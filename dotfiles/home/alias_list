@@ -46,7 +46,7 @@ alias @gdu du='gdu --si'
 alias @gdf df='gdf --si -x tmpfs -x devtmpfs'
 
 # Quick rsync command for system copies
-alias @rsync rsy='rsync --progress --partial --append-verify -a'
+alias @rsync rsy='rsync --progress --partial --append-verify -sa'
 
 # Grep colouring
 talias @echo a | grep a >/dev/null 2>&1@ grep='grep --color=auto'
