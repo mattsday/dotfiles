@@ -150,6 +150,7 @@ aliases() {
         add_alias ng 'npx @angular/cli@latest'
         add_alias genkit 'npx genkit-cli@latest'
         add_alias firebase 'npx firebase-tools@latest'
+        add_alias gemini 'npx @google/gemini-cli@latest'
     fi
 
     # Navigation shortcuts
