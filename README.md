@@ -26,42 +26,42 @@ If you only want to deploy the dotfiles without installing any additional softwa
 
 ## Features
 
-*   **Cross-shell compatibility:** A consistent experience across bourne-compatible shells, csh, tcsh, and fish.
-*   **Sensible defaults:** A set of sane defaults for various tools and utilities.
-*   **Aliases:** A collection of useful aliases for common commands.
-*   **Customizable:** Easily extendable with local customizations.
-*   **Automated setup:** Bootstrap scripts for setting up new machines.
+- **Cross-shell compatibility:** A consistent experience across bourne-compatible shells, csh, tcsh, and fish.
+- **Sensible defaults:** A set of sane defaults for various tools and utilities.
+- **Aliases:** A collection of useful aliases for common commands.
+- **Customizable:** Easily extendable with local customizations.
+- **Automated setup:** Bootstrap scripts for setting up new machines.
 
 ### Shell Configuration
 
-*   **`shell_common`:** A bourne-compatible script that loads most of the common shell settings.
-*   **`alias_list`:** A script for managing aliases across both bourne and csh-compatible shells.
-*   **Local customizations:** Create a `dotfile_local` file (e.g., `zsh_local`, `shell_common_local`) to add your own local customizations. These files will be sourced at the end of the main configuration files.
+- **`shell_common`:** A bourne-compatible script that loads most of the common shell settings.
+- **`alias_list`:** A script for managing aliases across both bourne and csh-compatible shells.
+- **Local customizations:** Create a `dotfile_local` file (e.g., `zsh_local`, `shell_common_local`) to add your own local customizations. These files will be sourced at the end of the main configuration files.
 
 ### Tool Configuration
 
 This repository also includes configuration files for a variety of tools, including:
 
-*   Vim
-*   Neovim
-*   Mutt
-*   Git
-*   Terminus
-*   VS Code
-*   Firefox
-*   PipeWire
+- Vim
+- Neovim
+- Mutt
+- Git
+- Terminus
+- VS Code
+- Firefox
+- PipeWire
 
 ## Supported Operating Systems
 
 The bootstrap scripts can set up the following operating systems:
 
-*   Debian-based distributions (e.g., Debian, Ubuntu)
-*   Red Hat-based distributions (e.g., CentOS, Fedora, RHEL)
-*   SUSE-based distributions (e.g., openSUSE)
-*   Arch-based distributions (e.g., Arch Linux, Manjaro)
-*   FreeBSD
-*   macOS
-*   Windows Subsystem for Linux (WSL)
+- Debian-based distributions (e.g., Debian, Ubuntu)
+- Red Hat-based distributions (e.g., CentOS, Fedora, RHEL)
+- SUSE-based distributions (e.g., openSUSE)
+- Arch-based distributions (e.g., Arch Linux, Manjaro)
+- FreeBSD
+- macOS
+- Windows Subsystem for Linux (WSL)
 
 ## Customization
 
@@ -71,23 +71,23 @@ To add your own local customizations, you can create a `_local` file for the cor
 
 The `os-bootstraps` directory contains several scripts for setting up specific applications and environments. These scripts are typically called by the main `bootstrap.sh` script, but they can also be run manually.
 
-*   **`brave.sh`**: Installs the Brave browser.
-*   **`bruschetta-bootstrap.sh`**: Sets up the Bruschetta environment.
-*   **`chromebook.sh`**: Sets up a Chromebook.
-*   **`docker.sh`**: Installs Docker.
-*   **`ferdi-anylist.sh`**: Sets up Ferdi for AnyList.
-*   **`ferdi-shopping-list.sh`**: Sets up Ferdi for a shopping list.
-*   **`git.sh`**: Configures Git.
-*   **`jetbrains-mono-font.sh`**: Installs the JetBrains Mono font.
-*   **`kde-desktop.sh`**: Sets up a KDE desktop environment.
-*   **`kubectx.sh`**: Installs kubectx and kubens.
-*   **`linux-emoji.sh`**: Installs emoji fonts on Linux.
-*   **`passwordless-sudo.sh`**: Configures passwordless sudo.
-*   **`pipewire.sh`**: Installs and configures PipeWire.
-*   **`rodete-bootstrap.sh`**: Sets up the Rodete environment.
-*   **`sdkman.sh`**: Installs SDKMAN!.
-*   **`spotify.sh`**: Installs Spotify.
-*   **`syncthing.sh`**: Installs and configures Syncthing.
-*   **`trillian-bootstrap.sh`**: Sets up the Trillian client.
-*   **`wsl.sh`**: Sets up Windows Subsystem for Linux.
-*   **`zsh.sh`**: Installs and configures Zsh.
+- **`brave.sh`**: Installs the Brave browser.
+- **`bruschetta-bootstrap.sh`**: Sets up the Bruschetta environment.
+- **`chromebook.sh`**: Sets up a Chromebook.
+- **`docker.sh`**: Installs Docker.
+- **`ferdi-anylist.sh`**: Sets up Ferdi for AnyList.
+- **`ferdi-shopping-list.sh`**: Sets up Ferdi for a shopping list.
+- **`git.sh`**: Configures Git.
+- **`jetbrains-mono-font.sh`**: Installs the JetBrains Mono font.
+- **`kde-desktop.sh`**: Sets up a KDE desktop environment.
+- **`kubectx.sh`**: Installs kubectx and kubens.
+- **`linux-emoji.sh`**: Installs emoji fonts on Linux.
+- **`passwordless-sudo.sh`**: Configures passwordless sudo.
+- **`pipewire.sh`**: Installs and configures PipeWire.
+- **`rodete-bootstrap.sh`**: Sets up the Rodete environment.
+- **`sdkman.sh`**: Installs SDKMAN!.
+- **`spotify.sh`**: Installs Spotify.
+- **`syncthing.sh`**: Installs and configures Syncthing.
+- **`trillian-bootstrap.sh`**: Sets up the Trillian client.
+- **`wsl.sh`**: Sets up Windows Subsystem for Linux.
+- **`zsh.sh`**: Installs and configures Zsh.
