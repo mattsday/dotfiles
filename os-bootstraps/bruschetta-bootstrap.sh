@@ -63,6 +63,10 @@ docker_setup() {
   fi
   if ! dpkg-query -W -f='${Status}' docker-ce 2>/dev/null | grep "ok installed" >/dev/null 2>&1; then
     info Setting up Docker
+    if ! sudo glinux-add-repo -b docker-ce-"$(lsb_release -cs)" >/dev/null; then
+      fail Failed to add Docker repo
+      return
+    fi
     _apt update >/dev/null || warn Failed to update repo
     _apt -y install docker-ce >/dev/null || error Failed to install Docker
     sudo service docker stop
@@ -92,7 +96,6 @@ EOF
     sudo service docker restart
   fi
 }
-
 
 main() {
   CALLBACKS+=(
