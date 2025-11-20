@@ -103,6 +103,9 @@ main() {
     install_kubectx
     docker_setup
   )
+  if [[ -f "${OS_BOOTSTRAP_ROOT}"/chromebook.sh ]]; then
+    . "${OS_BOOTSTRAP_ROOT}"/chromebook-common.sh
+  fi
   get_apt_packages
 
   # If we're not being sourced

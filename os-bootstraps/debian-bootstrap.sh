@@ -97,7 +97,6 @@ get_apt_packages() {
 	APT_PACKAGES+=(
 		apt-utils
 		bash-completion
-		dnsutils
 		zsh
 		rsync
 		curl
