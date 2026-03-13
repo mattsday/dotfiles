@@ -222,7 +222,9 @@ update_callbacks() {
     if check_cmd /opt/brave/brave; then
         UPDATE_CALLBACKS="${DOTFILES_ROOT}/os-bootstraps/brave.sh:${UPDATE_CALLBACKS}"
     fi
-    if check_cmd npm; then
+    if check_cmd bun; then
+        UPDATE_CALLBACKS="bun -g update:${UPDATE_CALLBACKS}"
+    elif check_cmd npm; then
         UPDATE_CALLBACKS="${sudo_cmd} npm -g update:${UPDATE_CALLBACKS}"
     fi
     if [ -n "${UPDATE_CALLBACKS}" ]; then
