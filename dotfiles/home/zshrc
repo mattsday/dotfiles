@@ -243,3 +243,10 @@ if [[ -f "${HOME}/.zsh-autosuggestions/zsh-autosuggestions.zsh" ]]; then
 fi
 
 # vim: syntax=zsh
+
+# bun completions
+[ -s "/home/mattsday/.bun/_bun" ] && source "/home/mattsday/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"

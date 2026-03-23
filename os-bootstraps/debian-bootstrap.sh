@@ -113,6 +113,7 @@ get_apt_packages() {
 		unzip
 		"${tmux}"
 		shellcheck
+        shfmt
 		whois
 	)
 }
