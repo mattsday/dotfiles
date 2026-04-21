@@ -149,6 +149,8 @@ aliases() {
     # TODO: Put in a function perhaps
     if check_cmd "bunx"; then
         NODE_RUN="bunx"
+    elif [[ -x "${HOME}/.bun/bin/bunx" ]]; then
+        NODE_RUN="${HOME}/.bun/bin/bunx"
     elif check_cmd "npx"; then
         NODE_RUN="npx"
     fi

@@ -122,3 +122,5 @@ if [[ -f "${HOME}/.bashrc_local" ]]; then
 fi
 
 # vim: syntax=sh
+
+. "$HOME/.local/bin/env"

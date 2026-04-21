@@ -158,3 +158,5 @@ if [ -f "${HOME}/.profile_local" ]; then
 fi
 
 # vim: syntax=sh
+
+. "$HOME/.local/bin/env"

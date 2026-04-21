@@ -23,3 +23,5 @@ fi
 if [[ -f "${HOME}/.bash_profile_local" ]]; then
     . "${HOME}/.bash_profile_local"
 fi
+
+. "$HOME/.local/bin/env"
