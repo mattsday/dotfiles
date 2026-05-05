@@ -248,7 +248,11 @@ fi
 [ -s "/home/mattsday/.bun/_bun" ] && source "/home/mattsday/.bun/_bun"
 
 # bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
+if [[ -d "${HOME}/.bin" ]]; then
+	export BUN_INSTALL="$HOME/.bun"
+	export PATH="$BUN_INSTALL/bin:$PATH"
+fi
 
-. "$HOME/.local/bin/env"
+if [[ -f "$HOME/.local/bin/env" ]]; then
+	. "$HOME/.local/bin/env"
+fi
