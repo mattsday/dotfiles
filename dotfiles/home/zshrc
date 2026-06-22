@@ -248,7 +248,7 @@ fi
 [ -s "/home/mattsday/.bun/_bun" ] && source "/home/mattsday/.bun/_bun"
 
 # bun
-if [[ -d "${HOME}/.bin" ]]; then
+if [[ -d "${HOME}/.bun" ]]; then
 	export BUN_INSTALL="$HOME/.bun"
 	export PATH="$BUN_INSTALL/bin:$PATH"
 fi
