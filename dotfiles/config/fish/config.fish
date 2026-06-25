@@ -26,6 +26,10 @@ function update
     end
 end
 
+if test -d ~/.local/bin
+set -gx PATH "~/.local/bin" $PATH
+end
+
 # Set colours
 set -u fish_color_cwd cyan
 set -u fish_color_user green

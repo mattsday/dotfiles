@@ -25,7 +25,7 @@ get_apt_packages() {
   # APT_PACKAGES+=(libreoffice-qt5 okular sddm-theme-debian-breeze lightdm)
   APT_PACKAGES+=(google-cloud-sdk google-cloud-sdk-anthos-auth google-cloud-sdk-gke-gcloud-auth-plugin)
   APT_PACKAGES+=(google-cloud-sdk-kpt google-cloud-sdk-skaffold kubectl)
-  APT_PACKAGES+=(golang openjdk-25-jdk npm code)
+  APT_PACKAGES+=(golang openjdk-25-jdk npm code isort  python3-isort python3-venv python3-pip)
 }
 
 passwordless_sudo() {
