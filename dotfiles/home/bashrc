@@ -121,11 +121,17 @@ if [[ -f "${HOME}/.bashrc_local" ]]; then
 	. "${HOME}/.bashrc_local"
 fi
 
-# vim: syntax=sh
+if [[ -f "$HOME/.local/bin/env" ]]; then
+    . "$HOME/.local/bin/env"
+fi
 
-. "$HOME/.local/bin/env"
+# bun
+if [[ -d "${HOME}/.bun" ]]; then
+	export BUN_INSTALL="$HOME/.bun"
+	export PATH="$BUN_INSTALL/bin:$PATH"
+fi
+
 
 if [[ -d "${HOME}/.local/bin" ]]; then
 	export PATH="${HOME}/.local/bin:$PATH"
 fi
-

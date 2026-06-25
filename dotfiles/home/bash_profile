@@ -24,8 +24,6 @@ if [[ -f "${HOME}/.bash_profile_local" ]]; then
     . "${HOME}/.bash_profile_local"
 fi
 
-. "$HOME/.local/bin/env"
-
-if [[ -d "${HOME}/.local/bin" ]]; then
-	export PATH="${HOME}/.local/bin:$PATH"
+if [[ -f "$HOME/.local/bin/env" ]]; then
+    . "$HOME/.local/bin/env"
 fi

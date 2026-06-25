@@ -157,11 +157,10 @@ if [ -f "${HOME}/.profile_local" ]; then
 	. "${HOME}/.profile_local"
 fi
 
-# vim: syntax=sh
-
-. "$HOME/.local/bin/env"
+if [ -f "$HOME/.local/bin/env" ]; then
+    . "$HOME/.local/bin/env"
+fi
 
 if [ -d "${HOME}/.local/bin" ]; then
 	export PATH="${HOME}/.local/bin:$PATH"
 fi
-
