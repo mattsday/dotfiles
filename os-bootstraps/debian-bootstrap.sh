@@ -115,6 +115,7 @@ get_apt_packages() {
 		shellcheck
         shfmt
 		whois
+        lsof
 	)
 }
 
