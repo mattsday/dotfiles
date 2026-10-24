@@ -43,7 +43,7 @@ if [[ ! -x /usr/bin/sudo ]]; then
 			exit
 		fi
 	fi
-elif sudo [[ ! -f /etc/sudoers.d/nopasswd-"${USER}" ]]; then
+elif sudo [ ! -f /etc/sudoers.d/nopasswd-"${USER}" ]; then
 	echo "${USER}"' ALL=(ALL:ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/nopasswd-"${USER}" >/dev/null
 fi
 

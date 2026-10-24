@@ -52,6 +52,9 @@ if [[ ! -x /usr/bin/sudo ]]; then
       error "User is not root and sudo isn't installed. Install sudo first"
     fi
   fi
+elif sudo [ ! -f /etc/sudoers.d/nopasswd-"${USER}" ]; then
+  info Setting up passwordless sudo
+	echo "${USER}"' ALL=(ALL:ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/nopasswd-"${USER}" >/dev/null
 fi
 
 info Updating System
@@ -68,7 +71,7 @@ list=(
   bind-tools
   zsh
   vim
-  uutils-findutils
+  findutils
   uutils-coreutils
   git
   htop
@@ -90,15 +93,6 @@ done
 if ((${#to_install[@]})); then
   info Installing "${to_install[@]}"
   _pacman -Sq --noconfirm "${to_install[@]}" > /dev/null
-fi
-
-if ! command -v yay > /dev/null 2>&1; then
-  info Installing yay
-  git clone https://aur.archlinux.org/yay.git /tmp/yay > /dev/null 2>&1
-  pushd /tmp/yay > /dev/null 2>&1 || return
-  makepkg -si --noconfirm > /dev/null 2>&1
-  popd > /dev/null 2>&1 || return
-  rm -fr /tmp/yay
 fi
 
 # Only run yay if not root
