@@ -38,7 +38,7 @@ if [ -f "/etc/os-release" ]; then
 			info Detected SuSE flavoured
 			"${DOTFILES_ROOT}"/os-bootstraps/suse-bootstrap.sh
 		fi
-	elif [ "${RELEASE}" = arch ] || [ "${RELEASE}" = manjaro ]; then
+	elif [ "${RELEASE}" = arch ] || [ "${RELEASE}" = manjaro ] || [ "${RELEASE}" = cachyos ]; then
 		if [ -f "${DOTFILES_ROOT}"/os-bootstraps/arch-bootstrap.sh ]; then
 			info Detected Arch flavoured
 			"${DOTFILES_ROOT}"/os-bootstraps/arch-bootstrap.sh

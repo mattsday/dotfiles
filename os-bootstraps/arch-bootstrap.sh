@@ -31,6 +31,9 @@ if [[ -f /etc/os-release ]]; then
     manjaro*)
       info Detected Manjaro
       ;;
+    cachyos*)
+      info Detected CachyOS
+      ;;
     *)
       error Cannot detect supported OS, stopping
       ;;
